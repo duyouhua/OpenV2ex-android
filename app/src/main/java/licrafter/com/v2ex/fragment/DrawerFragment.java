@@ -17,11 +17,13 @@ import licrafter.com.v2ex.R;
  */
 public class DrawerFragment extends BaseFragment {
 
+    private static final String PREF_USER_LEARN_DRAWER = "navigation_drawer_learned";
+
     private ActionBarDrawerToggle mDrawerToggle;
     private View mFragmentContainerView;
     private DrawerLayout mDrawerLayout;
     private boolean mUserLearnDrawer;
-
+    private boolean mFromSavedInstanceState;
 
 
     @Override
@@ -29,6 +31,15 @@ public class DrawerFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_navigation_draw, container, false);
         ButterKnife.bind(this,view);
         return view;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mUserLearnDrawer = mSharedPrefUtil.getBooleanSP(PREF_USER_LEARN_DRAWER,false);
+        if (savedInstanceState!=null){
+            mFromSavedInstanceState = true;
+        }
     }
 
     @Override
@@ -54,15 +65,21 @@ public class DrawerFragment extends BaseFragment {
                 super.onDrawerClosed(drawerView);
                 if (!isAdded()) return;
                 getActivity().invalidateOptionsMenu();
+                if (!isAdded()) return;
+                if (!mUserLearnDrawer){
+                    mUserLearnDrawer = true;
+                    mSharedPrefUtil.setBooleanSP(PREF_USER_LEARN_DRAWER,true);
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                if (!isAdded()) return;
-                //TODO 记忆用户是否知道侧滑栏
             }
         };
+
+        if (!mUserLearnDrawer&&!mFromSavedInstanceState)
+            mDrawerLayout.openDrawer(mFragmentContainerView);
 
         mDrawerLayout.post(new Runnable() {
             @Override

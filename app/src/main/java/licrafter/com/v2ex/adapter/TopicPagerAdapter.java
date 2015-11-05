@@ -45,7 +45,6 @@ public class TopicPagerAdapter extends FragmentStatePagerAdapter {
 
         for (int i=0;i<nodes.size();i++){
             Fragment fragment = new TopicFragment();
-            android.util.Log.d("ljx","创建了fragment");
             Bundle bundle = new Bundle();
             bundle.putString(Constant.EXTRA.TOPIC_TITLE,nodes.get(i).getTopicTitle());
             fragment.setArguments(bundle);

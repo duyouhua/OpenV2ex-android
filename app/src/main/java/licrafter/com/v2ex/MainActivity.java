@@ -10,11 +10,12 @@ import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import licrafter.com.v2ex.activity.BaseActivity;
 import licrafter.com.v2ex.fragment.DrawerFragment;
 import licrafter.com.v2ex.fragment.MainFragment;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends BaseActivity {
 
     private DrawerFragment mDrawerFragment;
     @Bind(R.id.toolbar) Toolbar mToolbar;
