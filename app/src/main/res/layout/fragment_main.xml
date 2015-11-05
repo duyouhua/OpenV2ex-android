@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <licrafter.com.v2ex.widget.PagerSlidingTabStrip
+        android:id="@+id/tabs"
+        app:pstsSelectedTabTextColor="@color/teal200"
+        app:pstsIndicatorHeight="3dp"
+        app:pstsIndicatorColor="@color/teal200"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="40dip" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_content"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>
