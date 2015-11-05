@@ -64,7 +64,7 @@ public class MainFragment extends BaseFragment{
         Callback<List<HotTopic>> callback = new Callback<List<HotTopic>>() {
             @Override
             public void success(List<HotTopic> hotTopics, Response response) {
-                android.util.Log.d("ljx",""+response.getBody());
+                android.util.Log.d("ljx",""+hotTopics.size());
             }
 
             @Override
