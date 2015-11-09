@@ -8,19 +8,19 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import licrafter.com.v2ex.fragment.TopicFragment;
-import licrafter.com.v2ex.module.TopicNode;
+import licrafter.com.v2ex.fragment.TabFragment;
+import licrafter.com.v2ex.model.Table;
 import licrafter.com.v2ex.util.Constant;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class TopicPagerAdapter extends FragmentStatePagerAdapter {
+public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<TopicNode> nodes;
+    private List<Table> nodes;
     private List<Fragment> fragments;
 
-    public TopicPagerAdapter(FragmentManager fm,List<TopicNode> nodes){
+    public MainPagerAdapter(FragmentManager fm, List<Table> nodes){
         super(fm);
         this.nodes = nodes;
         fragments = new ArrayList<>();
@@ -38,15 +38,15 @@ public class TopicPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return nodes.get(position).getTopicTitle();
+        return nodes.get(position).getTabName();
     }
 
     private void initFragment(){
 
         for (int i=0;i<nodes.size();i++){
-            Fragment fragment = new TopicFragment();
+            Fragment fragment = new TabFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.EXTRA.TOPIC_TITLE,nodes.get(i).getTopicTitle());
+            bundle.putString(Constant.EXTRA.TAB_TITLE,nodes.get(i).getTabValue());
             fragment.setArguments(bundle);
             fragments.add(fragment);
         }

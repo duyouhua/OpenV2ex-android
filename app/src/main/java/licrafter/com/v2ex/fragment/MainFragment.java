@@ -6,16 +6,17 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import java.util.ArrayList;
+
 import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.MainActivity;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.adapter.TopicPagerAdapter;
+import licrafter.com.v2ex.adapter.MainPagerAdapter;
 import licrafter.com.v2ex.api.Server;
-import licrafter.com.v2ex.module.HotTopic;
-import licrafter.com.v2ex.module.TopicNode;
+import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.Table;
+import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.widget.PagerSlidingTabStrip;
 import retrofit.Callback;
 import retrofit.RetrofitError;
@@ -31,7 +32,7 @@ public class MainFragment extends BaseFragment{
     @Bind(R.id.vp_content)
     ViewPager mVpContent;
 
-    private List<TopicNode> nodes;
+    private List<Table> nodes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,16 +44,10 @@ public class MainFragment extends BaseFragment{
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        nodes = new ArrayList<>();
-        for (int i=0;i<15;i++){
-            TopicNode node = new TopicNode();
-            node.setTopicTitle("标题"+i);
-            nodes.add(node);
-        }
-        mVpContent.setAdapter(new TopicPagerAdapter(getActivity().getSupportFragmentManager(), nodes));
+        nodes = Constant.getTables();
+        mVpContent.setAdapter(new MainPagerAdapter(getActivity().getSupportFragmentManager(), nodes));
         mTabStrip.setViewPager(mVpContent);
         mTabStrip.setTextColor(getResources().getColor(R.color.grey400));
-        getHot();
     }
 
     public Fragment newInstance(MainActivity cativity){
@@ -61,9 +56,9 @@ public class MainFragment extends BaseFragment{
     }
 
     private void getHot(){
-        Callback<List<HotTopic>> callback = new Callback<List<HotTopic>>() {
+        Callback<List<Topic>> callback = new Callback<List<Topic>>() {
             @Override
-            public void success(List<HotTopic> hotTopics, Response response) {
+            public void success(List<Topic> hotTopics, Response response) {
                 android.util.Log.d("ljx",""+hotTopics.size());
             }
 

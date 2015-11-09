@@ -1,9 +1,9 @@
-package licrafter.com.v2ex.module;
+package licrafter.com.v2ex.model;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class HotTopic {
+public class Topic {
 
     private String id;
     private String title;
