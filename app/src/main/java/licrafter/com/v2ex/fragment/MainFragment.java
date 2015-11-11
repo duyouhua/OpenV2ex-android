@@ -40,7 +40,7 @@ public class MainFragment extends BaseFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nodes = Constant.getTables();
-        mVpContent.setOffscreenPageLimit(9);
+        mVpContent.setOffscreenPageLimit(10);
         mVpContent.setAdapter(new MainPagerAdapter(getActivity().getSupportFragmentManager(), nodes));
         mTabStrip.setViewPager(mVpContent);
         mTabStrip.setTextColor(getResources().getColor(R.color.grey400));

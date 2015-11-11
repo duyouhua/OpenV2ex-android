@@ -36,6 +36,7 @@ public class Constant {
             tables.add(new Tab("Apple", "apple"));
             tables.add(new Tab("酷工作", "jobs"));
             tables.add(new Tab("交易", "deals"));
+            tables.add(new Tab("全部","all"));
             tables.add(new Tab("城市", "city"));
             tables.add(new Tab("问与答", "qna"));
             tables.add(new Tab("R2", "r2"));

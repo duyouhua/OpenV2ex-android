@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -39,12 +40,16 @@ public class TabContentDao {
     public void addTabContent(TabContent tab){
         try {
             if (!isTabExists(tab.getName())){
+                //如果数据库中没有该tab的记录
                 tabContentDao.create(tab);
                 for (Topic topic : tab.getTopics()){
                     topic.setContent(tab);
                     topicDao.addTopic(topic);
                 }
             }else {
+                //如果数据库中已经有该tab的记录
+                updatePages(tab.getName(),"page",tab.getPage());
+                updatePages(tab.getName(),"totalPages",tab.getTotalPages());
                 TabContent content = getTabContent(tab.getName());
                 for (Topic topic : tab.getTopics()){
                     topic.setContent(content);
@@ -84,6 +89,23 @@ public class TabContentDao {
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * 更新page totalPages
+     * @param tab
+     * @param col
+     * @param value
+     */
+    public void updatePages(String tab,String col,Integer value){
+        try {
+            UpdateBuilder<TabContent, Integer> updateBuilder = tabContentDao.updateBuilder();
+            updateBuilder.where().eq("name",tab);
+            updateBuilder.updateColumnValue(col, value);
+            updateBuilder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

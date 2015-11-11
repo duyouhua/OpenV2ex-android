@@ -35,7 +35,8 @@ import retrofit.client.Response;
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoadmoreListener, SwipeRefreshLayout.OnRefreshListener {
+public class TabFragment extends BaseFragment
+        implements TabContentAdapter.OnLoadmoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.rv_content)
     RecyclerView mListView;
@@ -49,7 +50,8 @@ public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoa
     private boolean isCached;                   //是否已经缓存到数据库
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater
+            , ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -92,11 +94,13 @@ public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoa
                     String body = CustomUtil.streamFormToString(response.getBody().in());
                     mData = JsoupUtil.parse(title, body);
                     if (action.equals(Constant.NETWORK.FIRST_LOADING)) {
+                        mSwipeLayout.setRefreshing(false);
                         setAdapter();
                         cacheTab(mData);
                     } else if (action.equals(Constant.NETWORK.LOAD_MORE)) {
                         mAdapter.addAll(mData.getTopics());
                         mAdapter.setLoaded();
+                        cacheTab(mData);
                     } else if (action.equals(Constant.NETWORK.REFUSE)) {
                         mAdapter.resetData(mData.getTopics());
                         mSwipeLayout.setRefreshing(false);
@@ -108,6 +112,12 @@ public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoa
 
             @Override
             public void failure(RetrofitError error) {
+                Toast.makeText(getActivity(), "网络出了点问题o(╯□╰)o", Toast.LENGTH_SHORT).show();
+                if (action.equals(Constant.NETWORK.LOAD_MORE)) {
+                    mAdapter.removeLastData();
+                } else if (action.equals(Constant.NETWORK.REFUSE)) {
+                    mSwipeLayout.setRefreshing(false);
+                }
                 android.util.Log.d("ljx", error.toString());
             }
         };
@@ -119,7 +129,8 @@ public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoa
     }
 
     private void setAdapter() {
-        mListView.setAdapter(mAdapter = new TabContentAdapter(getActivity(), mListView, mData.getTopics(), R.layout.item_topic_card) {
+        mListView.setAdapter(mAdapter = new TabContentAdapter(getActivity()
+                , mListView, mData.getTopics(), R.layout.item_topic_card) {
             @Override
             public void convert(AnimationViewHolder holder, Topic item) {
                 RoundedImageView iv_avatar = holder.getView(R.id.iv_avatar);
