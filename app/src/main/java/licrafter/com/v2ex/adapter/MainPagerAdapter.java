@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import licrafter.com.v2ex.fragment.TabFragment;
-import licrafter.com.v2ex.model.Table;
+import licrafter.com.v2ex.model.Tab;
 import licrafter.com.v2ex.util.Constant;
 
 /**
@@ -17,15 +17,16 @@ import licrafter.com.v2ex.util.Constant;
  */
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<Table> nodes;
+    private List<Tab> nodes;
     private List<Fragment> fragments;
 
-    public MainPagerAdapter(FragmentManager fm, List<Table> nodes){
+    public MainPagerAdapter(FragmentManager fm, List<Tab> nodes) {
         super(fm);
         this.nodes = nodes;
         fragments = new ArrayList<>();
         initFragment();
     }
+
     @Override
     public Fragment getItem(int position) {
         return fragments.get(position);
@@ -41,12 +42,12 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
         return nodes.get(position).getTabName();
     }
 
-    private void initFragment(){
+    private void initFragment() {
 
-        for (int i=0;i<nodes.size();i++){
+        for (int i = 0; i < nodes.size(); i++) {
             Fragment fragment = new TabFragment();
             Bundle bundle = new Bundle();
-            bundle.putString(Constant.EXTRA.TAB_TITLE,nodes.get(i).getTabValue());
+            bundle.putString(Constant.EXTRA.TAB_TITLE, nodes.get(i).getTabValue());
             fragment.setArguments(bundle);
             fragments.add(fragment);
         }

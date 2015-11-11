@@ -1,92 +1,59 @@
 package licrafter.com.v2ex.model;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
 /**
- * Created by lijinxiang on 11/5/15.
+ * 通过解析html得到的Topci model
+ * Created by shell on 15-11-10.
  */
+@DatabaseTable(tableName = "tb_topic")
 public class Topic {
+    @DatabaseField(generatedId = true)
+    private int id;                         //数据库记录id,自增
+    @DatabaseField(columnName = "topicId")
+    private String topicId;                 //话题id
+    @DatabaseField(columnName = "avatar")
+    private String avatar;                  //发布者头像链接
+    @DatabaseField(columnName = "userId")
+    private String userId;                  //发布者id
+    @DatabaseField(columnName = "title")
+    private String title;                   //话题标题
+    @DatabaseField(columnName = "nodeName")
+    private String nodeName;                //来自节点的名字
+    @DatabaseField(columnName = "nodeId")
+    private String nodeId;                  //来自节点的英文id
+    @DatabaseField(columnName = "lastedReviewer")
+    private String lastedReviewer;          //最新回复的用户id
+    @DatabaseField(columnName = "createTime")
+    private String createTime;              //发布时间
+    @DatabaseField(columnName = "replies")
+    private int replies;                    //回复次数
+    @DatabaseField(foreign = true, foreignAutoRefresh = true)
+    private TabContent content;
 
-    private String id;
-    private String title;
-    private String url;
-    private String content;
-    private String content_rendered;
-    private int replies;
-    private String created;
-    private String last_modified;
-    private String last_touched;
-    private Members member;
-    private Node node;
-
-    public Node getNode() {
-        return node;
+    public String getTopicId() {
+        return topicId;
     }
 
-    public void setNode(Node node) {
-        this.node = node;
+    public void setTopicId(String id) {
+        this.topicId = id;
     }
 
-    public Members getMember() {
-        return member;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setMember(Members member) {
-        this.member = member;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
-    public String getLast_touched() {
-        return last_touched;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setLast_touched(String last_touched) {
-        this.last_touched = last_touched;
-    }
-
-    public String getLast_modified() {
-        return last_modified;
-    }
-
-    public void setLast_modified(String last_modified) {
-        this.last_modified = last_modified;
-    }
-
-    public String getCreated() {
-        return created;
-    }
-
-    public void setCreated(String created) {
-        this.created = created;
-    }
-
-    public int getReplies() {
-        return replies;
-    }
-
-    public void setReplies(int replies) {
-        this.replies = replies;
-    }
-
-    public String getContent_rendered() {
-        return content_rendered;
-    }
-
-    public void setContent_rendered(String content_rendered) {
-        this.content_rendered = content_rendered;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getTitle() {
@@ -97,31 +64,59 @@ public class Topic {
         this.title = title;
     }
 
-    public String getId() {
+    public String getNodeName() {
+        return nodeName;
+    }
+
+    public void setNodeName(String nodeName) {
+        this.nodeName = nodeName;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
+    }
+
+    public String getLastedReviewer() {
+        return lastedReviewer;
+    }
+
+    public void setLastedReviewer(String lastedReviewer) {
+        this.lastedReviewer = lastedReviewer;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getReplies() {
+        return replies;
+    }
+
+    public void setReplies(int replies) {
+        this.replies = replies;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public static class Members{
-        public String id;
-        public String username;
-        public String tagline;
-        public String avatar_mini;
-        public String avatar_normal;
-        public String avatar_large;
+    public TabContent getContent() {
+        return content;
     }
 
-    public static class Node{
-        public String id;
-        public String title;
-        public String title_alternative;
-        public String url;
-        public int topics;
-        public String avatar_mini;
-        public String avatar_normal;
-        public String avatar_large;
+    public void setContent(TabContent content) {
+        this.content = content;
     }
 }

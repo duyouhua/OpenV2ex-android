@@ -3,12 +3,12 @@ package licrafter.com.v2ex.model;
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class Table {
+public class Tab {
 
     private String tabName;
     private String tabValue;
 
-    public Table(String tabName, String tabValue) {
+    public Tab(String tabName, String tabValue) {
         this.tabName = tabName;
         this.tabValue = tabValue;
     }

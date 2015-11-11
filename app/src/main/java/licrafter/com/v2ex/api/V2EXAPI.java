@@ -2,7 +2,7 @@ package licrafter.com.v2ex.api;
 
 import java.util.List;
 
-import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.JsonTopic;
 import retrofit.Callback;
 import retrofit.http.GET;
 
@@ -13,5 +13,5 @@ public interface V2EXAPI {
     public static String BASE_API = "https://www.v2ex.com/api";
 
     @GET("/topics/hot.json")
-    void getHotTopics(Callback<List<Topic>> callback);
+    void getHotTopics(Callback<List<JsonTopic>> callback);
 }

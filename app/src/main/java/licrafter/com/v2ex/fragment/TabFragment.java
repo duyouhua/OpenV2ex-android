@@ -8,23 +8,23 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
-import licrafter.com.v2ex.adapter.CommonAdapter;
+import licrafter.com.v2ex.adapter.TabContentAdapter;
 import licrafter.com.v2ex.api.Server;
-import licrafter.com.v2ex.model.TableContent;
+import licrafter.com.v2ex.db.TabContentDao;
+import licrafter.com.v2ex.model.TabContent;
+import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
@@ -35,36 +35,39 @@ import retrofit.client.Response;
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class TabFragment extends BaseFragment implements CommonAdapter.OnLoadmoreListener {
+public class TabFragment extends BaseFragment implements TabContentAdapter.OnLoadmoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.rv_content)
     RecyclerView mListView;
     @Bind(R.id.swipe_layout)
     SwipeRefreshLayout mSwipeLayout;
 
-    private CommonAdapter mAdapter;
+    private TabContentAdapter mAdapter;
     private String title;
-    private TableContent mData;
+    private TabContent mData;
     private Handler mHandler = new Handler();
+    private boolean isCached;                   //是否已经缓存到数据库
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_topic, container, false);
         ButterKnife.bind(this, view);
-        Bundle bundle = getArguments();
-        if (bundle.containsKey(Constant.EXTRA.TAB_TITLE)) {
-            title = bundle.getString(Constant.EXTRA.TAB_TITLE);
-        }
         return view;
     }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mListView.setHasFixedSize(false);
-        //getTabTopics();
-        setAdapter();
+        mSwipeLayout.setOnRefreshListener(this);
+        init();
+        if (isCached) {
+            getTopicsFormCache();
+        } else {
+            getTabTopics(Constant.NETWORK.FIRST_LOADING, 1);
+        }
     }
 
     @Override
@@ -73,21 +76,31 @@ public class TabFragment extends BaseFragment implements CommonAdapter.OnLoadmor
         mHandler.removeCallbacks(loadRunnable);
     }
 
-    private void getTabTopics() {
+    private void init() {
+        Bundle bundle = getArguments();
+        if (bundle.containsKey(Constant.EXTRA.TAB_TITLE)) {
+            title = bundle.getString(Constant.EXTRA.TAB_TITLE);
+        }
+        isCached = new TabContentDao(getActivity()).isTabExists(title);
+    }
+
+    private void getTabTopics(final String action, final int page) {
         Callback<Response> callback = new Callback<Response>() {
             @Override
             public void success(Response response, Response response2) {
                 try {
                     String body = CustomUtil.streamFormToString(response.getBody().in());
-                    mData = JsoupUtil.parse(body);
-                    String str = "";
-                    for (TableContent.Topic topic : mData.getTopics()) {
-                        android.util.Log.d("ljx", topic.avatar);
-                        str += topic.avatar + "*" + topic.createTime + "*" + topic.lastedReviewer
-                                + "*" + topic.nodeId + "*" + topic.nodeName + "*" + topic.replies
-                                + "*" + topic.title + "*" + topic.topicId + "*" + topic.userId + "\n\n";
+                    mData = JsoupUtil.parse(title, body);
+                    if (action.equals(Constant.NETWORK.FIRST_LOADING)) {
+                        setAdapter();
+                        cacheTab(mData);
+                    } else if (action.equals(Constant.NETWORK.LOAD_MORE)) {
+                        mAdapter.addAll(mData.getTopics());
+                        mAdapter.setLoaded();
+                    } else if (action.equals(Constant.NETWORK.REFUSE)) {
+                        mAdapter.resetData(mData.getTopics());
+                        mSwipeLayout.setRefreshing(false);
                     }
-                    setAdapter();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -98,22 +111,29 @@ public class TabFragment extends BaseFragment implements CommonAdapter.OnLoadmor
                 android.util.Log.d("ljx", error.toString());
             }
         };
-        Server.v2EX(getActivity()).getTabTopics(title, callback);
+        if (!title.equals("recent")) {
+            Server.v2EX(getActivity()).getTabTopics(title, callback);
+        } else {
+            Server.v2EX(getActivity()).getRecentTopics(title, page, callback);
+        }
     }
 
     private void setAdapter() {
-        List<TableContent.Topic> list = new ArrayList<>();
-        for (int i = 0; i < 15; i++) {
-            list.add(new TableContent.Topic());
-        }
-        list.add(null);
-        mData = new TableContent();
-        mData.setTopics(list);
-        mListView.setAdapter(mAdapter = new CommonAdapter<TableContent.Topic>(getActivity(), mListView, mData.getTopics(), R.layout.item_topic_card) {
+        mListView.setAdapter(mAdapter = new TabContentAdapter(getActivity(), mListView, mData.getTopics(), R.layout.item_topic_card) {
             @Override
-            public void convert(AnimationViewHolder holder, TableContent.Topic item) {
+            public void convert(AnimationViewHolder holder, Topic item) {
                 RoundedImageView iv_avatar = holder.getView(R.id.iv_avatar);
-                Picasso.with(getActivity()).load("http://h.hiphotos.baidu.com/image/pic/item/4ec2d5628535e5ddf0a6ffde74c6a7efce1b622c.jpg").into(iv_avatar);
+                TextView topicTitle = holder.getView(R.id.tv_title);
+                TextView node = holder.getView(R.id.tv_node);
+                TextView author = holder.getView(R.id.tv_author);
+                TextView createTime = holder.getView(R.id.tv_create_time);
+                TextView replies = holder.getView(R.id.tv_replies);
+                topicTitle.setText(item.getTitle());
+                node.setText(item.getNodeName());
+                author.setText(item.getUserId());
+                createTime.setText(item.getCreateTime());
+                replies.setText(item.getReplies() + "");
+                Picasso.with(getActivity()).load(item.getAvatar()).into(iv_avatar);
             }
         });
         mAdapter.setOnLoadmoreListener(this);
@@ -124,8 +144,7 @@ public class TabFragment extends BaseFragment implements CommonAdapter.OnLoadmor
         public void run() {
             //为了展示出来正在加载的效果，才这么做....
             //因为tab数据只有一页
-            mData.getTopics().remove(mData.getTopics().size() - 1);
-            mAdapter.notifyItemRemoved(mData.getTopics().size());
+            mAdapter.removeLastData();
             Toast.makeText(getActivity(), "已经加载到最后一条", Toast.LENGTH_SHORT).show();
             mAdapter.setLoaded();
         }
@@ -133,6 +152,33 @@ public class TabFragment extends BaseFragment implements CommonAdapter.OnLoadmor
 
     @Override
     public void onLoadMore() {
-        mHandler.postDelayed(loadRunnable, 2000);
+        mAdapter.addData(null);
+        if (mData.getTotalPages() <= 1 || mData.getPage() >= mData.getTotalPages()) {
+            mHandler.postDelayed(loadRunnable, 2000);
+        } else {
+            getTabTopics(Constant.NETWORK.LOAD_MORE, mData.getPage() + 1);
+        }
+    }
+
+    /**
+     * 从数据库读取缓存
+     */
+    private void getTopicsFormCache() {
+        mData = new TabContentDao(getActivity()).getTabContent(title);
+        setAdapter();
+    }
+
+    /**
+     * 保存到数据库
+     *
+     * @param content
+     */
+    private void cacheTab(TabContent content) {
+        new TabContentDao(getActivity()).addTabContent(content);
+    }
+
+    @Override
+    public void onRefresh() {
+        getTabTopics(Constant.NETWORK.REFUSE, 1);
     }
 }

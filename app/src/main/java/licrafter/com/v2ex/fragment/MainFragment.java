@@ -13,14 +13,9 @@ import butterknife.ButterKnife;
 import licrafter.com.v2ex.MainActivity;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.adapter.MainPagerAdapter;
-import licrafter.com.v2ex.api.Server;
-import licrafter.com.v2ex.model.Topic;
-import licrafter.com.v2ex.model.Table;
+import licrafter.com.v2ex.model.Tab;
 import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.widget.PagerSlidingTabStrip;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by lijinxiang on 11/5/15.
@@ -32,7 +27,7 @@ public class MainFragment extends BaseFragment{
     @Bind(R.id.vp_content)
     ViewPager mVpContent;
 
-    private List<Table> nodes;
+    private List<Tab> nodes;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -45,6 +40,7 @@ public class MainFragment extends BaseFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nodes = Constant.getTables();
+        mVpContent.setOffscreenPageLimit(9);
         mVpContent.setAdapter(new MainPagerAdapter(getActivity().getSupportFragmentManager(), nodes));
         mTabStrip.setViewPager(mVpContent);
         mTabStrip.setTextColor(getResources().getColor(R.color.grey400));
@@ -55,18 +51,4 @@ public class MainFragment extends BaseFragment{
         return fragment;
     }
 
-    private void getHot(){
-        Callback<List<Topic>> callback = new Callback<List<Topic>>() {
-            @Override
-            public void success(List<Topic> hotTopics, Response response) {
-                android.util.Log.d("ljx",""+hotTopics.size());
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-
-            }
-        };
-        Server.v2exApi(mContext).getHotTopics(callback);
-    }
 }

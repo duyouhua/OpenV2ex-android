@@ -2,6 +2,12 @@ package licrafter.com.v2ex.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import licrafter.com.v2ex.model.Topic;
 
 /**
  * Created by shell on 15-11-7.
@@ -19,5 +25,14 @@ public class CustomUtil {
             e.printStackTrace();
         }
         return "";
+    }
+
+    public static List<Topic> collectionToList(Collection<Topic> collections){
+        List<Topic> topics = new ArrayList<>();
+        Iterator<Topic> iterator = collections.iterator();
+        while (iterator.hasNext()){
+            topics.add(iterator.next());
+        }
+        return topics;
     }
 }

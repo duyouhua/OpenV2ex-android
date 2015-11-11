@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import licrafter.com.v2ex.db.DatabaseHelper;
 import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.util.SharedPrefsUtil;
 
@@ -16,6 +17,7 @@ import licrafter.com.v2ex.util.SharedPrefsUtil;
 public class BaseFragment extends Fragment {
 
     protected SharedPrefsUtil mSharedPrefUtil;
+    protected DatabaseHelper mDataBaseHelper;
     protected Context mContext;
 
     @Override
@@ -39,6 +41,7 @@ public class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = getActivity();
+        mDataBaseHelper = DatabaseHelper.getHelper(getActivity());
         mSharedPrefUtil = SharedPrefsUtil.getInstance(mContext, Constant.SharedPreference.SHARED_FILE);
     }
 }

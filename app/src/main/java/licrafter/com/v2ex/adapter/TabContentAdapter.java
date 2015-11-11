@@ -6,31 +6,33 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.util.List;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
+import licrafter.com.v2ex.model.Topic;
 
 /**
  * Created by shell on 15-11-9.
  */
-public abstract class CommonAdapter<T> extends AnimationRecyclerAdapter {
+public abstract class TabContentAdapter extends AnimationRecyclerAdapter {
 
-    private Context mContext;
-    private RecyclerView mListView;
-    private List<T> mData;
-    private int mLayoutId;
-    private LayoutInflater mInflater;
-    private OnLoadmoreListener mLoadmoreListener;
-    private int firstVisibleItem, totalItemCount, visibleItemCount;
-    private boolean isLoading;
+    protected Context mContext;
+    protected RecyclerView mListView;
+    protected List<Topic> mData;
+    protected int mLayoutId;
+    protected LayoutInflater mInflater;
+    protected OnLoadmoreListener mLoadmoreListener;
+    protected int firstVisibleItem, totalItemCount, visibleItemCount;
+    protected boolean isLoading;
 
     private final int TYPE_ITEM = 1;
     private final int TYPE_LOADING = 0;
 
-    public CommonAdapter(Context context, RecyclerView listview, List<T> data, int layoutId) {
+    public TabContentAdapter(Context context, RecyclerView listview, List<Topic> data, int layoutId) {
         this.mContext = context;
         this.mListView = listview;
         this.mData = data;
@@ -47,7 +49,7 @@ public abstract class CommonAdapter<T> extends AnimationRecyclerAdapter {
                     firstVisibleItem = manager.findFirstVisibleItemPosition();
                     visibleItemCount = manager.getChildCount();
                     if (!isLoading && (firstVisibleItem + visibleItemCount) >= totalItemCount) {
-                        if (mLoadmoreListener != null&&mData.get(mData.size()-1)==null) {
+                        if (mLoadmoreListener != null) {
                             mLoadmoreListener.onLoadMore();
                             isLoading = true;
                         }
@@ -73,7 +75,7 @@ public abstract class CommonAdapter<T> extends AnimationRecyclerAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if (mData.get(position) != null && holder instanceof AnimationViewHolder) {
+        if (getItemViewType(position) == TYPE_ITEM) {
             super.onBindViewHolder(holder, position);
             convert((AnimationViewHolder) holder, mData.get(position));
         }
@@ -110,7 +112,49 @@ public abstract class CommonAdapter<T> extends AnimationRecyclerAdapter {
         this.mLoadmoreListener = listener;
     }
 
-    public abstract void convert(AnimationViewHolder holder, T item);
+    /**
+     * 添加一个数据
+     *
+     * @param topic
+     */
+    public void addData(Topic topic) {
+        mData.add(topic);
+        notifyItemInserted(mData.size() - 1);
+    }
+
+    /**
+     * 添加一个列表
+     *
+     * @param topics
+     */
+    public void addAll(List<Topic> topics) {
+        removeLastData();
+        mData.addAll(topics);
+        notifyItemInserted(mData.size() - 1);
+    }
+
+    /**
+     * 移除最后一个数据
+     */
+    public void removeLastData() {
+        int size = mData.size();
+        if (mData.get(size - 1) == null) {
+            mData.remove(size - 1);
+            notifyItemRemoved(mData.size());
+        }
+    }
+
+    /**
+     * 重置数据
+     *
+     * @param topics
+     */
+    public void resetData(List<Topic> topics) {
+        mData = topics;
+        notifyDataSetChanged();
+    }
+
+    public abstract void convert(AnimationViewHolder holder, Topic item);
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder {
 

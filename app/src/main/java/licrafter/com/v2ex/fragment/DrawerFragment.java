@@ -9,7 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import licrafter.com.v2ex.R;
 
 /**
@@ -18,6 +22,8 @@ import licrafter.com.v2ex.R;
 public class DrawerFragment extends BaseFragment {
 
     private static final String PREF_USER_LEARN_DRAWER = "navigation_drawer_learned";
+
+    @Bind(R.id.profile_image)CircleImageView iv_profit;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private View mFragmentContainerView;
@@ -29,15 +35,15 @@ public class DrawerFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation_draw, container, false);
-        ButterKnife.bind(this,view);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserLearnDrawer = mSharedPrefUtil.getBooleanSP(PREF_USER_LEARN_DRAWER,false);
-        if (savedInstanceState!=null){
+        mUserLearnDrawer = mSharedPrefUtil.getBooleanSP(PREF_USER_LEARN_DRAWER, false);
+        if (savedInstanceState != null) {
             mFromSavedInstanceState = true;
         }
     }
@@ -45,7 +51,7 @@ public class DrawerFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        Picasso.with(getActivity()).load("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=504471062,2759042061&fm=58").into(iv_profit);
     }
 
     public ActionBarDrawerToggle getActionBarDrawerToggle() {
@@ -66,9 +72,9 @@ public class DrawerFragment extends BaseFragment {
                 if (!isAdded()) return;
                 getActivity().invalidateOptionsMenu();
                 if (!isAdded()) return;
-                if (!mUserLearnDrawer){
+                if (!mUserLearnDrawer) {
                     mUserLearnDrawer = true;
-                    mSharedPrefUtil.setBooleanSP(PREF_USER_LEARN_DRAWER,true);
+                    mSharedPrefUtil.setBooleanSP(PREF_USER_LEARN_DRAWER, true);
                 }
             }
 
@@ -78,7 +84,7 @@ public class DrawerFragment extends BaseFragment {
             }
         };
 
-        if (!mUserLearnDrawer&&!mFromSavedInstanceState)
+        if (!mUserLearnDrawer && !mFromSavedInstanceState)
             mDrawerLayout.openDrawer(mFragmentContainerView);
 
         mDrawerLayout.post(new Runnable() {
