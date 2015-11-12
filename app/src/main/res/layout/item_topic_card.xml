@@ -37,7 +37,7 @@
             android:layout_toLeftOf="@+id/tv_replies"
             android:layout_toRightOf="@+id/iv_avatar"
             android:maxLines="3"
-            android:text="我觉得对反感让人太十多个松德股份供热为国外杀怪"
+            android:text=""
             android:textSize="@dimen/text_normal" />
 
 
@@ -59,7 +59,7 @@
                 android:paddingRight="2dp"
                 android:paddingLeft="2dp"
                 android:text="裤工作"
-                android:textColor="@color/black"
+                android:textColor="@color/a700"
                 android:layout_marginRight="@dimen/margin_large"
                 android:background="@color/grey200"
                 android:textSize="@dimen/text_small" />

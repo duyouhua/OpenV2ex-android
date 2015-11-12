@@ -10,4 +10,9 @@
     <color name="grey300">#E0E0E0</color>
     <color name="grey400">#BDBDBD</color>
     <color name="black">#000000</color>
+
+    <color name="a100">#B9F6CA</color>
+    <color name="a200">#69F0AE</color>
+    <color name="a400">#00E676</color>
+    <color name="a700">#00C853</color>
 </resources>
