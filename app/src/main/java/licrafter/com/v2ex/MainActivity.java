@@ -2,7 +2,6 @@ package licrafter.com.v2ex;
 
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -10,9 +9,9 @@ import android.view.MenuItem;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import licrafter.com.v2ex.activity.BaseActivity;
-import licrafter.com.v2ex.fragment.DrawerFragment;
-import licrafter.com.v2ex.fragment.MainFragment;
+import licrafter.com.v2ex.ui.activity.BaseActivity;
+import licrafter.com.v2ex.ui.fragment.DrawerFragment;
+import licrafter.com.v2ex.ui.fragment.MainFragment;
 
 
 public class MainActivity extends BaseActivity {

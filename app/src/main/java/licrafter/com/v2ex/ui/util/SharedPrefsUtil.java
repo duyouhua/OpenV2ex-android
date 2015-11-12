@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.ui.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;

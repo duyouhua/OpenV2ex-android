@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.ui.util;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

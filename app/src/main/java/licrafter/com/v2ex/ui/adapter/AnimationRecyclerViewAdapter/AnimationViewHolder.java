@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter;
+package licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;

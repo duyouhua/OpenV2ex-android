@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.adapter;
+package licrafter.com.v2ex.ui.adapter;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +8,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import licrafter.com.v2ex.fragment.TabFragment;
+import licrafter.com.v2ex.ui.fragment.TabFragment;
 import licrafter.com.v2ex.model.Tab;
-import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.ui.util.Constant;
 
 /**
  * Created by lijinxiang on 11/5/15.

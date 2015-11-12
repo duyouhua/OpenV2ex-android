@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.fragment;
+package licrafter.com.v2ex.ui.fragment;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,15 +19,15 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
-import licrafter.com.v2ex.adapter.TabContentAdapter;
+import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
+import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
 import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.db.TabContentDao;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
-import licrafter.com.v2ex.util.Constant;
-import licrafter.com.v2ex.util.CustomUtil;
-import licrafter.com.v2ex.util.JsoupUtil;
+import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.ui.util.CustomUtil;
+import licrafter.com.v2ex.ui.util.JsoupUtil;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

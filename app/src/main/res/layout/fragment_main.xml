@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <licrafter.com.v2ex.widget.PagerSlidingTabStrip
+    <licrafter.com.v2ex.ui.widget.PagerSlidingTabStrip
         android:id="@+id/tabs"
         app:pstsSelectedTabTextColor="@color/teal200"
         app:pstsIndicatorHeight="3dp"

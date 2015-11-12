@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.fragment;
+package licrafter.com.v2ex.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,10 +12,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.MainActivity;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.adapter.MainPagerAdapter;
+import licrafter.com.v2ex.ui.adapter.MainPagerAdapter;
 import licrafter.com.v2ex.model.Tab;
-import licrafter.com.v2ex.util.Constant;
-import licrafter.com.v2ex.widget.PagerSlidingTabStrip;
+import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.ui.widget.PagerSlidingTabStrip;
 
 /**
  * Created by lijinxiang on 11/5/15.

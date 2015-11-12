@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.activity;
+package licrafter.com.v2ex.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;

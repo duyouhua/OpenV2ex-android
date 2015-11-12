@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.widget;
+package licrafter.com.v2ex.ui.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

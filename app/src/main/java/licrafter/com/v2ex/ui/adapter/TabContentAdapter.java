@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.adapter;
+package licrafter.com.v2ex.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,13 +6,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.List;
 
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
-import licrafter.com.v2ex.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
+import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
+import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.model.Topic;
 
 /**

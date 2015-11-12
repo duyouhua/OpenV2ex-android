@@ -20,7 +20,7 @@
 
         <fragment
             android:id="@+id/fragment_drawer"
-            class="licrafter.com.v2ex.fragment.DrawerFragment"
+            class="licrafter.com.v2ex.ui.fragment.DrawerFragment"
             android:layout_width="240dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"

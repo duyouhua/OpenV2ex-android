@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.fragment;
+package licrafter.com.v2ex.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import licrafter.com.v2ex.db.DatabaseHelper;
-import licrafter.com.v2ex.util.Constant;
-import licrafter.com.v2ex.util.SharedPrefsUtil;
+import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.ui.util.SharedPrefsUtil;
 
 /**
  * Created by lijinxiang on 11/5/15.
