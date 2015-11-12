@@ -37,4 +37,8 @@ public class AnimationViewHolder extends RecyclerView.ViewHolder {
         }
         return (T) view;
     }
+
+    public View getConvertView(){
+        return this.mConvertView;
+    }
 }

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:clickable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:background="@color/white"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+        <View
+            android:layout_marginLeft="57dp"
+            android:background="@color/grey300"
+            android:layout_width="match_parent"
+            android:layout_height="1px"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/padding_normal">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/iv_avatar"
+                android:src="@mipmap/photo"
+                android:layout_marginRight="@dimen/margin_normal"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerCrop"
+                app:riv_corner_radius="4dip"
+                app:riv_oval="false" />
+
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/iv_avatar"
+                android:layout_marginRight="@dimen/margin_large"
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:text="shell"
+                android:textColor="@color/a700"
+                android:textSize="@dimen/text_normal" />
+
+            <TextView
+                android:id="@+id/tv_create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tv_username"
+                android:text="12天前"
+                android:textColor="@color/grey400"
+                android:textSize="@dimen/text_normal" />
+
+            <licrafter.com.v2ex.ui.widget.RichTextView
+                android:id="@+id/tv_content"
+                android:layout_below="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_smaller"
+                android:layout_toRightOf="@+id/iv_avatar"
+                android:text="史蒂夫官方隔热投入的合格额"
+                android:textColor="@color/grey800"
+                android:textSize="@dimen/text_normal" />
+
+            <TextView
+                android:id="@+id/tv_rank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:text="第1楼"
+                android:background="@color/grey200"
+                android:textColor="@color/grey600"
+                android:textSize="@dimen/text_small" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>

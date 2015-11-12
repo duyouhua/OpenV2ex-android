@@ -3,12 +3,14 @@ package licrafter.com.v2ex.model;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
+import java.io.Serializable;
+
 /**
  * 通过解析html得到的Topci model
  * Created by shell on 15-11-10.
  */
 @DatabaseTable(tableName = "tb_topic")
-public class Topic {
+public class Topic{
     @DatabaseField(generatedId = true)
     private int id;                         //数据库记录id,自增
     @DatabaseField(columnName = "topicId")

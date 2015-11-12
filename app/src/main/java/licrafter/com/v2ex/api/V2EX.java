@@ -29,4 +29,13 @@ public interface V2EX {
      */
     @GET("/{recent}")
     void getRecentTopics(@Path("recent") String recent, @Query("p") int page, Callback<Response> callback);
+
+    /**
+     * 获取帖子详细内容和评论列表
+     * @param topicId
+     * @param page
+     * @param callback
+     */
+    @GET("/t/{topicId}")
+    void getTopicDetails(@Path("topicId") String topicId, @Query("p") int page, Callback<Response> callback);
 }

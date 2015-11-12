@@ -13,7 +13,11 @@ public class Constant {
     private static List<Tab> tables;
 
     public static class EXTRA {
-        public static final String TAB_TITLE = "topic_title";
+        public static final String TAB_TITLE = "tab_title";
+        public static final String AVATAR = "topic";
+        public static final String TOPIC_TITLE = "topic_topic";
+        public static final String USERNAME = "username";
+        public static final String TOPICID = "topic_id";
     }
 
     public static class SharedPreference {

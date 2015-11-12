@@ -10,5 +10,8 @@
         <item name="theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
     </style>
 
+    <style name="topicContentStyle" parent="TextAppearance.AppCompat.Body1">
+
+    </style>
 
 </resources>

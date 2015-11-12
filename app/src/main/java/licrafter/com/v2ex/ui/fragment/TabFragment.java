@@ -1,5 +1,6 @@
 package licrafter.com.v2ex.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -19,6 +20,8 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.activity.TopicActivity;
+import licrafter.com.v2ex.model.Tab;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
 import licrafter.com.v2ex.api.Server;
@@ -132,10 +135,10 @@ public class TabFragment extends BaseFragment
         mListView.setAdapter(mAdapter = new TabContentAdapter(getActivity()
                 , mListView, mData.getTopics(), R.layout.item_topic_card) {
             @Override
-            public void convert(AnimationViewHolder holder, Topic item) {
+            public void convert(AnimationViewHolder holder, final Topic item) {
                 RoundedImageView iv_avatar = holder.getView(R.id.iv_avatar);
                 TextView topicTitle = holder.getView(R.id.tv_title);
-                TextView node = holder.getView(R.id.tv_node);
+                final TextView node = holder.getView(R.id.tv_node);
                 TextView author = holder.getView(R.id.tv_author);
                 TextView createTime = holder.getView(R.id.tv_create_time);
                 TextView replies = holder.getView(R.id.tv_replies);
@@ -145,6 +148,23 @@ public class TabFragment extends BaseFragment
                 createTime.setText(item.getCreateTime());
                 replies.setText(item.getReplies() + "");
                 Picasso.with(getActivity()).load(item.getAvatar()).into(iv_avatar);
+                holder.getConvertView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), TopicActivity.class);
+                        intent.putExtra(Constant.EXTRA.AVATAR, item.getAvatar());
+                        intent.putExtra(Constant.EXTRA.TOPIC_TITLE, item.getTitle());
+                        intent.putExtra(Constant.EXTRA.USERNAME, item.getUserId());
+                        intent.putExtra(Constant.EXTRA.TOPICID, item.getTopicId());
+                        startActivity(intent);
+                    }
+                });
+                node.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Toast.makeText(getActivity(), "" + node.getText(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         mAdapter.setOnLoadmoreListener(this);
