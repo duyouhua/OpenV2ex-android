@@ -65,12 +65,14 @@
 
             <TextView
                 android:id="@+id/tv_rank"
+                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:text="第1楼"
-                android:background="@color/grey200"
-                android:textColor="@color/grey600"
+                android:text="1"
+                android:padding="2dp"
+                android:background="@drawable/bg_oval_grey"
+                android:textColor="@color/white"
                 android:textSize="@dimen/text_small" />
 
         </RelativeLayout>

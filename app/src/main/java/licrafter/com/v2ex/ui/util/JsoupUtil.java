@@ -97,7 +97,7 @@ public class JsoupUtil {
         return topic;
     }
 
-    public static TopicResponse parseTopicRes(Context context,String response){
+    public static TopicResponse parseTopicRes(Context context, String response) {
         TopicResponse topic = new TopicResponse();
         TopicResponse.TopicDetail detail = new TopicResponse.TopicDetail();
         List<TopicResponse.Comment> comments = new ArrayList<>();
@@ -105,32 +105,51 @@ public class JsoupUtil {
         Element body = document.body();
         //解析帖子内容
         Elements divNodes = body.getElementsByTag("div");
-        for (Element div : divNodes){
+        for (Element div : divNodes) {
             String divStr = div.toString();
-            if (divStr.contains("class=\"topic_content\"")){
-                android.util.Log.d("ljx",divStr);
+            if (divStr.contains("class=\"topic_content\"")) {
                 detail.content = divStr;
-                topic.setDetail(detail);
+                detail.repliesCount = "0 回复";
+            } else if (divStr.contains("class=\"fr\"")) {
+                Elements spans = div.getElementsByTag("span");
+                for (Element span : spans) {
+                    String spanStr = span.toString();
+                    if (spanStr.contains("class=\"gray\"")) {
+                        String text = span.text();
+                        detail.repliesCount = text.substring(0, text.indexOf("+"));
+                    }
+                }
             }
         }
+        //解析点击数和发布时间
+        Elements smallNodes = body.getElementsByTag("small");
+        for (Element small : smallNodes) {
+            String smallStr = small.toString();
+            if (smallStr.contains("class=\"gray\"")) {
+                String text = small.text();
+                detail.createTime = text.replace("&nbsp;", "").substring(text.indexOf("at"));
+            }
+        }
+
+        topic.setDetail(detail);
         //解析回复列表
         Elements tableNodes = body.getElementsByTag("table");
-        for (Element table : tableNodes){
-            if (table!=null&&table.toString().contains("class=\"reply_content\"")){
-               comments.add(parseComments(table));
+        for (Element table : tableNodes) {
+            if (table != null && table.toString().contains("class=\"reply_content\"")) {
+                comments.add(parseComments(table));
             }
         }
         topic.setComments(comments);
         return topic;
     }
 
-    public static TopicResponse.Comment parseComments(Element table){
+    public static TopicResponse.Comment parseComments(Element table) {
         TopicResponse.Comment comment = new TopicResponse.Comment();
         Elements imgNodes = table.getElementsByTag("img");
-        for (Element img : imgNodes){
-            if (img!=null){
+        for (Element img : imgNodes) {
+            if (img != null) {
                 String imgStr = img.toString();
-                if (imgStr.contains("class=\"avatar\"")){
+                if (imgStr.contains("class=\"avatar\"")) {
                     String avatar = img.attr("src");
                     if (avatar.startsWith("//")) {
                         comment.avatar = ("http:" + avatar);
@@ -140,30 +159,30 @@ public class JsoupUtil {
 
         }
         Elements aNodes = table.getElementsByTag("a");
-        for (Element a : aNodes){
-            if (a!=null){
+        for (Element a : aNodes) {
+            if (a != null) {
                 String aStr = a.toString();
-                if (aStr.contains("/member/")){
-                    comment.userName = a.attr("href").replace("/member/","");
+                if (aStr.contains("/member/")) {
+                    comment.userName = a.attr("href").replace("/member/", "");
                 }
             }
         }
         Elements spanNodes = table.getElementsByTag("span");
-        for (Element span : spanNodes){
-            if (span!=null){
+        for (Element span : spanNodes) {
+            if (span != null) {
                 String spanStr = span.toString();
-                if (spanStr.contains("class=\"fade small\"")){
+                if (spanStr.contains("class=\"fade small\"")) {
                     comment.createTime = span.text();
-                }else if (spanStr.contains("class=\"no\"")){
-                    comment.rank = "第"+span.text()+"楼";
+                } else if (spanStr.contains("class=\"no\"")) {
+                    comment.rank = span.text();
                 }
             }
         }
 
         Elements divNodes = table.getElementsByTag("div");
-        for (Element div : divNodes){
+        for (Element div : divNodes) {
             String divStr = div.toString();
-            if (divStr.contains("class=\"reply_content\"")){
+            if (divStr.contains("class=\"reply_content\"")) {
                 comment.content = divStr;
             }
         }

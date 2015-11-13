@@ -26,7 +26,6 @@
                 android:layout_height="37dp"
                 android:layout_marginRight="@dimen/margin_normal"
                 android:scaleType="centerCrop"
-                android:src="@mipmap/photo"
                 app:riv_corner_radius="4dip"
                 app:riv_oval="false" />
 
@@ -36,7 +35,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignTop="@+id/iv_avatar"
                 android:layout_toRightOf="@+id/iv_avatar"
-                android:text="shell"
                 android:textColor="@color/a700"
                 android:textSize="@dimen/text_normal" />
 
@@ -47,12 +45,10 @@
                 android:layout_alignBottom="@+id/iv_avatar"
                 android:layout_marginTop="@dimen/margin_smaller"
                 android:layout_toRightOf="@+id/iv_avatar"
-                android:text="10分钟前 点击 300"
                 android:textColor="@color/grey500"
                 android:textSize="@dimen/text_small" />
 
             <TextView
-                android:id="@+id/tv_replies"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -60,6 +56,7 @@
                 android:background="@drawable/bg_oval_blue"
                 android:padding="4dp"
                 android:text="35"
+                android:visibility="gone"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_small" />
         </RelativeLayout>
@@ -70,7 +67,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="@dimen/padding_normal"
-        android:text="时等候的四十多岁你哇嘎dsft人个人台湾而环境额 >探索与发现"
         android:textColor="@color/black"
         android:textSize="@dimen/text_large" />
 
@@ -90,11 +86,12 @@
         android:textSize="@dimen/text_normal" />
 
     <TextView
+        android:id="@+id/tv_replies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey300"
         android:padding="@dimen/padding_normal"
-        android:text="全部评论"
+        android:text="全部回复"
         android:textColor="@color/grey500" />
 
 </LinearLayout>

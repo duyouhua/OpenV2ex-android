@@ -19,10 +19,10 @@ public class TabContentDao {
 
     private Context context;
     private DatabaseHelper helper;
-    private Dao<TabContent,Integer> tabContentDao;
+    private Dao<TabContent, Integer> tabContentDao;
     private TopicDao topicDao;
 
-    public TabContentDao(Context context){
+    public TabContentDao(Context context) {
         this.context = context;
         topicDao = new TopicDao(context);
         try {
@@ -35,23 +35,24 @@ public class TabContentDao {
 
     /**
      * 添加一个TabContent到数据库
+     *
      * @param tab
      */
-    public void addTabContent(TabContent tab){
+    public void addTabContent(TabContent tab) {
         try {
-            if (!isTabExists(tab.getName())){
+            if (!isTabExists(tab.getName())) {
                 //如果数据库中没有该tab的记录
                 tabContentDao.create(tab);
-                for (Topic topic : tab.getTopics()){
+                for (Topic topic : tab.getTopics()) {
                     topic.setContent(tab);
                     topicDao.addTopic(topic);
                 }
-            }else {
+            } else {
                 //如果数据库中已经有该tab的记录
-                updatePages(tab.getName(),"page",tab.getPage());
-                updatePages(tab.getName(),"totalPages",tab.getTotalPages());
+                updatePages(tab.getName(), "page", tab.getPage());
+                updatePages(tab.getName(), "totalPages", tab.getTotalPages());
                 TabContent content = getTabContent(tab.getName());
-                for (Topic topic : tab.getTopics()){
+                for (Topic topic : tab.getTopics()) {
                     topic.setContent(content);
                     topicDao.addTopic(topic);
                 }
@@ -63,15 +64,16 @@ public class TabContentDao {
 
     /**
      * tabContent是否存在
+     *
      * @return
      */
-    public boolean isTabExists(String tab){
+    public boolean isTabExists(String tab) {
         List<TabContent> tabs;
         try {
-            tabs = tabContentDao.queryBuilder().where().eq("name",tab).query();
-            if (tabs.size()>=1){
+            tabs = tabContentDao.queryBuilder().where().eq("name", tab).query();
+            if (tabs.size() >= 1) {
                 return true;
-            }else {
+            } else {
                 return false;
             }
         } catch (SQLException e) {
@@ -80,10 +82,11 @@ public class TabContentDao {
         return false;
     }
 
-    public TabContent getTabContent(String tab){
+
+    public TabContent getTabContent(String tab) {
 
         try {
-            TabContent content = tabContentDao.queryBuilder().where().eq("name",tab).queryForFirst();
+            TabContent content = tabContentDao.queryBuilder().where().eq("name", tab).queryForFirst();
             return content;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -93,14 +96,15 @@ public class TabContentDao {
 
     /**
      * 更新page totalPages
+     *
      * @param tab
      * @param col
      * @param value
      */
-    public void updatePages(String tab,String col,Integer value){
+    public void updatePages(String tab, String col, Integer value) {
         try {
             UpdateBuilder<TabContent, Integer> updateBuilder = tabContentDao.updateBuilder();
-            updateBuilder.where().eq("name",tab);
+            updateBuilder.where().eq("name", tab);
             updateBuilder.updateColumnValue(col, value);
             updateBuilder.update();
         } catch (SQLException e) {

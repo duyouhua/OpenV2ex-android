@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.activity;
+package licrafter.com.v2ex.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,6 @@ import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.Response.TopicResponse;
-import licrafter.com.v2ex.ui.activity.BaseActivity;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.TopicAdapter;
 import licrafter.com.v2ex.ui.util.Constant;
@@ -76,7 +76,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 break;
@@ -91,6 +91,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         mSwipeLayout.setOnRefreshListener(this);
+        mSwipeLayout.setProgressViewOffset(false, 0, 24);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setHasFixedSize(false);
         View headerView = LayoutInflater.from(this).inflate(R.layout.header_topic, mRecyclerView, false);
@@ -128,7 +129,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
             @Override
             public void failure(RetrofitError error) {
                 mSwipeLayout.setRefreshing(false);
-                Toast.makeText(TopicActivity.this,"网络错误o(╯□╰)o",Toast.LENGTH_SHORT);
+                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT);
             }
         };
         Server.v2EX(this).getTopicDetails(mTopicId, page, callback);
@@ -142,12 +143,14 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     }
 
     private void updateView(TopicResponse res) {
+        tv_replies.setText("全部 " + res.getDetail().repliesCount);
+        tv_create_time.setText(res.getDetail().createTime);
         tv_content.setRichText(res.getDetail().content);
         mAdapter.setData(res.getComments());
     }
 
     @Override
     public void onRefresh() {
-
+        getData(1);
     }
 }

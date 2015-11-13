@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by shell on 15-11-10.
  */
 @DatabaseTable(tableName = "tb_topic")
-public class Topic{
+public class Topic {
     @DatabaseField(generatedId = true)
     private int id;                         //数据库记录id,自增
     @DatabaseField(columnName = "topicId")
@@ -31,6 +31,8 @@ public class Topic{
     private String createTime;              //发布时间
     @DatabaseField(columnName = "replies")
     private int replies;                    //回复次数
+    @DatabaseField(columnName = "read")
+    private boolean read;                   //是否已读
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private TabContent content;
 
@@ -112,6 +114,14 @@ public class Topic{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
     public TabContent getContent() {

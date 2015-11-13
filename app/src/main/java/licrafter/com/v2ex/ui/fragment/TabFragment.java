@@ -20,8 +20,8 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.activity.TopicActivity;
-import licrafter.com.v2ex.model.Tab;
+import licrafter.com.v2ex.db.TopicDao;
+import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
 import licrafter.com.v2ex.api.Server;
@@ -142,6 +142,13 @@ public class TabFragment extends BaseFragment
                 TextView author = holder.getView(R.id.tv_author);
                 TextView createTime = holder.getView(R.id.tv_create_time);
                 TextView replies = holder.getView(R.id.tv_replies);
+                if (item.isRead()) {
+                    topicTitle.setTextColor(getResources().getColor(R.color.grey500));
+                    replies.setBackground(getResources().getDrawable(R.drawable.bg_oval_grey));
+                } else {
+                    topicTitle.setTextColor(getResources().getColor(R.color.black));
+                    replies.setBackground(getResources().getDrawable(R.drawable.bg_oval_blue));
+                }
                 topicTitle.setText(item.getTitle());
                 node.setText(item.getNodeName());
                 author.setText(item.getUserId());
@@ -157,6 +164,9 @@ public class TabFragment extends BaseFragment
                         intent.putExtra(Constant.EXTRA.USERNAME, item.getUserId());
                         intent.putExtra(Constant.EXTRA.TOPICID, item.getTopicId());
                         startActivity(intent);
+                        item.setRead(true);
+                        notifyDataSetChanged();
+                        new TopicDao(getActivity()).updateRead(item.getTopicId(), true);
                     }
                 });
                 node.setOnClickListener(new View.OnClickListener() {

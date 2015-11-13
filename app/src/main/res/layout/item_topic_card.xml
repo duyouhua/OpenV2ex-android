@@ -96,7 +96,7 @@
             android:layout_marginLeft="10dp"
             android:padding="3dp"
             android:text="23"
-            android:background="@drawable/bg_oval_grey"
+            android:background="@drawable/bg_oval_blue"
             android:textColor="@color/white"
             android:textSize="@dimen/text_small" />
 
