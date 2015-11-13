@@ -48,4 +48,16 @@
                 android:text="Shell"/>
         </RelativeLayout>
     </FrameLayout>
+
+    <TextView
+        android:id="@+id/tv_nodes"
+        android:text="节点"
+        android:textSize="@dimen/text_large"
+        android:gravity="center"
+        android:elevation="4dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:textColor="@color/black"
+        android:padding="@dimen/padding_normal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

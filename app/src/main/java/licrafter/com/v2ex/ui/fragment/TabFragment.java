@@ -21,6 +21,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.db.TopicDao;
+import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
@@ -159,10 +160,8 @@ public class TabFragment extends BaseFragment
                     @Override
                     public void onClick(View v) {
                         Intent intent = new Intent(getActivity(), TopicActivity.class);
-                        intent.putExtra(Constant.EXTRA.AVATAR, item.getAvatar());
-                        intent.putExtra(Constant.EXTRA.TOPIC_TITLE, item.getTitle());
-                        intent.putExtra(Constant.EXTRA.USERNAME, item.getUserId());
-                        intent.putExtra(Constant.EXTRA.TOPICID, item.getTopicId());
+                        SeriableTopic sTopic = new SeriableTopic(item);
+                        intent.putExtra(Constant.EXTRA.TOPIC,sTopic);
                         startActivity(intent);
                         item.setRead(true);
                         notifyDataSetChanged();
@@ -183,8 +182,6 @@ public class TabFragment extends BaseFragment
     Runnable loadRunnable = new Runnable() {
         @Override
         public void run() {
-            //为了展示出来正在加载的效果，才这么做....
-            //因为tab数据只有一页
             mAdapter.removeLastData();
             Toast.makeText(getActivity(), "已经加载到最后一条", Toast.LENGTH_SHORT).show();
             mAdapter.setLoaded();

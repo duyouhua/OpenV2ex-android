@@ -1,5 +1,6 @@
 package licrafter.com.v2ex.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -7,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -14,15 +16,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.ui.activity.NodeListActivity;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class DrawerFragment extends BaseFragment {
+public class DrawerFragment extends BaseFragment implements View.OnClickListener {
 
     private static final String PREF_USER_LEARN_DRAWER = "navigation_drawer_learned";
 
-    @Bind(R.id.profile_image)CircleImageView iv_profit;
+    @Bind(R.id.profile_image)
+    CircleImageView iv_profit;
+    @Bind(R.id.tv_nodes)
+    TextView tv_nodes;
 
     private ActionBarDrawerToggle mDrawerToggle;
     private View mFragmentContainerView;
@@ -50,6 +56,7 @@ public class DrawerFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        tv_nodes.setOnClickListener(this);
         Picasso.with(getActivity()).load("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=504471062,2759042061&fm=58").into(iv_profit);
     }
 
@@ -108,4 +115,14 @@ public class DrawerFragment extends BaseFragment {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.tv_nodes:
+                Intent intent = new Intent(getActivity(), NodeListActivity.class);
+                startActivity(intent);
+                closeDrawer();
+                break;
+        }
+    }
 }

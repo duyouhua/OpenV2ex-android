@@ -15,9 +15,7 @@ public class Constant {
     public static class EXTRA {
         public static final String TAB_TITLE = "tab_title";
         public static final String AVATAR = "topic";
-        public static final String TOPIC_TITLE = "topic_topic";
-        public static final String USERNAME = "username";
-        public static final String TOPICID = "topic_id";
+        public static final String TOPIC = "topic";
     }
 
     public static class SharedPreference {

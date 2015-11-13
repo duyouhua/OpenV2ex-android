@@ -7,6 +7,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
+import android.text.style.URLSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
@@ -41,6 +42,9 @@ public class RichTextView extends TextView {
         } else {
             htmlSpannable = new SpannableStringBuilder(spanned);
         }
+        /**
+         * 点击图片
+         */
         ImageSpan[] spans = htmlSpannable.getSpans(0, htmlSpannable.length(), ImageSpan.class);
         final ArrayList<String> imageUrls = new ArrayList<String>();
         final ArrayList<String> imagePositions = new ArrayList<String>();
@@ -55,7 +59,6 @@ public class RichTextView extends TextView {
         for(ImageSpan span : spans){
             final int start = htmlSpannable.getSpanStart(span);
             final int end   = htmlSpannable.getSpanEnd(span);
-
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
@@ -64,15 +67,28 @@ public class RichTextView extends TextView {
                 }
             };
 
-            ClickableSpan[] clickSpans = htmlSpannable.getSpans(start, end, ClickableSpan.class);
-            if(clickSpans != null && clickSpans.length != 0) {
-
-                for(ClickableSpan c_span : clickSpans) {
-                    htmlSpannable.removeSpan(c_span);
-                }
-            }
-
             htmlSpannable.setSpan(clickableSpan, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        /**
+         * 点击@后面的人名崩溃的问题,并且点击@用户名跳转到用户详情页
+         * http://androblip.huiges.nl/2010/11/28/handling-html-in-a-textview/
+         */
+        URLSpan[] urlSpans = htmlSpannable.getSpans(0,htmlSpannable.length(),URLSpan.class);
+        for (URLSpan span : urlSpans){
+            int start = htmlSpannable.getSpanStart(span);
+            int end = htmlSpannable.getSpanEnd(span);
+            int flag = htmlSpannable.getSpanFlags(span);
+            if (!span.getURL().startsWith("http")&&span.getURL().contains("/member/")){
+                ClickableSpan clickableSpan = new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        Toast.makeText(getContext(),"@",Toast.LENGTH_SHORT).show();
+                    }
+                };
+                htmlSpannable.removeSpan(span);
+                htmlSpannable.setSpan(clickableSpan,start,end,flag);
+            }
         }
 
         super.setText(spanned);

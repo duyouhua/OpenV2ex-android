@@ -1,12 +1,15 @@
 package licrafter.com.v2ex.ui.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +26,7 @@ import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.Response.TopicResponse;
+import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.TopicAdapter;
 import licrafter.com.v2ex.ui.util.Constant;
@@ -49,11 +53,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     private ImageView iv_avatar;
     private TextView tv_username, tv_create_time, tv_replies, tv_title;
     private RichTextView tv_content;
-
-    private String mAvatar;
-    private String mTitle;
-    private String mUserName;
-    private String mTopicId;
+    private SeriableTopic topic;
     private TopicResponse mData;
     private TopicAdapter mAdapter;
     private HeaderViewRecyclerAdapter mHeaderAdapter;
@@ -63,13 +63,8 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_topic);
         ButterKnife.bind(this);
-        Intent intent = getIntent();
-        if (intent.hasExtra(Constant.EXTRA.TOPICID) && intent.hasExtra(Constant.EXTRA.USERNAME)
-                && intent.hasExtra(Constant.EXTRA.TOPIC_TITLE) && intent.hasExtra(Constant.EXTRA.AVATAR)) {
-            mAvatar = intent.getStringExtra(Constant.EXTRA.AVATAR);
-            mTitle = intent.getStringExtra(Constant.EXTRA.TOPIC_TITLE);
-            mUserName = intent.getStringExtra(Constant.EXTRA.USERNAME);
-            mTopicId = intent.getStringExtra(Constant.EXTRA.TOPICID);
+        if (getIntent().hasExtra(Constant.EXTRA.TOPIC)) {
+            topic = (SeriableTopic) getIntent().getSerializableExtra(Constant.EXTRA.TOPIC);
         }
         setupView();
     }
@@ -132,13 +127,13 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
                 Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT);
             }
         };
-        Server.v2EX(this).getTopicDetails(mTopicId, page, callback);
+        Server.v2EX(this).getTopicDetails(topic.getTopicId(), page, callback);
     }
 
     private void setUpHeaderView() {
-        Picasso.with(this).load(mAvatar).into(iv_avatar);
-        tv_username.setText(mUserName);
-        tv_title.setText(mTitle);
+        Picasso.with(this).load(topic.getAvatar()).into(iv_avatar);
+        tv_username.setText(topic.getUserName());
+        setTopicTitle();
         tv_content.setRichText("");
     }
 
@@ -147,6 +142,21 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         tv_create_time.setText(res.getDetail().createTime);
         tv_content.setRichText(res.getDetail().content);
         mAdapter.setData(res.getComments());
+    }
+
+    private void setTopicTitle() {
+        String title = topic.getTitle() + " > " + topic.getNodeName();
+        SpannableString builder = new SpannableString(title);
+        ClickableSpan span = new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Toast.makeText(TopicActivity.this, "将诶点", Toast.LENGTH_SHORT).show();
+                android.util.Log.d("ljx","点击了");
+            }
+        };
+        builder.setSpan(span, title.indexOf(">"), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        tv_title.setText(builder);
+        tv_title.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
     @Override
