@@ -73,7 +73,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
+                onBackPressed();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -140,7 +140,9 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     private void updateView(TopicResponse res) {
         tv_replies.setText("全部 " + res.getDetail().repliesCount);
         tv_create_time.setText(res.getDetail().createTime);
-        tv_content.setRichText(res.getDetail().content);
+        if (res.getDetail().content!=null){
+            tv_content.setRichText(res.getDetail().content);
+        }
         mAdapter.setData(res.getComments());
     }
 

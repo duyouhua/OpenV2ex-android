@@ -6,6 +6,8 @@ import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import licrafter.com.v2ex.model.Topic;
 
@@ -35,10 +37,32 @@ public class TopicDao {
      */
     public void addTopic(Topic topic) {
         try {
-            topicDao.create(topic);
+            if (!isTopicExists(topic.getTopicId()))
+                topicDao.create(topic);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 判断topic记录是否已经存在
+     * @param topicId
+     * @return
+     */
+    public boolean isTopicExists(String topicId) {
+        List<Topic> topics = new ArrayList<>();
+
+        try {
+            topics = topicDao.queryBuilder().where().eq("topicId", topicId).query();
+            if (topics.size() >= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     /**

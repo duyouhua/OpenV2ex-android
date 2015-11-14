@@ -1,6 +1,7 @@
 package licrafter.com.v2ex.ui.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import java.util.List;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Node;
+import licrafter.com.v2ex.ui.activity.NodeActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
+import licrafter.com.v2ex.ui.util.Constant;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 
 /**
@@ -38,7 +41,7 @@ public class NodeListAdapter extends AnimationRecyclerAdapter {
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Node node = mData.get(position);
+        final Node node = mData.get(position);
         AnimationViewHolder vh = (AnimationViewHolder) holder;
         if (node != null) {
             super.onBindViewHolder(vh, position);
@@ -52,6 +55,14 @@ public class NodeListAdapter extends AnimationRecyclerAdapter {
                 tv_header.setRichText("");
             }
             tv_topics.setText("主题数: " + node.getTopics());
+            vh.getConvertView().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(mContext, NodeActivity.class);
+                    intent.putExtra(Constant.EXTRA.NODE,node);
+                    mContext.startActivity(intent);
+                }
+            });
         }
     }
 

@@ -16,6 +16,7 @@ public class Constant {
         public static final String TAB_TITLE = "tab_title";
         public static final String AVATAR = "topic";
         public static final String TOPIC = "topic";
+        public static final String NODE = "node";
     }
 
     public static class SharedPreference {

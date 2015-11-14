@@ -27,7 +27,7 @@ public class JsoupUtil {
         Element body = document.body();
         Elements elements = body.getElementsByAttributeValue("class", "cell item");
         for (Element element : elements) {
-            topics.add(parseContent(element));
+            topics.add(parseContent(element, false, ""));
         }
         content.setTopics(topics);
         //解析page totalPages;
@@ -46,7 +46,28 @@ public class JsoupUtil {
         return content;
     }
 
-    private static Topic parseContent(Element element) {
+    public static TabContent parseNodeTopics(String node, String response) {
+        TabContent content = new TabContent();
+        List<Topic> topics = new ArrayList<>();
+        content.setName(node);
+        Document document = Jsoup.parse(response);
+        Element body = document.body();
+        Elements elements = body.getElementsByTag("table");
+        for (Element element : elements) {
+            if (element.toString().contains("item_title")) {
+                Topic topic = parseContent(element, true, node);
+                topics.add(topic);
+            }
+        }
+        content.setTopics(topics);
+        //解析page totalPages;
+        int[] array = parseNodePage(body);
+        content.setPage(array[0]);
+        content.setTotalPages(array[1]);
+        return content;
+    }
+
+    private static Topic parseContent(Element element, boolean isParseNode, String nodeId) {
         Topic topic = new Topic();
         //解析出所有的td标签
         Elements tdNodes = element.getElementsByTag("td");
@@ -90,11 +111,39 @@ public class JsoupUtil {
                 for (Element spanNode : spanNodes) {
                     String spanStr = spanNode.text();
                     String[] array = spanStr.split("  •  ");
-                    topic.setCreateTime(array[0]);
+                    if (!isParseNode) {
+                        topic.setCreateTime(array[0]);
+                    } else {
+                        if (array.length >= 3)
+                            topic.setCreateTime(array[2]);
+                        else topic.setCreateTime("");
+                    }
                 }
             }
         }
+        if (isParseNode) {
+            topic.setNodeName(nodeId);
+            topic.setNodeId(nodeId);
+        }
         return topic;
+    }
+
+    private static int[] parseNodePage(Element body) {
+        int[] array = new int[]{1, 1};
+        Elements elements = body.getElementsByAttributeValue("class", "inner");
+        for (Element el : elements) {
+            Elements tds = el.getElementsByTag("td");
+            if (tds.size() != 3) continue;
+
+            String pageString = el.getElementsByAttributeValue("align", "center").text();
+            pageString = pageString.split(" · ")[0];
+            String[] arrayString = pageString.split("/");
+            if (arrayString.length != 2) continue;
+            array[1] = Integer.parseInt(arrayString[1]);
+            array[0] = Integer.parseInt(arrayString[0]);
+            break;
+        }
+        return array;
     }
 
     public static TopicResponse parseTopicRes(Context context, String response) {

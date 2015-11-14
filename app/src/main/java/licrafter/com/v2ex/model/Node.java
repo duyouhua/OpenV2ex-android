@@ -1,9 +1,11 @@
 package licrafter.com.v2ex.model;
 
+import java.io.Serializable;
+
 /**
  * Created by shell on 15-11-13.
  */
-public class Node {
+public class Node implements Serializable{
     private String id;
     private String name;
     private String url;

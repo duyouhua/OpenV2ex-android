@@ -1,5 +1,8 @@
 package licrafter.com.v2ex.api;
 
+import java.util.List;
+
+import licrafter.com.v2ex.model.Node;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.GET;
@@ -32,10 +35,14 @@ public interface V2EX {
 
     /**
      * 获取帖子详细内容和评论列表
+     *
      * @param topicId
      * @param page
      * @param callback
      */
     @GET("/t/{topicId}")
     void getTopicDetails(@Path("topicId") String topicId, @Query("p") int page, Callback<Response> callback);
+
+    @GET("/go/{nodeId}")
+    void getTopicsByNodeId(@Path("nodeId") String nodeId, @Query("p") int page, Callback<Response> callback);
 }

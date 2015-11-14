@@ -83,6 +83,11 @@ public class TabContentDao {
     }
 
 
+    /**
+     * 获取缓存的一个tab
+     * @param tab
+     * @return
+     */
     public TabContent getTabContent(String tab) {
 
         try {

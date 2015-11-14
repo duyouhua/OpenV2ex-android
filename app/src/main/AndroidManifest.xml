@@ -27,6 +27,8 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.NodeListActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.NodeActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
