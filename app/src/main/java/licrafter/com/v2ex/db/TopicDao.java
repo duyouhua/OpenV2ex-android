@@ -3,12 +3,14 @@ package licrafter.com.v2ex.db;
 import android.content.Context;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 
 /**
@@ -37,15 +39,16 @@ public class TopicDao {
      */
     public void addTopic(Topic topic) {
         try {
-            if (!isTopicExists(topic.getTopicId()))
-                topicDao.create(topic);
+            topicDao.create(topic);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+
     /**
      * 判断topic记录是否已经存在
+     *
      * @param topicId
      * @return
      */
@@ -77,6 +80,21 @@ public class TopicDao {
             builder.where().eq("topicId", topicId);
             builder.updateColumnValue("read", read);
             builder.update();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 删除topic记录
+     *
+     * @param tab
+     */
+    public void deleteTopic(String tab) {
+        try {
+            DeleteBuilder<Topic, Integer> deleteBuilder = topicDao.deleteBuilder();
+            deleteBuilder.where().eq("tabName", tab);
+            deleteBuilder.delete();
         } catch (SQLException e) {
             e.printStackTrace();
         }

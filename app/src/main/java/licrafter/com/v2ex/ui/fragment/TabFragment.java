@@ -69,7 +69,7 @@ public class TabFragment extends BaseFragment
         mListView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mListView.setHasFixedSize(false);
         mSwipeLayout.setOnRefreshListener(this);
-        mSwipeLayout.setProgressViewOffset(false,0,25);
+        mSwipeLayout.setProgressViewOffset(false, 0, 25);
         init();
         if (isCached && !isRequestNode()) {
             getTopicsFormCache();
@@ -101,8 +101,7 @@ public class TabFragment extends BaseFragment
             public void success(Response response, Response response2) {
                 try {
                     String body = CustomUtil.streamFormToString(response.getBody().in());
-                    mData = isRequestNode()?JsoupUtil.parseNodeTopics(node,body):JsoupUtil.parse(title, body);
-                    cacheTab(mData);
+                    mData = isRequestNode() ? JsoupUtil.parseNodeTopics(node, body) : JsoupUtil.parse(title, body);
                     switch (action) {
                         case Constant.NETWORK.FIRST_LOADING:
                             mSwipeLayout.setRefreshing(false);
@@ -115,8 +114,10 @@ public class TabFragment extends BaseFragment
                         case Constant.NETWORK.REFUSE:
                             mAdapter.resetData(mData.getTopics());
                             mSwipeLayout.setRefreshing(false);
+                            new TabContentDao(getActivity()).deleteTab(title);
                             break;
                     }
+                    cacheTab(mData);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

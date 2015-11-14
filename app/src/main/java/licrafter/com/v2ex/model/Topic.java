@@ -33,6 +33,8 @@ public class Topic {
     private int replies;                    //回复次数
     @DatabaseField(columnName = "read")
     private boolean read;                   //是否已读
+    @DatabaseField(columnName = "tabName")  //所在tab名字
+    private String tabName;
     @DatabaseField(foreign = true, foreignAutoRefresh = true)
     private TabContent content;
 
@@ -130,5 +132,13 @@ public class Topic {
 
     public void setContent(TabContent content) {
         this.content = content;
+    }
+
+    public String getTabName() {
+        return tabName;
+    }
+
+    public void setTabName(String tabName) {
+        this.tabName = tabName;
     }
 }

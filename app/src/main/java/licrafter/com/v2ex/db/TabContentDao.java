@@ -4,6 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.j256.ormlite.dao.Dao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.UpdateBuilder;
 
 import java.sql.SQLException;
@@ -80,6 +81,21 @@ public class TabContentDao {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 删除tab记录
+     * @param tab
+     */
+    public void deleteTab (String tab){
+        try {
+            DeleteBuilder<TabContent,Integer> deleteBuilder = tabContentDao.deleteBuilder();
+            deleteBuilder.where().eq("name",tab);
+            deleteBuilder.delete();
+            topicDao.deleteTopic(tab);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 

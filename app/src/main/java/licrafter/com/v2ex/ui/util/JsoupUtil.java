@@ -27,7 +27,7 @@ public class JsoupUtil {
         Element body = document.body();
         Elements elements = body.getElementsByAttributeValue("class", "cell item");
         for (Element element : elements) {
-            topics.add(parseContent(element, false, ""));
+            topics.add(parseContent(element, false, null, tab));
         }
         content.setTopics(topics);
         //解析page totalPages;
@@ -55,7 +55,7 @@ public class JsoupUtil {
         Elements elements = body.getElementsByTag("table");
         for (Element element : elements) {
             if (element.toString().contains("item_title")) {
-                Topic topic = parseContent(element, true, node);
+                Topic topic = parseContent(element, true, node, null);
                 topics.add(topic);
             }
         }
@@ -67,7 +67,7 @@ public class JsoupUtil {
         return content;
     }
 
-    private static Topic parseContent(Element element, boolean isParseNode, String nodeId) {
+    private static Topic parseContent(Element element, boolean isParseNode, String nodeId, String tabName) {
         Topic topic = new Topic();
         //解析出所有的td标签
         Elements tdNodes = element.getElementsByTag("td");
@@ -124,6 +124,9 @@ public class JsoupUtil {
         if (isParseNode) {
             topic.setNodeName(nodeId);
             topic.setNodeId(nodeId);
+        }
+        if (!isParseNode) {
+            topic.setTabName(tabName);
         }
         return topic;
     }

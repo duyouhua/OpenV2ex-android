@@ -37,6 +37,7 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
+
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
         try {
@@ -65,39 +66,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return instance;
     }
 
-    /**
-     * 获取dao
-     *
-     * @return
-     * @throws SQLException
-     */
-    public Dao<TabContent, Integer> getTableContentDao() {
-        try {
-            if (tableContentDao == null) {
-                tableContentDao = getDao(TabContent.class);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return tableContentDao;
-    }
-
-    /**
-     * 获取dao
-     *
-     * @return
-     * @throws SQLException
-     */
-    public Dao<Topic, Integer> getTopicDao() {
-        try {
-            if (topicDao == null) {
-                topicDao = getDao(Topic.class);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return topicDao;
-    }
 
     /**
      * 释放资源
