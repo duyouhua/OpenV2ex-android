@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressed_white_blue"
+        android:clickable="true"
+        android:padding="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tv_info1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/social_twitter"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="Twitter"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/tv_twitter"
+            android:layout_toRightOf="@+id/tv_info1"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"
+            android:drawableRight="@mipmap/ic_arrow_right_grey"
+            android:gravity="center_vertical|right"
+            android:text="无该项设置"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/grey300" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressed_white_blue"
+        android:clickable="true"
+        android:padding="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tv_info2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/social_home"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="个人主页"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/tv_home"
+            android:layout_toRightOf="@+id/tv_info2"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"
+            android:drawableRight="@mipmap/ic_arrow_right_grey"
+            android:gravity="center_vertical|right"
+            android:text="无该项设置"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/grey300" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_pressed_white_blue"
+        android:clickable="true"
+        android:padding="@dimen/padding_normal">
+
+        <TextView
+            android:id="@+id/tv_info3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@mipmap/social_geo"
+            android:drawablePadding="5dp"
+            android:gravity="center_vertical"
+            android:text="My Location"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+
+        <TextView
+            android:id="@+id/tv_mylocation"
+            android:singleLine="true"
+            android:layout_toRightOf="@+id/tv_info3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"
+            android:drawableRight="@mipmap/ic_arrow_right_grey"
+            android:gravity="center_vertical|right"
+            android:text="无该项设置"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -16,6 +16,7 @@
         card_view:cardCornerRadius="0dp">
 
         <RelativeLayout
+            android:id="@+id/rl_profit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_normal">

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="300dp">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_myheader" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            app:riv_oval="true"
+            app:riv_border_color="@color/white"
+            app:riv_border_width="1dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/photo" />
+
+        <TextView
+            android:id="@+id/tv_username"
+            android:text="shell92"
+            android:layout_marginTop="@dimen/margin_smaller"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/iv_avatar"
+            android:textSize="@dimen/text_large"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <include layout="@layout/include_myfov" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey200"
+        android:padding="@dimen/padding_normal"
+        android:text="基本信息"
+        android:textColor="@color/grey400"
+        android:textSize="@dimen/text_normal" />
+
+    <include layout="@layout/include_baseinfo" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/grey200"
+        android:padding="@dimen/padding_normal"
+        android:text="我发表的帖子"
+        android:textColor="@color/grey400"
+        android:textSize="@dimen/text_normal" />
+</LinearLayout>

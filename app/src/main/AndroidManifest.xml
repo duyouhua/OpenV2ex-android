@@ -29,6 +29,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".ui.activity.NodeActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.ProfitActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ui.activity.LoginActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -10,12 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.NodeListActivity;
 
 /**
@@ -26,7 +28,7 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
     private static final String PREF_USER_LEARN_DRAWER = "navigation_drawer_learned";
 
     @Bind(R.id.profile_image)
-    CircleImageView iv_profit;
+    RoundedImageView iv_profit;
     @Bind(R.id.tv_nodes)
     TextView tv_nodes;
 
@@ -57,6 +59,7 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         tv_nodes.setOnClickListener(this);
+        iv_profit.setOnClickListener(this);
         Picasso.with(getActivity()).load("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=504471062,2759042061&fm=58").into(iv_profit);
     }
 
@@ -123,6 +126,10 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
                 startActivity(intent);
                 closeDrawer();
                 break;
+            case R.id.profile_image:
+                Intent intent1 = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent1);
+                closeDrawer();
         }
     }
 }

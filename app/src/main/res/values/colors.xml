@@ -2,6 +2,7 @@
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="teal500">#009688</color>
+    <color name="teal500l">#3080CBC4</color>
     <color name="teal200">#80CBC4</color>
     <color name="background_tab_pressed">#6633B5E5</color>
 

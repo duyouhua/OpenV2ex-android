@@ -14,4 +14,10 @@
 
     </style>
 
+    <!-- dialog从中间弹出动画-->
+    <style name="DialogInOutCenterAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_scale_in</item>
+        <item name="android:windowExitAnimation">@anim/anim_scale_out</item>
+    </style>
+
 </resources>

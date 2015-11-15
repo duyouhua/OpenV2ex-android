@@ -21,7 +21,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.db.TopicDao;
+import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.model.SeriableTopic;
+import licrafter.com.v2ex.ui.activity.NodeActivity;
 import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
@@ -49,7 +51,7 @@ public class TabFragment extends BaseFragment
 
     private TabContentAdapter mAdapter;
     private String title;
-    private String node;
+    private Node node;
     private TabContent mData;
     private Handler mHandler = new Handler();
     private boolean isCached;                   //是否已经缓存到数据库
@@ -90,7 +92,7 @@ public class TabFragment extends BaseFragment
             title = bundle.getString(Constant.EXTRA.TAB_TITLE);
         } else if (bundle.containsKey(Constant.EXTRA.NODE)) {
             //如果传进来node,则请求节点话题列表
-            node = bundle.getString(Constant.EXTRA.NODE);
+            node = (Node) bundle.getSerializable(Constant.EXTRA.NODE);
         }
         isCached = new TabContentDao(getActivity()).isTabExists(title);
     }
@@ -101,7 +103,7 @@ public class TabFragment extends BaseFragment
             public void success(Response response, Response response2) {
                 try {
                     String body = CustomUtil.streamFormToString(response.getBody().in());
-                    mData = isRequestNode() ? JsoupUtil.parseNodeTopics(node, body) : JsoupUtil.parse(title, body);
+                    mData = isRequestNode() ? JsoupUtil.parseNodeTopics(node.getName(), node.getTitle(), body) : JsoupUtil.parse(title, body);
                     switch (action) {
                         case Constant.NETWORK.FIRST_LOADING:
                             mSwipeLayout.setRefreshing(false);
@@ -141,7 +143,7 @@ public class TabFragment extends BaseFragment
                 Server.v2EX(getActivity()).getRecentTopics(title, page, callback);
             }
         } else {//请求节点话题列表
-            Server.v2EX(getActivity()).getTopicsByNodeId(node, page, callback);
+            Server.v2EX(getActivity()).getTopicsByNodeId(node.getName(), page, callback);
         }
 
     }
@@ -191,7 +193,12 @@ public class TabFragment extends BaseFragment
                 node.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(), "" + node.getText(), Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(mContext, NodeActivity.class);
+                        Node node = new Node();
+                        node.setName(item.getNodeId());
+                        node.setTitle(item.getNodeName());
+                        intent.putExtra(Constant.EXTRA.NODE, node);
+                        mContext.startActivity(intent);
                     }
                 });
             }

@@ -27,7 +27,7 @@ public class JsoupUtil {
         Element body = document.body();
         Elements elements = body.getElementsByAttributeValue("class", "cell item");
         for (Element element : elements) {
-            topics.add(parseContent(element, false, null, tab));
+            topics.add(parseContent(element, false, null, null, tab));
         }
         content.setTopics(topics);
         //解析page totalPages;
@@ -46,7 +46,7 @@ public class JsoupUtil {
         return content;
     }
 
-    public static TabContent parseNodeTopics(String node, String response) {
+    public static TabContent parseNodeTopics(String node, String nodeName, String response) {
         TabContent content = new TabContent();
         List<Topic> topics = new ArrayList<>();
         content.setName(node);
@@ -55,7 +55,7 @@ public class JsoupUtil {
         Elements elements = body.getElementsByTag("table");
         for (Element element : elements) {
             if (element.toString().contains("item_title")) {
-                Topic topic = parseContent(element, true, node, null);
+                Topic topic = parseContent(element, true, node, nodeName, null);
                 topics.add(topic);
             }
         }
@@ -67,7 +67,7 @@ public class JsoupUtil {
         return content;
     }
 
-    private static Topic parseContent(Element element, boolean isParseNode, String nodeId, String tabName) {
+    private static Topic parseContent(Element element, boolean isParseNode, String nodeId, String nodeName, String tabName) {
         Topic topic = new Topic();
         //解析出所有的td标签
         Elements tdNodes = element.getElementsByTag("td");
@@ -122,7 +122,7 @@ public class JsoupUtil {
             }
         }
         if (isParseNode) {
-            topic.setNodeName(nodeId);
+            topic.setNodeName(nodeName);
             topic.setNodeId(nodeId);
         }
         if (!isParseNode) {
@@ -240,5 +240,17 @@ public class JsoupUtil {
         }
 
         return comment;
+    }
+
+    public static String parseOnce(String response){
+        String once = "";
+        Document document = Jsoup.parse(response);
+        Element body = document.body();
+        Elements inputNodes = body.getElementsByAttributeValue("name", "once");
+        for (Element input : inputNodes){
+            once = input.attr("value");
+            android.util.Log.d("ljx",once);
+        }
+        return once;
     }
 }

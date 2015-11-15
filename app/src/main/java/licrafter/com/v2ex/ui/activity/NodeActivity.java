@@ -40,7 +40,7 @@ public class NodeActivity extends BaseActivity{
 
         Fragment tabFragment = new TabFragment();
         Bundle bundle = new Bundle();
-        bundle.putString(Constant.EXTRA.NODE, node.getName());
+        bundle.putSerializable(Constant.EXTRA.NODE, node);
         tabFragment.setArguments(bundle);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content,tabFragment).commit();

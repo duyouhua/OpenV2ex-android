@@ -4,25 +4,27 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:gravity="center"
-    android:padding="@dimen/margin_large"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:padding="@dimen/margin_large">
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:gravity="center"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <ProgressBar
             style="?android:attr/progressBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true" />
+
         <TextView
-            android:text="加载中..."
-            android:textSize="@dimen/text_small"
-            android:layout_marginLeft="@dimen/margin_small"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:text="加载中..."
+            android:textSize="@dimen/text_small" />
     </LinearLayout>
 
 </LinearLayout>

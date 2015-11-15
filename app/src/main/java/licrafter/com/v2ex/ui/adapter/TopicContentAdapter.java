@@ -22,13 +22,13 @@ import licrafter.com.v2ex.ui.widget.RichTextView;
 /**
  * Created by shell on 15-11-12.
  */
-public class TopicAdapter extends AnimationRecyclerAdapter {
+public class TopicContentAdapter extends AnimationRecyclerAdapter {
 
     private Context mContext;
     private List<TopicResponse.Comment> commentList;
     private LayoutInflater mInflater;
 
-    public TopicAdapter(Context context) {
+    public TopicContentAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
     }

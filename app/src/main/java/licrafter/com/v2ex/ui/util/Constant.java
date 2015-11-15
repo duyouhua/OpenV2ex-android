@@ -17,6 +17,11 @@ public class Constant {
         public static final String AVATAR = "topic";
         public static final String TOPIC = "topic";
         public static final String NODE = "node";
+        public static final String NODE_NAME = "node_name";
+        public static final String PROFIT_TYPE = "profit_type";
+        public static final String PRO_ME = "pro_me";
+        public static final String PRO_OTHERS = "pro_others";
+        public static final String MYPROFITHEADER = "myprofitheader";
     }
 
     public static class SharedPreference {

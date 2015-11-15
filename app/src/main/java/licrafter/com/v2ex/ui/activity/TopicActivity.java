@@ -1,12 +1,12 @@
 package licrafter.com.v2ex.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,10 +26,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.api.Server;
+import licrafter.com.v2ex.model.MyProfitHeader;
+import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.model.Response.TopicResponse;
 import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
-import licrafter.com.v2ex.ui.adapter.TopicAdapter;
+import licrafter.com.v2ex.ui.adapter.TopicContentAdapter;
 import licrafter.com.v2ex.ui.util.Constant;
 import licrafter.com.v2ex.ui.util.CustomUtil;
 import licrafter.com.v2ex.ui.util.JsoupUtil;
@@ -40,7 +43,7 @@ import retrofit.client.Response;
 /**
  * Created by shell on 15-11-12.
  */
-public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
 
     @Bind(R.id.swipe_layout)
@@ -53,9 +56,10 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     private ImageView iv_avatar;
     private TextView tv_username, tv_create_time, tv_replies, tv_title;
     private RichTextView tv_content;
+    private RelativeLayout rl_profit;
     private SeriableTopic topic;
     private TopicResponse mData;
-    private TopicAdapter mAdapter;
+    private TopicContentAdapter mAdapter;
     private HeaderViewRecyclerAdapter mHeaderAdapter;
 
     @Override
@@ -93,10 +97,12 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         iv_avatar = (ImageView) headerView.findViewById(R.id.iv_avatar);
         tv_username = (TextView) headerView.findViewById(R.id.tv_username);
         tv_create_time = (TextView) headerView.findViewById(R.id.tv_create_time);
+        rl_profit = (RelativeLayout) headerView.findViewById(R.id.rl_profit);
         tv_replies = (TextView) headerView.findViewById(R.id.tv_replies);
         tv_title = (TextView) headerView.findViewById(R.id.tv_title);
         tv_content = (RichTextView) headerView.findViewById(R.id.tv_content);
-        mAdapter = new TopicAdapter(this);
+        rl_profit.setOnClickListener(this);
+        mAdapter = new TopicContentAdapter(this);
         mHeaderAdapter = new HeaderViewRecyclerAdapter(mAdapter);
         mHeaderAdapter.addHeaderView(headerView);
         mRecyclerView.setAdapter(mHeaderAdapter);
@@ -124,7 +130,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
             @Override
             public void failure(RetrofitError error) {
                 mSwipeLayout.setRefreshing(false);
-                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT);
+                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
             }
         };
         Server.v2EX(this).getTopicDetails(topic.getTopicId(), page, callback);
@@ -140,7 +146,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     private void updateView(TopicResponse res) {
         tv_replies.setText("全部 " + res.getDetail().repliesCount);
         tv_create_time.setText(res.getDetail().createTime);
-        if (res.getDetail().content!=null){
+        if (res.getDetail().content != null) {
             tv_content.setRichText(res.getDetail().content);
         }
         mAdapter.setData(res.getComments());
@@ -152,8 +158,12 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         ClickableSpan span = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Toast.makeText(TopicActivity.this, "将诶点", Toast.LENGTH_SHORT).show();
-                android.util.Log.d("ljx","点击了");
+                Intent intent = new Intent(TopicActivity.this, NodeActivity.class);
+                Node node = new Node();
+                node.setName(topic.getNodeId());
+                node.setTitle(topic.getNodeName());
+                intent.putExtra(Constant.EXTRA.NODE, node);
+                startActivity(intent);
             }
         };
         builder.setSpan(span, title.indexOf(">"), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -164,5 +174,17 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     @Override
     public void onRefresh() {
         getData(1);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.rl_profit:
+                Intent intent = new Intent(this, ProfitActivity.class);
+                intent.putExtra(Constant.EXTRA.PROFIT_TYPE,Constant.EXTRA.PRO_ME);
+                intent.putExtra("title",topic.getUserName());
+                startActivity(intent);
+                break;
+        }
     }
 }
