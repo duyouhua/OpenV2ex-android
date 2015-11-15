@@ -20,7 +20,7 @@ public class ProfitActivity extends BaseActivity {
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private String title = "";
+    private String userName = "";
     private FragmentTransaction transaction;
 
     @Override
@@ -30,10 +30,13 @@ public class ProfitActivity extends BaseActivity {
         ButterKnife.bind(this);
         transaction = getSupportFragmentManager().beginTransaction();
         if (getIntent().hasExtra(Constant.EXTRA.PROFIT_TYPE)&&getIntent().hasExtra("title")){
-            title = getIntent().getStringExtra("title");
+            userName = getIntent().getStringExtra("title");
             switch (getIntent().getStringExtra(Constant.EXTRA.PROFIT_TYPE)){
                 case Constant.EXTRA.PRO_ME:
                     Fragment myProfit = new MyProfitFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username",userName);
+                    myProfit.setArguments(bundle);
                     transaction.replace(R.id.container,myProfit).commit();
                     break;
                 case Constant.EXTRA.PRO_OTHERS:
@@ -43,9 +46,13 @@ public class ProfitActivity extends BaseActivity {
 
             }
         }
-        toolbar.setTitle(title);
+        toolbar.setTitle(userName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    public Toolbar getToolbar(){
+        return toolbar;
     }
 }

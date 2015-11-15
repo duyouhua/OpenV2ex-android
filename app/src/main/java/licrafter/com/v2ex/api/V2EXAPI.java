@@ -2,6 +2,7 @@ package licrafter.com.v2ex.api;
 
 import java.util.List;
 
+import licrafter.com.v2ex.model.JSONProfit;
 import licrafter.com.v2ex.model.JsonTopic;
 import licrafter.com.v2ex.model.Node;
 import retrofit.Callback;
@@ -37,4 +38,12 @@ public interface V2EXAPI {
      */
     @GET("/topics/show.json")
     void getTopicsByUserName(@Query("username") String username, Callback<List<JsonTopic>> callback);
+
+    /**
+     * 根据用户名获得个人详情
+     * @param username
+     * @param callback
+     */
+    @GET("/members/show.json")
+    void getProfitByUserName(@Query("username")String username,Callback<JSONProfit> callback);
 }

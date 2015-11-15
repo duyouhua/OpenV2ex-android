@@ -22,16 +22,25 @@
             app:riv_oval="true"
             app:riv_border_color="@color/white"
             app:riv_border_width="1dp"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/photo" />
+            android:layout_centerInParent="true" />
 
         <TextView
             android:id="@+id/tv_username"
-            android:text="shell92"
             android:layout_marginTop="@dimen/margin_smaller"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/iv_avatar"
             android:textSize="@dimen/text_large"
+            android:textColor="@color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/tv_tagline"
+            android:layout_marginTop="@dimen/margin_smaller"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/tv_username"
+            android:textSize="@dimen/text_small"
+            android:maxLines="2"
             android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -56,7 +65,7 @@
         android:layout_height="wrap_content"
         android:background="@color/grey200"
         android:padding="@dimen/padding_normal"
-        android:text="我发表的帖子"
+        android:text="发表的帖子"
         android:textColor="@color/grey400"
         android:textSize="@dimen/text_normal" />
 </LinearLayout>

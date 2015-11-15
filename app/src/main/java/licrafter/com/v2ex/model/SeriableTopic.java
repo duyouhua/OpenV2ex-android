@@ -69,4 +69,13 @@ public class SeriableTopic implements Serializable {
         this.userName = topic.getUserId();
         this.topicId = topic.getTopicId();
     }
+
+    public SeriableTopic(JsonTopic topic){
+        this.avatar = "https:"+topic.getMember().avatar_normal;
+        this.nodeId = topic.getNode().id;
+        this.nodeName = topic.getNode().title;
+        this.title = topic.getTitle();
+        this.userName = topic.getMember().username;
+        this.topicId = topic.getId();
+    }
 }
