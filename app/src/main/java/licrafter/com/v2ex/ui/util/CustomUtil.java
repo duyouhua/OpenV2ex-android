@@ -1,7 +1,12 @@
 package licrafter.com.v2ex.ui.util;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +17,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.ui.widget.CustomProgressbarDialog;
 
@@ -56,6 +62,12 @@ public class CustomUtil {
         return dialog;
     }
 
+    /**
+     * 登陆报错解析
+     *
+     * @param response
+     * @return
+     */
     public static String getErrorMsg(String response) {
         Pattern errorPattern = Pattern.compile("<div class=\"problem\">(.*)</div>");
         Matcher errorMatcher = errorPattern.matcher(response);
@@ -66,5 +78,25 @@ public class CustomUtil {
             errorContent = "未知错误";
         }
         return errorContent;
+    }
+
+    /**
+     * 在代码中修改status bar颜色
+     * 也可以在values-v21里重写styles.yml
+     * http://stackoverflow.com/questions/22192291/how-to-change-the-status-bar-color-in-android
+     */
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    public static void setStatusBarColor(Activity activity) {
+        Window window = activity.getWindow();
+
+        // clear FLAG_TRANSLUCENT_STATUS flag:
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+        // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+        // finally change the color
+        window.setStatusBarColor(activity.getResources().getColor(R.color.teal500));
     }
 }

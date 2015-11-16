@@ -12,6 +12,7 @@ import butterknife.ButterKnife;
 import licrafter.com.v2ex.ui.activity.BaseActivity;
 import licrafter.com.v2ex.ui.fragment.DrawerFragment;
 import licrafter.com.v2ex.ui.fragment.MainFragment;
+import licrafter.com.v2ex.ui.util.CustomUtil;
 
 
 public class MainActivity extends BaseActivity {
@@ -26,10 +27,9 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
         mDrawerFragment = (DrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
         mDrawerFragment.setup(R.id.fragment_drawer,mDrawerLayout,mToolbar);
-
+        CustomUtil.setStatusBarColor(this);
         if (savedInstanceState == null){
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             transaction.replace(R.id.container,new MainFragment().newInstance(this));

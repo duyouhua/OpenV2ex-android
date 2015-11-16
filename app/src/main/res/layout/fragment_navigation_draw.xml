@@ -15,25 +15,24 @@
         <ImageView
             android:background="#000"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="170dp"
             android:src="@mipmap/header_background"
             android:scaleType="centerCrop"/>
         <RelativeLayout
             android:id="@+id/navigation_drawer_header"
-            android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent">
 
             <com.makeramen.roundedimageview.RoundedImageView
                 android:id="@+id/profile_image"
                 android:layout_width="64dp"
                 android:layout_height="64dp"
-                android:src="@mipmap/photo"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
                 app:riv_oval="true"
-                app:riv_border_width="2dp"
+                app:riv_border_width="1px"
                 app:riv_border_color="@color/white"/>
 
             <TextView
@@ -41,10 +40,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/profile_image"
-                android:layout_alignLeft="@id/profile_image"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/margin_large"
                 android:textSize="15sp"
-                android:paddingLeft="5dp"
+                android:layout_centerHorizontal="true"
                 android:textColor="@color/white"
                 android:text="Shell"/>
         </RelativeLayout>
@@ -54,11 +52,13 @@
         android:id="@+id/tv_nodes"
         android:text="节点"
         android:textSize="@dimen/text_large"
-        android:gravity="center"
-        android:elevation="4dp"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:gravity="left"
+        android:layout_marginTop="@dimen/margin_normal"
+        android:background="@drawable/bg_pressed_white_grey"
         android:textColor="@color/black"
-        android:padding="@dimen/padding_normal"
+        android:drawableLeft="@mipmap/ic_node"
+        android:drawablePadding="@dimen/margin_large"
+        android:padding="@dimen/margin_normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>

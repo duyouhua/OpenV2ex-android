@@ -37,8 +37,7 @@ public class MyProfitFragment extends BaseFragment {
     private MyTopicsAdapter mAdapter;
 
     private RoundedImageView iv_avatar;
-    private TextView tv_username, tv_num1, tv_num2, tv_num3
-            , tv_twitter, tv_home, tv_mylocation,tv_tagline;
+    private TextView tv_username, tv_num1, tv_num2, tv_num3, tv_twitter, tv_home, tv_mylocation, tv_tagline;
     private String userName;
 
 
@@ -122,17 +121,17 @@ public class MyProfitFragment extends BaseFragment {
         if (profit.getAvatar_large() != null) {
             Picasso.with(getActivity()).load("https:" + profit.getAvatar_normal()).into(iv_avatar);
         }
-        if (profit.getTwitter().length()>0) {
+        if (profit.getTwitter().length() > 0) {
             tv_twitter.setText(profit.getTwitter());
         } else tv_twitter.setText("没有设置该选项");
-        if (profit.getWebsite().length()>0) {
+        if (profit.getWebsite().length() > 0) {
             tv_home.setText(profit.getWebsite());
         } else tv_home.setText("没有设置该选项");
-        if (profit.getLocation().length()>0) {
+        if (profit.getLocation().length() > 0) {
             tv_mylocation.setText(profit.getLocation());
         } else tv_mylocation.setText("没有设置该选项");
 
-        if (profit.getTagline().length()>0){
+        if (profit.getTagline().length() > 0) {
             tv_tagline.setText(profit.getTagline());
         }
     }

@@ -24,7 +24,6 @@
             <com.makeramen.roundedimageview.RoundedImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/iv_avatar"
-                android:src="@mipmap/photo"
                 android:layout_marginRight="@dimen/margin_normal"
                 android:layout_width="45dp"
                 android:layout_height="45dp"

@@ -15,7 +15,6 @@ import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.NodeListActivity;
@@ -60,7 +59,7 @@ public class DrawerFragment extends BaseFragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         tv_nodes.setOnClickListener(this);
         iv_profit.setOnClickListener(this);
-        Picasso.with(getActivity()).load("https://ss2.baidu.com/6ONYsjip0QIZ8tyhnq/it/u=504471062,2759042061&fm=58").into(iv_profit);
+        Picasso.with(getActivity()).load("https://cdn.v2ex.co/avatar/0ae7/a919/119132_large.png?m=1432709843").into(iv_profit);
     }
 
     public ActionBarDrawerToggle getActionBarDrawerToggle() {
