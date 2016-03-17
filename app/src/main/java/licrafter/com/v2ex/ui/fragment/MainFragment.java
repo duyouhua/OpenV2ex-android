@@ -14,7 +14,7 @@ import licrafter.com.v2ex.MainActivity;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.ui.adapter.MainPagerAdapter;
 import licrafter.com.v2ex.model.Tab;
-import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.ui.widget.PagerSlidingTabStrip;
 
 /**
@@ -40,7 +40,7 @@ public class MainFragment extends BaseFragment{
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         nodes = Constant.getTables();
-        mVpContent.setOffscreenPageLimit(10);
+        mVpContent.setOffscreenPageLimit(1);
         mVpContent.setAdapter(new MainPagerAdapter(getActivity().getSupportFragmentManager(), nodes));
         mTabStrip.setViewPager(mVpContent);
         mTabStrip.setTextColor(getResources().getColor(R.color.grey400));

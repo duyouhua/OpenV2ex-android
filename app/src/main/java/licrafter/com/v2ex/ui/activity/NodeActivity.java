@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.ui.fragment.TabFragment;
-import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.util.Constant;
 
 /**
  * Created by shell on 15-11-13.

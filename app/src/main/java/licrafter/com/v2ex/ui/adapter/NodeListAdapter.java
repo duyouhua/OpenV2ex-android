@@ -15,7 +15,7 @@ import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.ui.activity.NodeActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
-import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 
 /**

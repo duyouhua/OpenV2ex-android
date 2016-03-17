@@ -10,4 +10,6 @@
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_normal">8dp</dimen>
     <dimen name="padding_small">5dp</dimen>
+    <dimen name="appbar_elevation">4dp</dimen>
+
 </resources>

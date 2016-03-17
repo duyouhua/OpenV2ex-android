@@ -10,7 +10,7 @@ import java.util.List;
 
 import licrafter.com.v2ex.ui.fragment.TabFragment;
 import licrafter.com.v2ex.model.Tab;
-import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.util.Constant;
 
 /**
  * Created by lijinxiang on 11/5/15.

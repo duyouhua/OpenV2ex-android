@@ -2,9 +2,7 @@ package licrafter.com.v2ex.ui.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +19,7 @@ import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
-import licrafter.com.v2ex.ui.util.Constant;
+import licrafter.com.v2ex.util.Constant;
 
 /**
  * Created by shell on 15-11-15.

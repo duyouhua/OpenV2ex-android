@@ -8,15 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import licrafter.com.v2ex.db.DatabaseHelper;
-import licrafter.com.v2ex.ui.util.Constant;
-import licrafter.com.v2ex.ui.util.SharedPrefsUtil;
+
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
 public class BaseFragment extends Fragment {
 
-    protected SharedPrefsUtil mSharedPrefUtil;
     protected DatabaseHelper mDataBaseHelper;
     protected Context mContext;
 
@@ -42,6 +40,5 @@ public class BaseFragment extends Fragment {
         super.onAttach(context);
         mContext = getActivity();
         mDataBaseHelper = DatabaseHelper.getHelper(getActivity());
-        mSharedPrefUtil = SharedPrefsUtil.getInstance(mContext, Constant.SharedPreference.SHARED_FILE);
     }
 }

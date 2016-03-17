@@ -1,39 +1,57 @@
-package licrafter.com.v2ex;
+package licrafter.com.v2ex;/**
+ * Created by Administrator on 2016/3/17.
+ */
 
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.DrawerLayout;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import licrafter.com.v2ex.ui.activity.BaseActivity;
-import licrafter.com.v2ex.ui.fragment.DrawerFragment;
-import licrafter.com.v2ex.ui.fragment.MainFragment;
-import licrafter.com.v2ex.ui.util.CustomUtil;
+import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
+import licrafter.com.v2ex.ui.fragment.CategoryFragment;
+import licrafter.com.v2ex.util.FragmentUtil;
+
+/**
+ * author: lijinxiang
+ * date: 2016/3/17
+ **/
+public class MainActivity extends BaseDrawerLayoutActivity {
 
 
-public class MainActivity extends BaseActivity {
-
-    private DrawerFragment mDrawerFragment;
-    @Bind(R.id.toolbar) Toolbar mToolbar;
-    @Bind(R.id.contain_drawer) DrawerLayout mDrawerLayout;
+    private Handler handler;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-        setSupportActionBar(mToolbar);
-        mDrawerFragment = (DrawerFragment)getSupportFragmentManager().findFragmentById(R.id.fragment_drawer);
-        mDrawerFragment.setup(R.id.fragment_drawer,mDrawerLayout,mToolbar);
-        CustomUtil.setStatusBarColor(this);
-        if (savedInstanceState == null){
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.container,new MainFragment().newInstance(this));
-            transaction.commit();
+    protected int getLayoutId() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void initView(Bundle savedInstanceState) {
+        switchFragment(CategoryFragment.newInstance());
+    }
+
+    @Override
+    protected void initData() {
+        handler = new Handler();
+    }
+
+    @Override
+    protected void initListener() {
+
+    }
+
+    @Override
+    protected void onMenuItemOnClick(MenuItem now) {
+        switch (now.getItemId()) {
+            case R.id.topicDrawerMenuItem:
+                switchFragment(CategoryFragment.newInstance());
+                break;
+            case R.id.nodeDrawerMenuItem:
+               // switchFragment(NodesFragment.newInstance());
+                break;
+            default:
+                break;
         }
     }
 
@@ -57,5 +75,20 @@ public class MainActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void switchFragment(final Fragment fragment) {
+        //延时200ms跳转fragment，减缓drawerlayout卡顿现象
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                boolean show = fragment instanceof CategoryFragment;
+                setAppBarShadow(!show);
+                FragmentUtil.replaceWithAnim(getSupportFragmentManager(), R.id.containerFrameLayout
+                        , fragment, false, "");
+                handler.removeCallbacks(this);
+            }
+        }, 200);
+
     }
 }
