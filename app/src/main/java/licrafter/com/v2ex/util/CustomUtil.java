@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -77,6 +78,17 @@ public class CustomUtil {
             errorContent = "未知错误";
         }
         return errorContent;
+    }
+
+    public static void initStyle(SwipeRefreshLayout swipeRefreshLayout) {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setColorSchemeResources(
+                    R.color.loading_color_1,
+                    R.color.loading_color_2,
+                    R.color.loading_color_3,
+                    R.color.loading_color_4,
+                    R.color.loading_color_5);
+        }
     }
 
     /**

@@ -1,49 +1,53 @@
 package licrafter.com.v2ex.api;
 
+
+import android.database.Observable;
+
 import java.util.List;
 
 import licrafter.com.v2ex.model.JSONProfit;
 import licrafter.com.v2ex.model.JsonTopic;
 import licrafter.com.v2ex.model.Node;
-import retrofit.Callback;
-import retrofit.http.GET;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
 public interface V2EXAPI {
-    public static String BASE_API = "https://www.v2ex.com/api";
+    String BASE_API = "https://www.v2ex.com/api";
 
     /**
      * 获取最热帖子
      *
-     * @param callback
+     * @return
      */
     @GET("/topics/hot.json")
-    void getHotTopics(Callback<List<JsonTopic>> callback);
+    Observable<List<JsonTopic>> getHotTopics();
 
     /**
      * 获取所有节点列表
      *
-     * @param callback
+     * @return
      */
     @GET("/nodes/all.json")
-    void getNodesList(Callback<List<Node>> callback);
+    Observable<List<Node>> getNodesList();
 
     /**
      * 根据用户名获得帖子列表
+     *
      * @param username
-     * @param callback
+     * @return
      */
     @GET("/topics/show.json")
-    void getTopicsByUserName(@Query("username") String username, Callback<List<JsonTopic>> callback);
+    Observable<List<JsonTopic>> getTopicsByUserName(@Query("username") String username);
 
     /**
      * 根据用户名获得个人详情
+     *
      * @param username
-     * @param callback
+     * @return
      */
     @GET("/members/show.json")
-    void getProfitByUserName(@Query("username")String username,Callback<JSONProfit> callback);
+    Observable<JSONProfit> getProfitByUserName(@Query("username") String username);
 }

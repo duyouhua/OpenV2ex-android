@@ -11,6 +11,7 @@ import licrafter.com.v2ex.model.Tab;
 public class Constant {
 
     private static List<Tab> tables;
+    public static boolean DEBUG = true;
 
     public static class EXTRA {
         public static final String TAB_TITLE = "tab_title";

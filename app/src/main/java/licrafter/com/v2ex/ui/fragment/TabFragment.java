@@ -20,7 +20,6 @@ import java.io.IOException;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.db.TopicDao;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.activity.NodeActivity;
@@ -28,15 +27,11 @@ import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
 import licrafter.com.v2ex.api.Server;
-import licrafter.com.v2ex.db.TabContentDao;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by lijinxiang on 11/5/15.
@@ -74,7 +69,6 @@ public class TabFragment extends BaseFragment
         mSwipeLayout.setProgressViewOffset(false, 0, 25);
         init();
         if (isCached && !isRequestNode()) {
-            getTopicsFormCache();
         } else {
             getTabTopics(Constant.NETWORK.FIRST_LOADING, 1);
         }
@@ -94,57 +88,9 @@ public class TabFragment extends BaseFragment
             //如果传进来node,则请求节点话题列表
             node = (Node) bundle.getSerializable(Constant.EXTRA.NODE);
         }
-        isCached = new TabContentDao(getActivity()).isTabExists(title);
     }
 
     private void getTabTopics(final String action, final int page) {
-        final Callback<Response> callback = new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                try {
-                    String body = CustomUtil.streamFormToString(response.getBody().in());
-                    mData = isRequestNode() ? JsoupUtil.parseNodeTopics(node.getName(), node.getTitle(), body) : JsoupUtil.parse(title, body);
-                    switch (action) {
-                        case Constant.NETWORK.FIRST_LOADING:
-                            mSwipeLayout.setRefreshing(false);
-                            setAdapter();
-                            break;
-                        case Constant.NETWORK.LOAD_MORE:
-                            mAdapter.addAll(mData.getTopics());
-                            mAdapter.setLoaded();
-                            break;
-                        case Constant.NETWORK.REFUSE:
-                            mAdapter.resetData(mData.getTopics());
-                            mSwipeLayout.setRefreshing(false);
-                            new TabContentDao(getActivity()).deleteTab(title);
-                            break;
-                    }
-                    cacheTab(mData);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                Toast.makeText(getActivity(), "网络出了点问题o(╯□╰)o", Toast.LENGTH_SHORT).show();
-                if (action.equals(Constant.NETWORK.LOAD_MORE)) {
-                    mAdapter.removeLastData();
-                } else if (action.equals(Constant.NETWORK.REFUSE)) {
-                    mSwipeLayout.setRefreshing(false);
-                }
-                android.util.Log.d("ljx", error.toString());
-            }
-        };
-        if (!isRequestNode()) {
-            if (!title.equals("recent")) {//请求最近tag
-                Server.v2EX(getActivity()).getTabTopics(title, callback);
-            } else {//请求普通tag
-                Server.v2EX(getActivity()).getRecentTopics(title, page, callback);
-            }
-        } else {//请求节点话题列表
-            Server.v2EX(getActivity()).getTopicsByNodeId(node.getName(), page, callback);
-        }
 
     }
 
@@ -187,7 +133,6 @@ public class TabFragment extends BaseFragment
                         startActivity(intent);
                         item.setRead(true);
                         notifyDataSetChanged();
-                        new TopicDao(getActivity()).updateRead(item.getTopicId(), true);
                     }
                 });
                 node.setOnClickListener(new View.OnClickListener() {
@@ -225,24 +170,7 @@ public class TabFragment extends BaseFragment
         }
     }
 
-    /**
-     * 从数据库读取缓存
-     */
-    private void getTopicsFormCache() {
-        mData = new TabContentDao(getActivity()).getTabContent(title);
-        setAdapter();
-    }
 
-    /**
-     * 保存到数据库
-     * 如果请求节点列表,不保存话题
-     *
-     * @param content
-     */
-    private void cacheTab(TabContent content) {
-        if (!isRequestNode())
-            new TabContentDao(getActivity()).addTabContent(content);
-    }
 
     /**
      * 是否为请求节点数据

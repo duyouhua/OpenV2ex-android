@@ -1,26 +1,37 @@
 package licrafter.com.v2ex.api;
 
-import licrafter.com.v2ex.model.request.LoginBody;
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.Field;
-import retrofit.http.FormUrlEncoded;
-import retrofit.http.POST;
+import android.database.Observable;
+
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
 
 /**
  * Created by shell on 15-11-15.
  */
 public interface LOGIN {
 
-    public static String BASE_URL = "https://www.v2ex.com";
+    String BASE_URL = "https://www.v2ex.com";
 
     /**
-     * 登陆
+     * 获取once字符串
      *
-     * @param callback
+     * @return
+     */
+    @GET("/signin")
+    Observable<String> getOnceString();
+
+    /**
+     * 登录
+     *
+     * @param u
+     * @param p
+     * @param once
+     * @param next
+     * @return
      */
     @FormUrlEncoded
     @POST("/signin")
-    void login(@Field("u") String u, @Field("p") String p, @Field("once") String once, @Field("next") String next, Callback<Response> callback);
+    Observable<Void> login(@Field("u") String u, @Field("p") String p, @Field("once") String once, @Field("next") String next);
 }

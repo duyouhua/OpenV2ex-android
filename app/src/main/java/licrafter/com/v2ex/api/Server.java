@@ -2,102 +2,118 @@ package licrafter.com.v2ex.api;
 
 import android.content.Context;
 
-import licrafter.com.v2ex.BuildConfig;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.OkClient;
-import retrofit.client.Response;
-import retrofit.client.UrlConnectionClient;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import licrafter.com.v2ex.util.Constant;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
 public class Server {
 
-    private static V2EX mV2ex;
-    private static V2EXAPI mV2exApi;
-    private static LOGIN mLogin;
+    private static Server instance;
 
-    public static V2EXAPI v2exApi(Context context) {
+    private V2EX mV2ex;
+    private V2EXAPI mV2exApi;
+    private LOGIN mLogin;
+    private Gson gson;
+    private OkHttpClient client;
+
+    public Server getInstance() {
+        if (instance == null) {
+            instance = new Server();
+        }
+        return instance;
+    }
+
+    private Server() {
+        client = new OkHttpClient();
+        client.newBuilder().readTimeout(12, TimeUnit.SECONDS);
+
+        if (Constant.DEBUG) {
+            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            client.interceptors().add(loggingInterceptor);
+        }
+
+        gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .serializeNulls()
+                .create();
+    }
+
+    public V2EXAPI v2exApi() {
         if (mV2exApi == null) {
-            RestAdapter.Builder builder = initRequest(context);
-            RestAdapter restAdapter = builder.build();
-            mV2exApi = restAdapter.create(V2EXAPI.class);
+            client.newBuilder().interceptors().add(jsonInterceptor);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(V2EXAPI.BASE_API)
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(client)
+                    .build();
+            mV2exApi = retrofit.create(V2EXAPI.class);
         }
         return mV2exApi;
     }
 
-    public static LOGIN login(Context context){
-        if (mLogin == null){
-            RestAdapter.Builder builder = initLoginRequestHeader(context);
-            RestAdapter restAdapter = builder.build();
-            mLogin = restAdapter.create(LOGIN.class);
-        }
-        return mLogin;
-    }
-
-    public static V2EX v2EX(Context context) {
+    public V2EX v2EX() {
         if (mV2ex == null) {
-            RestAdapter.Builder builder = initRequestHeader(context);
-            RestAdapter restAdapter = builder.build();
-            mV2ex = restAdapter.create(V2EX.class);
+            client.newBuilder().interceptors().add(htmlInterceptor);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(V2EX.BASE_URL)
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(client)
+                    .build();
+            mV2ex = retrofit.create(V2EX.class);
         }
         return mV2ex;
     }
 
-    private static RestAdapter.Builder initRequest(Context context) {
-        RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(V2EXAPI.BASE_API).setClient(new OkClient());
-        if (BuildConfig.DEBUG) {
-            builder.setLogLevel(RestAdapter.LogLevel.FULL);
-        } else {
-            builder.setLogLevel(RestAdapter.LogLevel.NONE);
+    public LOGIN login() {
+        if (mLogin == null) {
+            client.newBuilder().interceptors().add(htmlInterceptor);
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(LOGIN.BASE_URL)
+                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .client(client)
+                    .build();
+            mLogin = retrofit.create(LOGIN.class);
         }
-        return builder;
+        return mLogin;
     }
 
-    private static RestAdapter.Builder initRequestHeader(Context context) {
-        RequestInterceptor interceptor = null;
-        interceptor = new RequestInterceptor() {
-            @Override
-            public void intercept(RequestFacade request) {
-                request.addHeader("Referer", V2EX.BASE_URL);
-                request.addHeader("Content-Type", "application/x-www-form-urlencoded");
-            }
-        };
-        RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(V2EX.BASE_URL).setClient(new UrlConnectionClient());
-        if (BuildConfig.DEBUG) {
-            builder.setLogLevel(RestAdapter.LogLevel.FULL);
-        } else {
-            builder.setLogLevel(RestAdapter.LogLevel.NONE);
+    private Interceptor htmlInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request newRequest = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .build();
+            return chain.proceed(newRequest);
         }
-        if (interceptor != null) {
-            builder.setRequestInterceptor(interceptor);
-        }
-        return builder;
-    }
+    };
 
-    private static RestAdapter.Builder initLoginRequestHeader(Context context){
-        RequestInterceptor interceptor = null;
-        interceptor = new RequestInterceptor() {
-            @Override
-            public void intercept(RequestFacade request) {
-                request.addHeader("Origin", LOGIN.BASE_URL);
-                request.addHeader("Content-Type", "application/x-www-form-urlencoded");
-                request.addHeader("Referer","https://www.v2ex.com/signin");
-            }
-        };
-        RestAdapter.Builder builder = new RestAdapter.Builder().setEndpoint(LOGIN.BASE_URL).setClient(new OkClient());
-        if (BuildConfig.DEBUG) {
-            builder.setLogLevel(RestAdapter.LogLevel.FULL);
-        } else {
-            builder.setLogLevel(RestAdapter.LogLevel.NONE);
+    private Interceptor jsonInterceptor = new Interceptor() {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request newRequest = chain.request().newBuilder()
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+            return chain.proceed(newRequest);
         }
-        if (interceptor != null) {
-            builder.setRequestInterceptor(interceptor);
-        }
-        return builder;
-    }
+    };
 
 }

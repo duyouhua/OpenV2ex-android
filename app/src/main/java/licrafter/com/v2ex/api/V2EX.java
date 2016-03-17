@@ -1,67 +1,54 @@
 package licrafter.com.v2ex.api;
 
-import java.util.List;
+import android.database.Observable;
 
-import licrafter.com.v2ex.model.Node;
-import licrafter.com.v2ex.model.request.LoginBody;
-import retrofit.Callback;
-import retrofit.client.Response;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Path;
-import retrofit.http.Query;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
 public interface V2EX {
-    public static String BASE_URL = "https://www.v2ex.com";
+    String BASE_URL = "https://www.v2ex.com";
 
     /**
      * 获取tab主题列表
      *
      * @param tab
-     * @param callback
+     * @return
      */
     @GET("/")
-    void getTabTopics(@Query("tab") String tab, Callback<Response> callback);
+    Observable<String> getTabTopics(@Query("tab") String tab);
 
     /**
-     * 获取最近的主题列表(和tab列表差不多)
+     * 获取最近的主题列表(和tab列表差不多，但是有多页)
      *
      * @param recent
-     * @param callback
+     * @param page
+     * @return
      */
     @GET("/{recent}")
-    void getRecentTopics(@Path("recent") String recent, @Query("p") int page, Callback<Response> callback);
+    Observable<String> getRecentTopics(@Path("recent") String recent, @Query("p") int page);
 
     /**
-     * 获取帖子详细内容和评论列表
+     * 获取帖子详细内容和评论列表(评论分页)
      *
      * @param topicId
      * @param page
-     * @param callback
+     * @return
      */
     @GET("/t/{topicId}")
-    void getTopicDetails(@Path("topicId") String topicId, @Query("p") int page, Callback<Response> callback);
+    Observable<String> getTopicDetailsById(@Path("topicId") String topicId, @Query("p") int page);
 
     /**
-     * 根据节点id获取话题列表
+     * 根据借点id获取话题列表
      *
      * @param nodeId
      * @param page
-     * @param callback
+     * @return
      */
     @GET("/go/{nodeId}")
-    void getTopicsByNodeId(@Path("nodeId") String nodeId, @Query("p") int page, Callback<Response> callback);
-
-    /**
-     * 获取once字符串
-     *
-     * @param callback
-     */
-    @GET("/signin")
-    void getOnceString(Callback<Response> callback);
+    Observable<String> getTopicsByNodeId(@Path("nodeId") String nodeId, @Query("p") int page);
 
 }
