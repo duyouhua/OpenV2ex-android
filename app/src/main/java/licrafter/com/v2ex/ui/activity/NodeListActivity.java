@@ -6,13 +6,11 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.graphics.Palette;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +18,8 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.ui.adapter.NodeListAdapter;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by shell on 15-11-13.
@@ -88,24 +82,24 @@ public class NodeListActivity extends BaseActivity implements SwipeRefreshLayout
     }
 
     private void getData() {
-        //mSwipeLayout.setRefreshing(true);
-        Callback<List<Node>> callback = new Callback<List<Node>>() {
-            @Override
-            public void success(List<Node> list, Response response) {
-                //mSwipeLayout.setRefreshing(false);
-                if (list != null) {
-                    mData = list;
-                    madapter.setData(mData);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                //mSwipeLayout.setRefreshing(false);
-                Toast.makeText(NodeListActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
-            }
-        };
-        Server.v2exApi(this).getNodesList(callback);
+//        //mSwipeLayout.setRefreshing(true);
+//        Callback<List<Node>> callback = new Callback<List<Node>>() {
+//            @Override
+//            public void success(List<Node> list, Response response) {
+//                //mSwipeLayout.setRefreshing(false);
+//                if (list != null) {
+//                    mData = list;
+//                    madapter.setData(mData);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                //mSwipeLayout.setRefreshing(false);
+//                Toast.makeText(NodeListActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        V2exService.v2exApi(this).getNodesList(callback);
     }
 
     @Override

@@ -8,8 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.text.Html;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 import licrafter.com.v2ex.R;
 
@@ -39,40 +37,40 @@ public class AsyncImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         final URLDrawable urlDrawable = new URLDrawable();
-        Target target = new Target() {
-            @Override
-            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                if (bitmap != null) {
-                    int width;
-                    int height;
-                    if (bitmap.getWidth() > mMaxWidth) {
-                        width = mMaxWidth;
-                        height = mMaxWidth * bitmap.getHeight() / bitmap.getWidth();
-                    } else {
-                        width = bitmap.getWidth();
-                        height = bitmap.getHeight();
-                    }
-                    Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-                    drawable.setBounds(0, 0, width, height);
-                    urlDrawable.setBounds(0, 0, width, height);
-                    urlDrawable.mDrawable = drawable;
-                    //reset text to invalidate.
-                    container.setText(container.getText());
-                }
-            }
-
-            @Override
-            public void onBitmapFailed(Drawable errorDrawable) {
-
-            }
-
-            @Override
-            public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-            }
-
-        };
-        Picasso.with(context).load(source).into(target);
+//        Target target = new Target() {
+//            @Override
+//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+//                if (bitmap != null) {
+//                    int width;
+//                    int height;
+//                    if (bitmap.getWidth() > mMaxWidth) {
+//                        width = mMaxWidth;
+//                        height = mMaxWidth * bitmap.getHeight() / bitmap.getWidth();
+//                    } else {
+//                        width = bitmap.getWidth();
+//                        height = bitmap.getHeight();
+//                    }
+//                    Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
+//                    drawable.setBounds(0, 0, width, height);
+//                    urlDrawable.setBounds(0, 0, width, height);
+//                    urlDrawable.mDrawable = drawable;
+//                    //reset text to invalidate.
+//                    container.setText(container.getText());
+//                }
+//            }
+//
+//            @Override
+//            public void onBitmapFailed(Drawable errorDrawable) {
+//
+//            }
+//
+//            @Override
+//            public void onPrepareLoad(Drawable placeHolderDrawable) {
+//
+//            }
+//
+//        };
+//        Picasso.with(context).load(source).into(target);
         return urlDrawable;
     }
 

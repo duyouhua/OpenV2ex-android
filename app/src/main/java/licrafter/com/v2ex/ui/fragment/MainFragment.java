@@ -20,7 +20,7 @@ import licrafter.com.v2ex.ui.widget.PagerSlidingTabStrip;
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class MainFragment extends BaseFragment{
+public class MainFragment extends OldBaseFragment {
 
     @Bind(R.id.tabs)
     PagerSlidingTabStrip mTabStrip;

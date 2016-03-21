@@ -16,28 +16,18 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.model.Response.TopicResponse;
 import licrafter.com.v2ex.model.SeriableTopic;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.TopicContentAdapter;
 import licrafter.com.v2ex.util.Constant;
-import licrafter.com.v2ex.util.CustomUtil;
-import licrafter.com.v2ex.util.JsoupUtil;
 import licrafter.com.v2ex.ui.widget.RichTextView;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by shell on 15-11-12.
@@ -110,33 +100,33 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
     }
 
     private void getData(int page) {
-        mSwipeLayout.setRefreshing(true);
-        Callback<Response> callback = new Callback<Response>() {
-            @Override
-            public void success(Response response, Response response2) {
-                mSwipeLayout.setRefreshing(false);
-                try {
-                    String body = CustomUtil.streamFormToString(response.getBody().in());
-                    mData = JsoupUtil.parseTopicRes(TopicActivity.this, body);
-                    if (mData != null) {
-                        updateView(mData);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                mSwipeLayout.setRefreshing(false);
-                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
-            }
-        };
-        Server.v2EX(this).getTopicDetails(topic.getTopicId(), page, callback);
+//        mSwipeLayout.setRefreshing(true);
+//        Callback<Response> callback = new Callback<Response>() {
+//            @Override
+//            public void success(Response response, Response response2) {
+//                mSwipeLayout.setRefreshing(false);
+//                try {
+//                    String body = CustomUtil.streamFormToString(response.getBody().in());
+//                    mData = JsoupUtil.parseTopicRes(TopicActivity.this, body);
+//                    if (mData != null) {
+//                        updateView(mData);
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                mSwipeLayout.setRefreshing(false);
+//                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
+//            }
+//        };
+//        V2exService.v2EX(this).getTopicDetails(topic.getTopicId(), page, callback);
     }
 
     private void setUpHeaderView() {
-        Picasso.with(this).load(topic.getAvatar()).into(iv_avatar);
+        //Picasso.with(this).load(topic.getAvatar()).into(iv_avatar);
         tv_username.setText(topic.getUserName());
         setTopicTitle();
         tv_content.setRichText("");

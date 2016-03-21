@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 /**
  * Created by shell on 15-11-15.
  */
-public class OtherProfitFragment extends BaseFragment {
+public class OtherProfitFragment extends OldBaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

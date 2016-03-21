@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -53,7 +52,7 @@ public class MyTopicsAdapter extends AnimationRecyclerAdapter {
             TextView tv_author = vh.getView(R.id.tv_author);
             TextView tv_create_time = vh.getView(R.id.tv_create_time);
             TextView tv_replies = vh.getView(R.id.tv_replies);
-            Picasso.with(mContext).load("https:" + topic.getMember().avatar_normal).into(iv_avatar);
+            //Picasso.with(mContext).load("https:" + topic.getMember().avatar_normal).into(iv_avatar);
             tv_title.setText(topic.getTitle());
             tv_author.setText(topic.getMember().username);
             tv_node.setText(topic.getNode().title);

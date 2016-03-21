@@ -1,55 +1,40 @@
 package licrafter.com.v2ex.ui.adapter;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import licrafter.com.v2ex.ui.fragment.TabFragment;
 import licrafter.com.v2ex.model.Tab;
-import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.ui.fragment.TopicListFragment;
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
 public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
-    private List<Tab> nodes;
-    private List<Fragment> fragments;
+    private List<Tab> tabs;
 
-    public MainPagerAdapter(FragmentManager fm, List<Tab> nodes) {
+    public MainPagerAdapter(FragmentManager fm, List<Tab> tabs) {
         super(fm);
-        this.nodes = nodes;
-        fragments = new ArrayList<>();
-        initFragment();
+        this.tabs = tabs;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return fragments.get(position);
+        return TopicListFragment.getInstance(tabs.get(position).getTabValue(), null);
     }
 
     @Override
     public int getCount() {
-        return fragments.size();
+        return tabs.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return nodes.get(position).getTabName();
+        return tabs.get(position).getTabName();
     }
 
-    private void initFragment() {
-
-        for (int i = 0; i < nodes.size(); i++) {
-            Fragment fragment = new TabFragment();
-            Bundle bundle = new Bundle();
-            bundle.putString(Constant.EXTRA.TAB_TITLE, nodes.get(i).getTabValue());
-            fragment.setArguments(bundle);
-            fragments.add(fragment);
-        }
-    }
 }

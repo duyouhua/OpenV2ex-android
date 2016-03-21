@@ -13,9 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
-
-import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,17 +23,15 @@ import licrafter.com.v2ex.ui.activity.NodeActivity;
 import licrafter.com.v2ex.ui.activity.TopicActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.adapter.TabContentAdapter;
-import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.util.Constant;
-import licrafter.com.v2ex.util.CustomUtil;
-import licrafter.com.v2ex.util.JsoupUtil;
+
 
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class TabFragment extends BaseFragment
+public class TabFragment extends OldBaseFragment
         implements TabContentAdapter.OnLoadmoreListener, SwipeRefreshLayout.OnRefreshListener {
 
     @Bind(R.id.rv_content)
@@ -54,7 +49,7 @@ public class TabFragment extends BaseFragment
     @Override
     public View onCreateView(LayoutInflater inflater
             , ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_topic, container, false);
+        View view = inflater.inflate(R.layout.fragment_topic_list, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -123,7 +118,7 @@ public class TabFragment extends BaseFragment
                 author.setText(item.getUserId());
                 createTime.setText(item.getCreateTime());
                 replies.setText(item.getReplies() + "");
-                Picasso.with(getActivity()).load(item.getAvatar()).into(iv_avatar);
+                //Picasso.with(getActivity()).load(item.getAvatar()).into(iv_avatar);
                 holder.getConvertView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

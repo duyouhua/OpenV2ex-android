@@ -62,7 +62,7 @@ public abstract class TabContentAdapter extends AnimationRecyclerAdapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_LOADING:
-                View loading = mInflater.inflate(R.layout.item_loading, parent, false);
+                View loading = mInflater.inflate(R.layout.item_footer, parent, false);
                 return new LoadingViewHolder(loading);
             case TYPE_ITEM:
                 View item = mInflater.inflate(mLayoutId, parent, false);

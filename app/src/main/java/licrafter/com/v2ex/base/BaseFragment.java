@@ -14,7 +14,8 @@ import butterknife.ButterKnife;
  */
 public abstract class BaseFragment extends Fragment {
 
-
+    private boolean isVisible;
+    private boolean isPrepare;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -26,16 +27,46 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        initData();
+        attachView();
         initViews(view);
         setListeners();
+        isPrepare = true;
+        loadData();
     }
 
-    public abstract int getLayoutId();
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (getUserVisibleHint()){
+//            isVisible = true;
+//            lazyLoad();
+//        }else {
+//            isVisible = false;
+//        }
+//    }
 
-    public abstract void initViews(View view);
+//    public void lazyLoad(){
+//        if (!isVisible||!isPrepare){
+//            return;
+//        }
+//        loadData();
+//    }
 
-    public abstract void setListeners();
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        detachView();
+    }
 
-    public abstract void initData();
+    protected abstract int getLayoutId();
+
+    protected abstract void attachView();
+
+    protected abstract void initViews(View view);
+
+    protected abstract void setListeners();
+
+    protected abstract void loadData();
+
+    protected abstract void detachView();
 }

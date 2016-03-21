@@ -21,9 +21,16 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         SharedPreferenceUtils.init(getApplicationContext());
         this.initToolbar(savedInstanceState);
-        this.initData();
+        this.attachVeiw();
         this.initView(savedInstanceState);
         this.initListener();
+        this.loadData();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.detachView();
     }
 
     /**
@@ -35,11 +42,15 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     protected abstract void initToolbar(Bundle savedInstanceState);
 
+    protected abstract void attachVeiw();
+
     protected abstract void initView(Bundle savedInstanceState);
 
-    protected abstract void initData();
+    protected abstract void loadData();
 
     protected abstract void initListener();
+
+    protected abstract void detachView();
 
     public void showToast(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();

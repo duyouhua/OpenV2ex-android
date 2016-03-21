@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +49,7 @@ public class TopicContentAdapter extends AnimationRecyclerAdapter {
             TextView tv_create_time = vh.getView(R.id.tv_create_time);
             TextView tv_rank = vh.getView(R.id.tv_rank);
             RichTextView tv_content = vh.getView(R.id.tv_content);
-            Picasso.with(mContext).load(comment.avatar).into(iv_avatar);
+            //Picasso.with(mContext).load(comment.avatar).into(iv_avatar);
             tv_username.setText(comment.userName);
             tv_create_time.setText(comment.createTime);
             tv_rank.setText(comment.rank);

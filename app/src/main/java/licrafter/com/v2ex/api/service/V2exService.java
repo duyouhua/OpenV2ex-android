@@ -1,6 +1,4 @@
-package licrafter.com.v2ex.api;
-
-import android.content.Context;
+package licrafter.com.v2ex.api.service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -8,7 +6,10 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.api.LOGIN;
+import licrafter.com.v2ex.api.V2EX;
+import licrafter.com.v2ex.api.V2EXAPI;
+import licrafter.com.v2ex.util.StringConverter;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -21,32 +22,31 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class Server {
+public class V2exService {
 
-    private static Server instance;
+    private static V2exService instance;
 
     private V2EX mV2ex;
-    private V2EXAPI mV2exApi;
     private LOGIN mLogin;
     private Gson gson;
     private OkHttpClient client;
 
-    public Server getInstance() {
+    public static V2exService getInstance() {
         if (instance == null) {
-            instance = new Server();
+            instance = new V2exService();
         }
         return instance;
     }
 
-    private Server() {
-        client = new OkHttpClient();
-        client.newBuilder().readTimeout(12, TimeUnit.SECONDS);
+    private V2exService() {
 
-        if (Constant.DEBUG) {
-            HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-            client.interceptors().add(loggingInterceptor);
-        }
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        client = new OkHttpClient.Builder()
+                .readTimeout(12,TimeUnit.SECONDS)
+                .addInterceptor(loggingInterceptor)
+                .addInterceptor(htmlInterceptor)
+                .build();
 
         gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
@@ -54,26 +54,12 @@ public class Server {
                 .create();
     }
 
-    public V2EXAPI v2exApi() {
-        if (mV2exApi == null) {
-            client.newBuilder().interceptors().add(jsonInterceptor);
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(V2EXAPI.BASE_API)
-                    .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
-                    .build();
-            mV2exApi = retrofit.create(V2EXAPI.class);
-        }
-        return mV2exApi;
-    }
-
     public V2EX v2EX() {
         if (mV2ex == null) {
-            client.newBuilder().interceptors().add(htmlInterceptor);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(V2EX.BASE_URL)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(new StringConverter())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();
@@ -84,7 +70,6 @@ public class Server {
 
     public LOGIN login() {
         if (mLogin == null) {
-            client.newBuilder().interceptors().add(htmlInterceptor);
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(LOGIN.BASE_URL)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -105,15 +90,4 @@ public class Server {
             return chain.proceed(newRequest);
         }
     };
-
-    private Interceptor jsonInterceptor = new Interceptor() {
-        @Override
-        public Response intercept(Chain chain) throws IOException {
-            Request newRequest = chain.request().newBuilder()
-                    .addHeader("Content-Type", "application/json")
-                    .build();
-            return chain.proceed(newRequest);
-        }
-    };
-
 }

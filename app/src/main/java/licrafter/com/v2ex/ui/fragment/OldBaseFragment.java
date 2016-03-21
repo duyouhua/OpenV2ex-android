@@ -7,15 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import licrafter.com.v2ex.db.DatabaseHelper;
-
-
 /**
  * Created by lijinxiang on 11/5/15.
  */
-public class BaseFragment extends Fragment {
+public class OldBaseFragment extends Fragment {
 
-    protected DatabaseHelper mDataBaseHelper;
+   // protected DatabaseHelper mDataBaseHelper;
     protected Context mContext;
 
     @Override
@@ -39,6 +36,6 @@ public class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = getActivity();
-        mDataBaseHelper = DatabaseHelper.getHelper(getActivity());
+       // mDataBaseHelper = DatabaseHelper.getHelper(getActivity());
     }
 }

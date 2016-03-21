@@ -9,27 +9,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.api.Server;
 import licrafter.com.v2ex.model.JSONProfit;
-import licrafter.com.v2ex.model.JsonTopic;
-import licrafter.com.v2ex.ui.activity.ProfitActivity;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.MyTopicsAdapter;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Created by shell on 15-11-15.
  */
-public class MyProfitFragment extends BaseFragment {
+public class MyProfitFragment extends OldBaseFragment {
 
     @Bind(R.id.rv_content)
     RecyclerView mRecyclerView;
@@ -85,41 +76,41 @@ public class MyProfitFragment extends BaseFragment {
     }
 
     public void getProfitByUserName(String username) {
-        Callback<JSONProfit> callback = new Callback<JSONProfit>() {
-            @Override
-            public void success(JSONProfit jsonProfit, Response response) {
-                if (jsonProfit != null && jsonProfit.getStatus().equals("found")) {
-                    updateHeader(jsonProfit);
-                }
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                android.util.Log.d("ljx", error.toString());
-            }
-        };
-        Server.v2exApi(getActivity()).getProfitByUserName(username, callback);
+//        Callback<JSONProfit> callback = new Callback<JSONProfit>() {
+//            @Override
+//            public void success(JSONProfit jsonProfit, Response response) {
+//                if (jsonProfit != null && jsonProfit.getStatus().equals("found")) {
+//                    updateHeader(jsonProfit);
+//                }
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                android.util.Log.d("ljx", error.toString());
+//            }
+//        };
+//        V2exService.v2exApi(getActivity()).getProfitByUserName(username, callback);
     }
 
     private void getSentTopicsByName(String username) {
-        Callback<List<JsonTopic>> callback = new Callback<List<JsonTopic>>() {
-            @Override
-            public void success(List<JsonTopic> jsonTopicList, Response response) {
-                if (jsonTopicList != null)
-                    mAdapter.resetData(jsonTopicList);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                android.util.Log.d("ljx", error.toString());
-            }
-        };
-        Server.v2exApi(getActivity()).getTopicsByUserName(username, callback);
+//        Callback<List<JsonTopic>> callback = new Callback<List<JsonTopic>>() {
+//            @Override
+//            public void success(List<JsonTopic> jsonTopicList, Response response) {
+//                if (jsonTopicList != null)
+//                    mAdapter.resetData(jsonTopicList);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                android.util.Log.d("ljx", error.toString());
+//            }
+//        };
+//        V2exService.v2exApi(getActivity()).getTopicsByUserName(username, callback);
     }
 
     private void updateHeader(JSONProfit profit) {
         if (profit.getAvatar_large() != null) {
-            Picasso.with(getActivity()).load("https:" + profit.getAvatar_normal()).into(iv_avatar);
+            //Picasso.with(getActivity()).load("https:" + profit.getAvatar_normal()).into(iv_avatar);
         }
         if (profit.getTwitter().length() > 0) {
             tv_twitter.setText(profit.getTwitter());

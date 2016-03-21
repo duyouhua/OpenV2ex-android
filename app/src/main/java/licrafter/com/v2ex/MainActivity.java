@@ -1,6 +1,4 @@
-package licrafter.com.v2ex;/**
- * Created by Administrator on 2016/3/17.
- */
+package licrafter.com.v2ex;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -27,17 +25,28 @@ public class MainActivity extends BaseDrawerLayoutActivity {
     }
 
     @Override
+    protected void attachVeiw() {
+
+    }
+
+    @Override
     protected void initView(Bundle savedInstanceState) {
+        handler = new Handler();
         switchFragment(CategoryFragment.newInstance());
     }
 
     @Override
-    protected void initData() {
-        handler = new Handler();
+    protected void loadData() {
+
     }
 
     @Override
     protected void initListener() {
+
+    }
+
+    @Override
+    protected void detachView() {
 
     }
 

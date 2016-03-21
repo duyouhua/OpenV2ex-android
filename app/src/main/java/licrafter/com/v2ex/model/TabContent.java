@@ -42,8 +42,8 @@ public class TabContent {
         this.totalPages = totalPages;
     }
 
-    public List<Topic> getTopics() {
-        List<Topic> topiclist = new ArrayList<>();
+    public ArrayList<Topic> getTopics() {
+        ArrayList<Topic> topiclist = new ArrayList<>();
         for (Topic topic : topics) {
             topiclist.add(topic);
         }

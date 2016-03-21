@@ -6,7 +6,6 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 import java.util.List;
-
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
@@ -25,11 +24,16 @@ public class CategoryFragment extends BaseFragment {
     @Bind(R.id.categoryViewPager)
     ViewPager categoryViewPager;
 
-    private List<Tab> nodes;
+    private List<Tab> tabs;
 
     @Override
     public int getLayoutId() {
         return R.layout.fragment_category;
+    }
+
+    @Override
+    protected void attachView() {
+
     }
 
     public static CategoryFragment newInstance() {
@@ -39,11 +43,12 @@ public class CategoryFragment extends BaseFragment {
 
     @Override
     public void initViews(View view) {
+        tabs = Constant.getTables();
         categoryTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
         categoryTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
         categoryTabLayout.setTabTextColors(getResources().getColor(R.color.grey800), getResources().getColor(R.color.white));
         ViewCompat.setElevation(categoryTabLayout, getResources().getDimension(R.dimen.appbar_elevation));
-        categoryViewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager(),nodes));
+        categoryViewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager(), tabs));
         categoryTabLayout.setupWithViewPager(categoryViewPager);
     }
 
@@ -53,7 +58,12 @@ public class CategoryFragment extends BaseFragment {
     }
 
     @Override
-    public void initData() {
-        nodes = Constant.getTables();
+    public void loadData() {
+
+    }
+
+    @Override
+    protected void detachView() {
+
     }
 }
