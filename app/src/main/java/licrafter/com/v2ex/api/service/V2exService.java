@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.api.LOGIN;
 import licrafter.com.v2ex.api.V2EX;
 import licrafter.com.v2ex.api.V2EXAPI;
@@ -73,6 +74,7 @@ public class V2exService {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(LOGIN.BASE_URL)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                    .addConverterFactory(new StringConverter())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();
@@ -86,6 +88,8 @@ public class V2exService {
         public Response intercept(Chain chain) throws IOException {
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .removeHeader("User-Agent")
+                    .addHeader("User-Agent", BaseApplication.userAgentString)
                     .build();
             return chain.proceed(newRequest);
         }

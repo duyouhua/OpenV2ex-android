@@ -1,15 +1,13 @@
 package licrafter.com.v2ex.api;
 
 
-import android.database.Observable;
-
 import java.util.List;
-
 import licrafter.com.v2ex.model.JSONProfit;
 import licrafter.com.v2ex.model.JsonTopic;
 import licrafter.com.v2ex.model.Node;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by lijinxiang on 11/5/15.

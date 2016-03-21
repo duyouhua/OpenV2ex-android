@@ -1,11 +1,10 @@
 package licrafter.com.v2ex.api;
 
-import android.database.Observable;
-
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import rx.Observable;
 
 /**
  * Created by shell on 15-11-15.
@@ -33,5 +32,5 @@ public interface LOGIN {
      */
     @FormUrlEncoded
     @POST("/signin")
-    Observable<Void> login(@Field("u") String u, @Field("p") String p, @Field("once") String once, @Field("next") String next);
+    Observable<String> login(@Field("u") String u, @Field("p") String p, @Field("once") String once, @Field("next") String next);
 }

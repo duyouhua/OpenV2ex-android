@@ -1,10 +1,9 @@
 package licrafter.com.v2ex.api;
 
-import android.database.Observable;
-
 import retrofit2.http.GET;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import rx.Observable;
 
 /**
  * Created by lijinxiang on 11/5/15.

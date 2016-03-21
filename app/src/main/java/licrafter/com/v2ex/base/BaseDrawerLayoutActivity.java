@@ -41,7 +41,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
                 R.string.action_menu,
                 R.string.app_name
         );
-
+        getMenuHeader(navigationView.getHeaderView(0));
     }
 
     protected NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {
@@ -50,6 +50,8 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
             return menuItemChecked(item);
         }
     };
+
+    protected abstract void getMenuHeader(View header);
 
     /**
      * @param now Now you choose the item

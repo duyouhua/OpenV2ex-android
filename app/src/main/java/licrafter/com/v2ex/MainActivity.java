@@ -1,12 +1,16 @@
 package licrafter.com.v2ex;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
+import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.fragment.CategoryFragment;
 import licrafter.com.v2ex.util.FragmentUtil;
 
@@ -61,6 +65,19 @@ public class MainActivity extends BaseDrawerLayoutActivity {
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    protected void getMenuHeader(View header) {
+        if (header!=null){
+            TextView userInfoTextView = (TextView) header.findViewById(R.id.userNameTextView);
+            userInfoTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            });
         }
     }
 
