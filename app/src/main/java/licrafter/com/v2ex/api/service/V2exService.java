@@ -4,12 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
 import java.util.concurrent.TimeUnit;
 
 import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.api.LOGIN;
 import licrafter.com.v2ex.api.V2EX;
 import licrafter.com.v2ex.api.V2EXAPI;
+import licrafter.com.v2ex.util.CustomCookieJar;
+import licrafter.com.v2ex.util.PersistentCookieStore;
 import licrafter.com.v2ex.util.StringConverter;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -31,6 +35,7 @@ public class V2exService {
     private LOGIN mLogin;
     private Gson gson;
     private OkHttpClient client;
+    private PersistentCookieStore persistentCookieStore;
 
     public static V2exService getInstance() {
         if (instance == null) {
@@ -43,16 +48,22 @@ public class V2exService {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        persistentCookieStore = new PersistentCookieStore(BaseApplication.getContext());
         client = new OkHttpClient.Builder()
-                .readTimeout(12,TimeUnit.SECONDS)
-                .addInterceptor(loggingInterceptor)
+                .cookieJar(new CustomCookieJar(new CookieManager(persistentCookieStore, CookiePolicy.ACCEPT_ALL)))
+                .readTimeout(12, TimeUnit.SECONDS)
                 .addInterceptor(htmlInterceptor)
+                .addInterceptor(loggingInterceptor)
                 .build();
 
         gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .serializeNulls()
                 .create();
+    }
+
+    public OkHttpClient getClient() {
+        return client;
     }
 
     public V2EX v2EX() {
@@ -83,10 +94,13 @@ public class V2exService {
         return mLogin;
     }
 
+    //这个interceptor添加顺序要在loggingInterceptor之前，否则无效
     private Interceptor htmlInterceptor = new Interceptor() {
         @Override
         public Response intercept(Chain chain) throws IOException {
             Request newRequest = chain.request().newBuilder()
+                    .addHeader("Origin", "https://www.v2ex.com")
+                    .addHeader("Referer", "https://www.v2ex.com/signin")
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .removeHeader("User-Agent")
                     .addHeader("User-Agent", BaseApplication.userAgentString)

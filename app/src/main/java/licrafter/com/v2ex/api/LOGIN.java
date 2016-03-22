@@ -11,7 +11,7 @@ import rx.Observable;
  */
 public interface LOGIN {
 
-    String BASE_URL = "https://www.v2ex.com";
+    String BASE_URL = "http://www.v2ex.com";
 
     /**
      * 获取once字符串
@@ -27,10 +27,9 @@ public interface LOGIN {
      * @param u
      * @param p
      * @param once
-     * @param next
      * @return
      */
     @FormUrlEncoded
     @POST("/signin")
-    Observable<String> login(@Field("u") String u, @Field("p") String p, @Field("once") String once, @Field("next") String next);
+    Observable<String> login(@Field("once") int once, @Field("u") String u, @Field("p") String p, @Field("next") String next);
 }

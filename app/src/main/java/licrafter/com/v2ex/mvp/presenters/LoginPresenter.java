@@ -31,7 +31,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String once) {
-                        return V2exService.getInstance().login().login(username, password, once, "");
+                        return V2exService.getInstance().login().login(Integer.valueOf(once), username, password, "/");
                     }
                 })
                 .subscribeOn(Schedulers.io())
