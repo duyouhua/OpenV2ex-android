@@ -79,7 +79,7 @@ public class SharedPreferenceUtils {
         return getSP().getStringSet(key, defValue);
     }
 
-    public static void contains(String key) {
-        getSP().contains(key);
+    public static boolean contains(String key) {
+        return getSP().contains(key);
     }
 }

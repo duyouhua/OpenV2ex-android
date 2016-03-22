@@ -1,8 +1,10 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.util.network;
 
+
+import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
- * Created by Jack on 2015/8/28.
+ * Created by shell on 2016/3/22.
  */
 public class TokenCache {
 

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import licrafter.com.v2ex.util.AsyncImageGetter;
+import licrafter.com.v2ex.util.network.AsyncImageGetter;
 
 /**
  * Created by shell on 15-11-12.

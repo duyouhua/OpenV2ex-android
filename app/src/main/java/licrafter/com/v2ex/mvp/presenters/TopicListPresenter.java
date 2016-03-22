@@ -3,12 +3,11 @@ package licrafter.com.v2ex.mvp.presenters;/**
  */
 
 import java.util.ArrayList;
-import java.util.List;
 
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.ui.fragment.TopicListFragment;
-import licrafter.com.v2ex.util.ApiErrorUtil;
+import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;

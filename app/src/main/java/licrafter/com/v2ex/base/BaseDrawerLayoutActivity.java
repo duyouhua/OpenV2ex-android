@@ -1,5 +1,6 @@
 package licrafter.com.v2ex.base;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,9 +10,16 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.ui.activity.LoginActivity;
+import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
  * Created by Administrator on 2016/1/31.
@@ -25,6 +33,8 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     @Bind(R.id.navigationView)
     NavigationView navigationView;
     private ActionBarDrawerToggle actionBarDrawerToggle;
+
+    private View headerView;
 
     protected MenuItem old = null;
 
@@ -41,7 +51,24 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
                 R.string.action_menu,
                 R.string.app_name
         );
-        getMenuHeader(navigationView.getHeaderView(0));
+        headerView = navigationView.getHeaderView(0);
+        TextView userInfoTextView = (TextView) headerView.findViewById(R.id.userNameTextView);
+        userInfoTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(BaseDrawerLayoutActivity.this, LoginActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (SharedPreferenceUtils.contains("user_name") && SharedPreferenceUtils.contains("user_avatar")) {
+            Glide.with(this).load(SharedPreferenceUtils.getString("user_avatar", ""))
+                    .centerCrop().into((ImageView) headerView.findViewById(R.id.userAvatarImageView));
+            ((TextView) headerView.findViewById(R.id.userNameTextView)).setText(SharedPreferenceUtils.getString("user_name", "请登录"));
+        }
     }
 
     protected NavigationView.OnNavigationItemSelectedListener itemSelectedListener = new NavigationView.OnNavigationItemSelectedListener() {

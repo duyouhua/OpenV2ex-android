@@ -2,9 +2,10 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/21.
  */
 
-import licrafter.com.v2ex.api.service.V2exService;
+import licrafter.com.v2ex.api.service.LoginService;
+import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
-import licrafter.com.v2ex.util.ApiErrorUtil;
+import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Observable;
@@ -21,7 +22,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
 
 
     public void login(final String username, final String password) {
-        compositeSubscription.add(V2exService.getInstance().login().getOnceString()
+        compositeSubscription.add(LoginService.getInstance().login().getOnceString()
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String s) {
@@ -31,12 +32,18 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String once) {
-                        return V2exService.getInstance().login().login(Integer.valueOf(once), username, password, "/");
+                        return LoginService.getInstance().login().login(Integer.valueOf(once), username, password, "/");
+                    }
+                })
+                .map(new Func1<String, LoginResult>() {
+                    @Override
+                    public LoginResult call(String response) {
+                        return JsoupUtil.parseLoginResult(response);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Subscriber<LoginResult>() {
                     @Override
                     public void onCompleted() {
 
@@ -51,8 +58,10 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                     }
 
                     @Override
-                    public void onNext(String s) {
-                        android.util.Log.d("ljx", CustomUtil.getErrorMsg(s));
+                    public void onNext(LoginResult result) {
+                        if (getView()!=null){
+                            ((LoginActivity)getView()).onLoginSuccess(result);
+                        }
                     }
                 }));
     }

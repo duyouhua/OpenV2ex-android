@@ -71,13 +71,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
     @Override
     protected void getMenuHeader(View header) {
         if (header!=null){
-            TextView userInfoTextView = (TextView) header.findViewById(R.id.userNameTextView);
-            userInfoTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                }
-            });
+
         }
     }
 

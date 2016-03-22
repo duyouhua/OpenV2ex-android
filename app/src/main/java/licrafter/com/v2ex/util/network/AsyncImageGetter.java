@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.util.network;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.util.ScreenUtil;
 
 /**
  * Created by shell on 15-11-12.

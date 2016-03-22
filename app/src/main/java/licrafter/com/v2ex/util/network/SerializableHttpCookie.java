@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.util.network;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

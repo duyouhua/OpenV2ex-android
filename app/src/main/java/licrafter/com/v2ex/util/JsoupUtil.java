@@ -10,6 +10,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
+import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.model.Response.TopicResponse;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
@@ -252,5 +253,16 @@ public class JsoupUtil {
             android.util.Log.d("ljx",once);
         }
         return once;
+    }
+
+    public static LoginResult parseLoginResult(String response) {
+        LoginResult loginResult=null;
+        Element body = Jsoup.parse(response).body();
+        Element td = body.select("div#Rightbar").select("div.box").get(0).getElementsByTag("td").get(0);
+        String userId = td.getElementsByTag("a").get(0).attr("href").replace("/member/","");
+        String src = "http:"+td.getElementsByTag("img").get(0).attr("src");
+        android.util.Log.d("ljx","userid = "+userId+" src = "+src);
+        loginResult = new LoginResult(userId,src);
+        return loginResult;
     }
 }

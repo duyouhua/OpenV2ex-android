@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.util.network;
 
 import java.io.IOException;
 import java.net.CookieHandler;
@@ -18,7 +18,7 @@ import static okhttp3.internal.Util.delimiterOffset;
 import static okhttp3.internal.Util.trimSubstring;
 
 /**
- * Created by Jack on 2016/1/14.
+ * Created by shell on 2016/3/22.
  */
 public class CustomCookieJar implements CookieJar {
     private final CookieHandler cookieHandler;

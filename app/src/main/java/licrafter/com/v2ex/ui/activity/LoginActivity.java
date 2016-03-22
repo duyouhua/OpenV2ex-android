@@ -13,11 +13,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
+import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.mvp.presenters.LoginPresenter;
 import licrafter.com.v2ex.mvp.views.LoginView;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.ui.widget.CustomProgressbarDialog;
+import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
  * Created by shell on 15-11-15.
@@ -87,55 +89,9 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
         }
     }
 
-    private void requestOnce(final String name, final String pwd) {
-//        dialog.show(getSupportFragmentManager(), "login");
-//        Callback<Response> callback = new Callback<Response>() {
-//            @Override
-//            public void success(Response response, Response response2) {
-//                try {
-//                    String body = CustomUtil.streamFormToString(response.getBody().in());
-//                    String once = JsoupUtil.parseOnce(body);
-//                    //登陆
-//                    login(name, pwd, once);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                android.util.Log.d("ljx", error.toString());
-//                Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
-//                dialog.dismiss();
-//            }
-//        };
-//        V2exService.v2EX(this).getOnceString(callback);
-    }
-
-    private void login(String username, String pwd, String once) {
-//        Callback<Response> callback = new Callback<Response>() {
-//            @Override
-//            public void success(Response response, Response response2) {
-//                try {
-//                    String body = CustomUtil.streamFormToString(response.getBody().in());
-//                    android.util.Log.d("ljx", CustomUtil.getErrorMsg(body));
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                android.util.Log.d("ljx", "error" + error.toString());
-//                Toast.makeText(LoginActivity.this, "登陆失败", Toast.LENGTH_SHORT).show();
-//            }
-//        };
-//        LoginBody body = new LoginBody();
-//        body.setNext("/");
-//        body.setU(username);
-//        body.setP(pwd);
-//        body.setOnce(once);
-//        V2exService.login(this).login(username, pwd, once, "/", callback);
+    public void onLoginSuccess(LoginResult result){
+        SharedPreferenceUtils.save("user_name",result.getUserId());
+        SharedPreferenceUtils.save("user_avatar",result.getUserAvatar());
     }
 
     private boolean isFormClean() {

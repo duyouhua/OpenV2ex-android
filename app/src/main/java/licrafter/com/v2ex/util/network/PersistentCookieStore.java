@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;
+package licrafter.com.v2ex.util.network;
 
 
 import android.content.Context;
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 
 /**
- * Created by Jack on 2015/7/8.
+ * Created by shell on 2016/3/22.
  */
 public class PersistentCookieStore implements CookieStore {
 

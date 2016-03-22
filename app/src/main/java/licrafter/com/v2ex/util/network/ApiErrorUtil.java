@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.util;/**
+package licrafter.com.v2ex.util.network;/**
  * Created by Administrator on 2016/3/18.
  */
 
