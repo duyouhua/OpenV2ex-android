@@ -11,7 +11,7 @@ import java.net.CookiePolicy;
 import java.util.concurrent.TimeUnit;
 
 import licrafter.com.v2ex.BaseApplication;
-import licrafter.com.v2ex.api.LOGIN;
+import licrafter.com.v2ex.api.AUTH;
 import licrafter.com.v2ex.util.network.CustomCookieJar;
 import licrafter.com.v2ex.util.network.PersistentCookieStore;
 import licrafter.com.v2ex.util.network.StringConverter;
@@ -28,23 +28,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * author: lijinxiang
  * date: 2016/3/22
  **/
-public class LoginService {
+public class AuthService {
 
-    private static LoginService instance;
+    private static AuthService instance;
     private Gson gson;
     private OkHttpClient client;
-    private LOGIN mLogin;
+    private AUTH auth;
     private PersistentCookieStore persistentCookieStore;
 
-    public static LoginService getInstance(){
+    public static AuthService getInstance(){
         if (instance==null){
-            instance = new LoginService();
+            instance = new AuthService();
         }
 
         return instance;
     }
 
-    public LoginService(){
+    public AuthService(){
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         persistentCookieStore = new PersistentCookieStore(BaseApplication.getContext());
@@ -61,18 +61,18 @@ public class LoginService {
                 .create();
     }
 
-    public LOGIN login() {
-        if (mLogin == null) {
+    public AUTH auth() {
+        if (auth == null) {
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(LOGIN.BASE_URL)
+                    .baseUrl(AUTH.BASE_URL)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(new StringConverter())
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(client)
                     .build();
-            mLogin = retrofit.create(LOGIN.class);
+            auth = retrofit.create(AUTH.class);
         }
-        return mLogin;
+        return auth;
     }
 
     //这个interceptor添加顺序要在loggingInterceptor之前，否则无效

@@ -2,7 +2,7 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/23.
  */
 
-import licrafter.com.v2ex.api.service.LoginService;
+import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Observable;
@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
 public class TopicEditPresenter extends BasePresenter<TopicEditActivity> {
 
     public void postTopic(final String title, final String content, final String nodeId) {
-        compositeSubscription.add(LoginService.getInstance().login()
+        compositeSubscription.add(AuthService.getInstance().auth()
                 .getOnceString()
                 .map(new Func1<String, String>() {
                     @Override
@@ -28,7 +28,7 @@ public class TopicEditPresenter extends BasePresenter<TopicEditActivity> {
                 }).flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String once) {
-                        return LoginService.getInstance().login()
+                        return AuthService.getInstance().auth()
                                 .newTopic(title, content, nodeId, once);
                     }
                 })

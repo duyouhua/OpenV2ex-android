@@ -2,7 +2,7 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/21.
  */
 
-import licrafter.com.v2ex.api.service.LoginService;
+import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
@@ -21,7 +21,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
 
 
     public void login(final String username, final String password) {
-        compositeSubscription.add(LoginService.getInstance().login().getOnceString()
+        compositeSubscription.add(AuthService.getInstance().auth().getOnceString()
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String s) {
@@ -31,7 +31,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                 .flatMap(new Func1<String, Observable<String>>() {
                     @Override
                     public Observable<String> call(String once) {
-                        return LoginService.getInstance().login().login(Integer.valueOf(once), username, password, "/");
+                        return AuthService.getInstance().auth().login(Integer.valueOf(once), username, password, "/");
                     }
                 })
                 .map(new Func1<String, LoginResult>() {

@@ -9,7 +9,7 @@ import rx.Observable;
 /**
  * Created by shell on 15-11-15.
  */
-public interface LOGIN {
+public interface AUTH {
 
     String BASE_URL = "http://www.v2ex.com";
 

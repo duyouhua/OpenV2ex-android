@@ -1,6 +1,5 @@
 package licrafter.com.v2ex.model;
 
-import java.io.Serializable;
 
 /**
  * Created by lijinxiang on 11/5/15.
