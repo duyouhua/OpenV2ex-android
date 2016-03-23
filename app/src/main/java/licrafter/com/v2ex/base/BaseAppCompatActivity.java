@@ -5,12 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
+import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
  * Created by Administrator on 2016/1/31.
  */
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
+
+    private ProgressbarDialog progressbarDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         SharedPreferenceUtils.init(getApplicationContext());
+        progressbarDialog = new ProgressbarDialog();
         this.initToolbar(savedInstanceState);
         this.attachVeiw();
         this.initView(savedInstanceState);
@@ -31,6 +35,16 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         this.detachView();
+    }
+
+    protected void showDialog() {
+        progressbarDialog.show(getSupportFragmentManager(), "");
+    }
+
+    protected void hideDialog() {
+        if (!progressbarDialog.isHidden()) {
+            progressbarDialog.dismiss();
+        }
     }
 
     /**

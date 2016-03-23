@@ -1,5 +1,6 @@
 package licrafter.com.v2ex.base;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,16 @@ public abstract class BaseFragment extends Fragment {
 
     private boolean isVisible;
     private boolean isPrepare;
+    private BaseToolbarActivity activity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context != null) {
+            activity = (BaseToolbarActivity) context;
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +62,10 @@ public abstract class BaseFragment extends Fragment {
 //        }
 //        loadData();
 //    }
+
+    public BaseToolbarActivity getBaseActivity() {
+        return activity;
+    }
 
     @Override
     public void onDestroyView() {

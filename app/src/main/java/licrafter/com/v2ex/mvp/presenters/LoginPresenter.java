@@ -6,7 +6,6 @@ import licrafter.com.v2ex.api.service.LoginService;
 import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
-import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Observable;
 import rx.Subscriber;
@@ -38,7 +37,14 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                 .map(new Func1<String, LoginResult>() {
                     @Override
                     public LoginResult call(String response) {
-                        return JsoupUtil.parseLoginResult(response);
+                        String errorMsg = ApiErrorUtil.getErrorMsg(response);
+                        if (errorMsg == null) {
+                            return JsoupUtil.parseLoginResult(response);
+                        } else {
+                            LoginResult result = new LoginResult();
+                            result.setMessage(errorMsg);
+                            return result;
+                        }
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -59,8 +65,8 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
 
                     @Override
                     public void onNext(LoginResult result) {
-                        if (getView()!=null){
-                            ((LoginActivity)getView()).onLoginSuccess(result);
+                        if (getView() != null) {
+                            ((LoginActivity) getView()).onLoginSuccess(result);
                         }
                     }
                 }));

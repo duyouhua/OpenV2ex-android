@@ -32,7 +32,7 @@ import licrafter.com.v2ex.ui.widget.RichTextView;
 /**
  * Created by shell on 15-11-12.
  */
-public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class TopicDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
 
     @Bind(R.id.swipe_layout)
@@ -107,7 +107,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
 //                mSwipeLayout.setRefreshing(false);
 //                try {
 //                    String body = CustomUtil.streamFormToString(response.getBody().in());
-//                    mData = JsoupUtil.parseTopicRes(TopicActivity.this, body);
+//                    mData = JsoupUtil.parseTopicRes(TopicDetailActivity.this, body);
 //                    if (mData != null) {
 //                        updateView(mData);
 //                    }
@@ -119,7 +119,7 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
 //            @Override
 //            public void failure(RetrofitError error) {
 //                mSwipeLayout.setRefreshing(false);
-//                Toast.makeText(TopicActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(TopicDetailActivity.this, "网络错误o(╯□╰)o", Toast.LENGTH_SHORT).show();
 //            }
 //        };
 //        V2exService.v2EX(this).getTopicDetails(topic.getTopicId(), page, callback);
@@ -147,12 +147,12 @@ public class TopicActivity extends BaseActivity implements SwipeRefreshLayout.On
         ClickableSpan span = new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                Intent intent = new Intent(TopicActivity.this, NodeActivity.class);
+               // Intent intent = new Intent(TopicDetailActivity.this, TopicDetailActivity.class);
                 Node node = new Node();
                 node.setName(topic.getNodeId());
                 node.setTitle(topic.getNodeName());
-                intent.putExtra(Constant.EXTRA.NODE, node);
-                startActivity(intent);
+//                intent.putExtra(Constant.EXTRA.NODE, node);
+//                startActivity(intent);
             }
         };
         builder.setSpan(span, title.indexOf(">"), title.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

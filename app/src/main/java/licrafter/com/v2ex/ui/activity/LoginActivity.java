@@ -6,19 +6,19 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
+import licrafter.com.v2ex.event.UserEvent;
 import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.mvp.presenters.LoginPresenter;
 import licrafter.com.v2ex.mvp.views.LoginView;
-import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.util.CustomUtil;
-import licrafter.com.v2ex.ui.widget.CustomProgressbarDialog;
+import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
+import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
@@ -35,7 +35,7 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private CustomProgressbarDialog dialog;
+    private ProgressbarDialog dialog;
     private LoginPresenter mPresenter;
 
     @Override
@@ -51,8 +51,8 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        input_name.setText("lijinxiang");
-        input_pwd.setText("149162536max");
+        input_name.setText("ljx");
+        input_pwd.setText("111111");
         dialog = CustomUtil.getCustomProgressDialog("登陆中...");
         toolbar.setTitle("登陆");
         setSupportActionBar(toolbar);
@@ -72,7 +72,7 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
 
     @Override
     protected void detachView() {
-
+        mPresenter.detachView();
     }
 
 
@@ -81,6 +81,7 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.btn_submit:
                 if (!isFormClean()) {
+                    showDialog();
                     mPresenter.login(input_name.getText().toString(), input_pwd.getText().toString());
                 } else {
                     Toast.makeText(this, "请输入用户名和密码", Toast.LENGTH_SHORT).show();
@@ -89,9 +90,19 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
         }
     }
 
-    public void onLoginSuccess(LoginResult result){
-        SharedPreferenceUtils.save("user_name",result.getUserId());
-        SharedPreferenceUtils.save("user_avatar",result.getUserAvatar());
+    public void onLoginSuccess(LoginResult result) {
+        hideDialog();
+        if (result.getMessage() == null) {
+            BaseApplication.setLogin(true);
+            SharedPreferenceUtils.save("user_name", result.getUserId());
+            SharedPreferenceUtils.save("user_avatar", result.getUserAvatar());
+            RxBus.getDefault().post(new UserEvent(result.getUserId(), result.getUserAvatar()));
+            Toast.makeText(this, "欢迎  " + result.getUserId() + "  登录客户端", Toast.LENGTH_LONG).show();
+            finish();
+        } else {
+            BaseApplication.setLogin(false);
+            Toast.makeText(this, result.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private boolean isFormClean() {
@@ -103,6 +114,7 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
 
     @Override
     public void onFailure(Throwable e) {
-
+        BaseApplication.setLogin(false);
+        hideDialog();
     }
 }

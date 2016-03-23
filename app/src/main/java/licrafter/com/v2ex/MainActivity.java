@@ -7,11 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
-import licrafter.com.v2ex.ui.activity.LoginActivity;
+import licrafter.com.v2ex.ui.activity.SettingActivity;
+import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.ui.fragment.CategoryFragment;
+import licrafter.com.v2ex.ui.fragment.NodeListFragment;
 import licrafter.com.v2ex.util.FragmentUtil;
 
 /**
@@ -59,10 +60,14 @@ public class MainActivity extends BaseDrawerLayoutActivity {
         switch (now.getItemId()) {
             case R.id.topicDrawerMenuItem:
                 switchFragment(CategoryFragment.newInstance());
+                actionBarHelper.setTitle(getString(R.string.app_name));
                 break;
             case R.id.nodeDrawerMenuItem:
-               // switchFragment(NodesFragment.newInstance());
+                switchFragment(NodeListFragment.newInstance());
+                actionBarHelper.setTitle(getString(R.string.node_list));
                 break;
+            case R.id.settingDrawerMenuItem:
+                startActivity(new Intent(this, SettingActivity.class));
             default:
                 break;
         }
@@ -70,7 +75,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected void getMenuHeader(View header) {
-        if (header!=null){
+        if (header != null) {
 
         }
     }
@@ -91,6 +96,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startActivity(new Intent(this, TopicEditActivity.class));
             return true;
         }
 

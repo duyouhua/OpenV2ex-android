@@ -1,13 +1,11 @@
 package licrafter.com.v2ex.base;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
@@ -36,6 +34,7 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
         this.setSupportActionBar(toolbar);
         this.actionBarHelper = new ActionBarHelper();
         this.actionBarHelper.init();
+        this.actionBarHelper.setDrawerTitle(getString(R.string.action_menu));
 
 //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
 //            appBarLayout.setElevation(6.0f);
@@ -51,9 +50,6 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
             return super.onOptionsItemSelected(item);
     }
 
-    public void setAppBarLayoutVisible(boolean visible) {
-        this.appBarLayout.setVisibility(visible ? View.VISIBLE : View.GONE);
-    }
 
     public void setAppBarShadow(boolean isShown) {
         final int elevation = isShown

@@ -32,4 +32,17 @@ public interface LOGIN {
     @FormUrlEncoded
     @POST("/signin")
     Observable<String> login(@Field("once") int once, @Field("u") String u, @Field("p") String p, @Field("next") String next);
+
+    /**
+     * 发表新的帖子
+     *
+     * @param title
+     * @param content
+     * @param node_name
+     * @param once
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/new")
+    Observable<String> newTopic(@Field("title") String title, @Field("content") String content, @Field("node_name") String node_name, @Field("once") String once);
 }

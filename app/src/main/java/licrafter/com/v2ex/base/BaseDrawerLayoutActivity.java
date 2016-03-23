@@ -16,10 +16,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.event.UserEvent;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * Created by Administrator on 2016/1/31.
@@ -35,8 +40,10 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     private ActionBarDrawerToggle actionBarDrawerToggle;
 
     private View headerView;
-
+    private TextView userInfoTextView;
+    private ImageView userAvatarImageView;
     protected MenuItem old = null;
+    private Subscription userSubscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,22 +59,41 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
                 R.string.app_name
         );
         headerView = navigationView.getHeaderView(0);
-        TextView userInfoTextView = (TextView) headerView.findViewById(R.id.userNameTextView);
+        userInfoTextView = (TextView) headerView.findViewById(R.id.userNameTextView);
+        userAvatarImageView = (ImageView) headerView.findViewById(R.id.userAvatarImageView);
         userInfoTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(BaseDrawerLayoutActivity.this, LoginActivity.class));
             }
         });
+        if (BaseApplication.isLogin()) {
+            setUserInfo(null);
+        }
+        onEvent();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        if (SharedPreferenceUtils.contains("user_name") && SharedPreferenceUtils.contains("user_avatar")) {
-            Glide.with(this).load(SharedPreferenceUtils.getString("user_avatar", ""))
-                    .centerCrop().into((ImageView) headerView.findViewById(R.id.userAvatarImageView));
-            ((TextView) headerView.findViewById(R.id.userNameTextView)).setText(SharedPreferenceUtils.getString("user_name", "请登录"));
+    private void onEvent() {
+        userSubscription = RxBus.getDefault().toObserverable(UserEvent.class).subscribe(new Action1<UserEvent>() {
+            @Override
+            public void call(UserEvent userEvent) {
+                setUserInfo(userEvent);
+            }
+        }, new Action1<Throwable>() {
+            @Override
+            public void call(Throwable throwable) {
+
+            }
+        });
+    }
+
+    protected void setUserInfo(UserEvent userEvent) {
+        if (userEvent == null) {
+            Glide.with(BaseDrawerLayoutActivity.this).load(SharedPreferenceUtils.getString("user_avatar", "")).into(userAvatarImageView);
+            userInfoTextView.setText(SharedPreferenceUtils.getString("user_name", "请登录"));
+        } else {
+            Glide.with(BaseDrawerLayoutActivity.this).load(userEvent.getAvatar()).into(userAvatarImageView);
+            userInfoTextView.setText(userEvent.getName());
         }
     }
 
@@ -187,4 +213,11 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         actionBarDrawerToggle.syncState();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!userSubscription.isUnsubscribed()) {
+            userSubscription.unsubscribe();
+        }
+    }
 }

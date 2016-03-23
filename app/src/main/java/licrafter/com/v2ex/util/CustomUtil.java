@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Topic;
-import licrafter.com.v2ex.ui.widget.CustomProgressbarDialog;
+import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
 
 /**
  * Created by shell on 15-11-7.
@@ -54,30 +54,12 @@ public class CustomUtil {
      * @param message
      * @return
      */
-    public static CustomProgressbarDialog getCustomProgressDialog(String message) {
-        CustomProgressbarDialog dialog = new CustomProgressbarDialog();
+    public static ProgressbarDialog getCustomProgressDialog(String message) {
+        ProgressbarDialog dialog = new ProgressbarDialog();
         Bundle bundle = new Bundle();
         bundle.putString("message", message);
         dialog.setArguments(bundle);
         return dialog;
-    }
-
-    /**
-     * 登陆报错解析
-     *
-     * @param response
-     * @return
-     */
-    public static String getErrorMsg(String response) {
-        Pattern errorPattern = Pattern.compile("<div class=\"problem\">(.*)</div>");
-        Matcher errorMatcher = errorPattern.matcher(response);
-        String errorContent;
-        if (errorMatcher.find()) {
-            errorContent = errorMatcher.group(1).replaceAll("<[^>]+>", "");
-        } else {
-            errorContent = "未知错误";
-        }
-        return errorContent;
     }
 
     public static void initStyle(SwipeRefreshLayout swipeRefreshLayout) {

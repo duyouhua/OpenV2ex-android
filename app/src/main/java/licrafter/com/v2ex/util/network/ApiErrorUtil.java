@@ -6,6 +6,8 @@ import android.widget.Toast;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
@@ -29,5 +31,23 @@ public class ApiErrorUtil {
                         .getContext().getString(R.string.forbidden), Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    /**
+     * 登陆报错解析
+     *
+     * @param response
+     * @return
+     */
+    public static String getErrorMsg(String response) {
+        Pattern errorPattern = Pattern.compile("<div class=\"problem\">(.*)</div>");
+        Matcher errorMatcher = errorPattern.matcher(response);
+        String errorContent;
+        if (errorMatcher.find()) {
+            errorContent = errorMatcher.group(1).replaceAll("<[^>]+>", "");
+        } else {
+            errorContent = null;
+        }
+        return errorContent;
     }
 }

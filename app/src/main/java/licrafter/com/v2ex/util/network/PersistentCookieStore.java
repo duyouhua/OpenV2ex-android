@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -27,7 +28,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class PersistentCookieStore implements CookieStore {
 
-
+    public static final String TAG = PersistentCookieStore.class.getName();
     private static final String LOG_TAG = "PersistentCookieStore";
     private static final String COOKIE_PREFS = "CookiePrefsFile";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
@@ -67,7 +68,6 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public void add(URI uri, HttpCookie cookie) {
-
         // Save cookie into local store, or remove if expired
         if (!cookie.hasExpired()) {
             if (!cookies.containsKey(cookie.getDomain()))
@@ -136,8 +136,10 @@ public class PersistentCookieStore implements CookieStore {
     @Override
     public List<HttpCookie> getCookies() {
         ArrayList<HttpCookie> ret = new ArrayList<>();
-        for (String key : cookies.keySet())
+        for (String key : cookies.keySet()) {
             ret.addAll(cookies.get(key).values());
+            android.util.Log.d(TAG, key + " : " + cookies.keySet());
+        }
         return ret;
     }
 
