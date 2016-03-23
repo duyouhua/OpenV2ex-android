@@ -1,7 +1,7 @@
 # OpenV2ex-android
 v2ex第三方android客户端
 
-> 进过一个多星期,OpenV2ex-android终于告一段落了,但是模拟http请求登陆功能卡住一直没有成功,最后还是放弃了(导致post的功能无法进行)
+> 最近在更新这个项目，post功能终于调通了^_^
 
 功能
 1. 主页tab话题列表
