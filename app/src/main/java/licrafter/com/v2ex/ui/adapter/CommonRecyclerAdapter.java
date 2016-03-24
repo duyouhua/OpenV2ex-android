@@ -119,8 +119,13 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         }
     }
 
-    public void addData(ArrayList<T> list) {
+    public void setData(ArrayList<T> list) {
         mDatas.clear();
+        mDatas.addAll(list);
+        notifyDataSetChanged();
+    }
+
+    public void addData(ArrayList<T> list){
         mDatas.addAll(list);
         notifyDataSetChanged();
     }

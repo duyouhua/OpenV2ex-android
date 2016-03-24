@@ -59,7 +59,7 @@ public class NodeListAdapter extends AnimationRecyclerAdapter {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, TopicDetailActivity.class);
-                    intent.putExtra(Constant.EXTRA.NODE,node);
+                    //intent.putExtra(Constant.EXTRA.NODE,node);
                     mContext.startActivity(intent);
                 }
             });

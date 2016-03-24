@@ -1,9 +1,10 @@
 package licrafter.com.v2ex.api;
 
 
+import java.util.ArrayList;
 import java.util.List;
-import licrafter.com.v2ex.model.JSONProfit;
-import licrafter.com.v2ex.model.JsonTopic;
+import licrafter.com.v2ex.model.old.JSONProfit;
+import licrafter.com.v2ex.model.old.JsonTopic;
 import licrafter.com.v2ex.model.Node;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -13,14 +14,14 @@ import rx.Observable;
  * Created by lijinxiang on 11/5/15.
  */
 public interface V2EXAPI {
-    String BASE_API = "https://www.v2ex.com/api";
+    String BASE_API = "https://www.v2ex.com/api/";
 
     /**
      * 获取最热帖子
      *
      * @return
      */
-    @GET("/topics/hot.json")
+    @GET("topics/hot.json")
     Observable<List<JsonTopic>> getHotTopics();
 
     /**
@@ -28,8 +29,8 @@ public interface V2EXAPI {
      *
      * @return
      */
-    @GET("/nodes/all.json")
-    Observable<List<Node>> getNodesList();
+    @GET("nodes/all.json")
+    Observable<ArrayList<Node>> getNodesList();
 
     /**
      * 根据用户名获得帖子列表
@@ -37,7 +38,7 @@ public interface V2EXAPI {
      * @param username
      * @return
      */
-    @GET("/topics/show.json")
+    @GET("topics/show.json")
     Observable<List<JsonTopic>> getTopicsByUserName(@Query("username") String username);
 
     /**
@@ -46,6 +47,6 @@ public interface V2EXAPI {
      * @param username
      * @return
      */
-    @GET("/members/show.json")
+    @GET("members/show.json")
     Observable<JSONProfit> getProfitByUserName(@Query("username") String username);
 }

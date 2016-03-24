@@ -1,11 +1,15 @@
-package licrafter.com.v2ex.model;
+package licrafter.com.v2ex.model.realm;/**
+ * Created by Administrator on 2016/3/24.
+ */
 
+import io.realm.RealmObject;
 
 /**
- * 通过解析html得到的Topci model
- * Created by shell on 15-11-10.
- */
-public class Topic {
+ * author: lijinxiang
+ * date: 2016/3/24
+ **/
+public class RealmTopic extends RealmObject {
+
     private String topicId;                 //话题id
     private String avatar;                  //发布者头像链接
     private String userId;                  //发布者id

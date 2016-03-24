@@ -24,7 +24,7 @@ public class MainPagerAdapter extends FragmentStatePagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return TopicListFragment.getInstance(tabs.get(position).getTabValue(), null);
+        return TopicListFragment.getInstance(tabs.get(position).getTabValue());
     }
 
     @Override

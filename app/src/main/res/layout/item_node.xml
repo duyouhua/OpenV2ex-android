@@ -1,49 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
     android:layout_margin="@dimen/margin_smaller"
-    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/bg_card_ripple"
+        android:clickable="true"
         android:orientation="vertical"
         android:padding="@dimen/padding_normal">
 
         <TextView
             android:id="@+id/tv_title"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_large"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你搜到佛山广东" />
+            android:text="你搜到佛山广东"
+            android:textColor="@color/black"
+            android:textSize="@dimen/text_large" />
+
         <licrafter.com.v2ex.ui.widget.RichTextView
             android:id="@+id/tv_header"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:textColor="@color/grey500"
-            android:textSize="@dimen/text_normal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="你搜到佛山广东" />
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="你搜到佛山广东"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_normal" />
 
         <View
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp"
-            android:background="@color/grey300"
             android:layout_width="match_parent"
-            android:layout_height="1px"/>
+            android:layout_height="1px"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:background="@color/grey300" />
+
         <TextView
             android:id="@+id/tv_topic_count"
-            android:layout_marginTop="@dimen/margin_normal"
-            android:textColor="@color/grey500"
-            android:textSize="@dimen/text_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="主题数:23" />
+            android:layout_marginTop="@dimen/margin_normal"
+            android:text="主题数:23"
+            android:textColor="@color/grey500"
+            android:textSize="@dimen/text_small" />
     </LinearLayout>
 </android.support.v7.widget.CardView>

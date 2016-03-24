@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * Created by shell on 15-11-13.
  */
-public class Node implements Serializable{
+public class Node {
     private String id;
     private String name;
     private String url;

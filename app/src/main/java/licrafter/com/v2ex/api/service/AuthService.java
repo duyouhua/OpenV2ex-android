@@ -36,15 +36,15 @@ public class AuthService {
     private AUTH auth;
     private PersistentCookieStore persistentCookieStore;
 
-    public static AuthService getInstance(){
-        if (instance==null){
+    public static AuthService getInstance() {
+        if (instance == null) {
             instance = new AuthService();
         }
 
         return instance;
     }
 
-    public AuthService(){
+    public AuthService() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         persistentCookieStore = new PersistentCookieStore(BaseApplication.getContext());
@@ -59,6 +59,10 @@ public class AuthService {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .serializeNulls()
                 .create();
+    }
+
+    public boolean clearCookies() {
+        return persistentCookieStore.removeAll();
     }
 
     public AUTH auth() {

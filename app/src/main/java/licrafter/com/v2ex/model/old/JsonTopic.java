@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.model;
+package licrafter.com.v2ex.model.old;
 
 /**
  * 通过访问api以json返回的 Topic Model

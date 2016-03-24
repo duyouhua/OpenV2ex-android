@@ -6,4 +6,10 @@
 
     <include layout="@layout/include_app_bar_layout" />
 
+    <Button
+        android:id="@+id/logoutBtn"
+        android:text="退出"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

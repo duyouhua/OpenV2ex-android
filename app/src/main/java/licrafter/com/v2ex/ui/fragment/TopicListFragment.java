@@ -9,18 +9,15 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
 import licrafter.com.v2ex.listener.OnScrollBottomListener;
+import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.mvp.presenters.TopicListPresenter;
 import licrafter.com.v2ex.mvp.views.TopicListView;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
-import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.util.CustomUtil;
 
 /**
@@ -38,13 +35,13 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     private TopicListPresenter mPresenter;
     private TopicListAdapter mAdapter;
 
-    public static TopicListFragment getInstance(String tabTitle, String nodeName) {
+    private int pageIndex = 1;
+    private int totalPage;
+
+    public static TopicListFragment getInstance(String tabTitle) {
         Bundle bundle = new Bundle();
         if (tabTitle != null) {
             bundle.putString("mTabTitle", tabTitle);
-        }
-        if (nodeName != null) {
-            bundle.putString("nodeName", nodeName);
         }
         TopicListFragment fragment = new TopicListFragment();
         fragment.setArguments(bundle);
@@ -69,7 +66,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             mTabTitle = getArguments().getString("mTabTitle");
         }
         CustomUtil.initStyle(mSwipeLayout);
-        mSwipeLayout.setProgressViewOffset(false,0,30);
+        mSwipeLayout.setProgressViewOffset(false, 0, 30);
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mListView.setHasFixedSize(true);
         mListView.setAdapter(mAdapter);
@@ -81,13 +78,16 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             @Override
             public void onBottom() {
                 super.onBottom();
-
+                if (pageIndex < totalPage) {
+                    mPresenter.getTopicList(mTabTitle, pageIndex, false);
+                }
             }
         });
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mSwipeLayout.setRefreshing(false);
+                pageIndex = 1;
+                mPresenter.getTopicList(mTabTitle,pageIndex,true);
             }
         });
     }
@@ -95,7 +95,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     @Override
     protected void loadData() {
         mSwipeLayout.setRefreshing(true);
-        mPresenter.getTopicList(mTabTitle);
+        mPresenter.getTopicList(mTabTitle, pageIndex, true);
     }
 
     @Override
@@ -104,19 +104,32 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     @Override
-    public void onGetTopicSuccess(ArrayList<Topic> topics) {
-        if (mSwipeLayout.isRefreshing()){
-            mSwipeLayout.setRefreshing(false);
-        }
-        if (mTabTitle!="recent"){
-            mAdapter.hasNextPage(false);
-        }
-        mAdapter.addData(topics);
+    public void onGetTopicSuccess(TabContent content) {
+        loadMoreUIHandler(content);
+        mAdapter.setData(content.getTopics());
     }
 
     @Override
     public void onFailure(Throwable e) {
         mSwipeLayout.setRefreshing(false);
+    }
+
+    public void onLoadMoreSuccess(TabContent content) {
+        loadMoreUIHandler(content);
+        mAdapter.addData(content.getTopics());
+    }
+
+    private void loadMoreUIHandler(TabContent content) {
+        if (mSwipeLayout.isRefreshing()) {
+            mSwipeLayout.setRefreshing(false);
+        }
+        pageIndex = content.getPage() + 1;
+        totalPage = content.getTotalPages();
+        if (pageIndex >= totalPage) {
+            mAdapter.hasNextPage(false);
+        } else {
+            mAdapter.hasNextPage(true);
+        }
     }
 
     public class TopicListAdapter extends CommonRecyclerAdapter<Topic> {

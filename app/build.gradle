@@ -1,13 +1,5 @@
 apply plugin: 'com.android.application'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath "io.realm:realm-gradle-plugin:0.88.2"
-    }
-}
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 23

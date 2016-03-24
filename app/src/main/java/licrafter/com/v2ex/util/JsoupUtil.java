@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import licrafter.com.v2ex.model.LoginResult;
-import licrafter.com.v2ex.model.Response.TopicResponse;
+import licrafter.com.v2ex.model.old.TopicResponse;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 
@@ -22,7 +22,7 @@ public class JsoupUtil {
 
     public static TabContent parse(String tab, String response) {
         TabContent content = new TabContent();
-        List<Topic> topics = new ArrayList<>();
+        ArrayList<Topic> topics = new ArrayList<>();
         content.setName(tab);
         Document document = Jsoup.parse(response);
         Element body = document.body();
@@ -35,21 +35,18 @@ public class JsoupUtil {
         Elements strongs = body.getElementsByTag("strong");
         content.setPage(1);
         content.setTotalPages(1);
-        for (Element element : strongs) {
-            String str = element.toString();
-            if (str.contains("class=\"fade\"")) {
-                android.util.Log.d("ljx", "page:" + element.text());
-                String[] array = element.text().split("/");
-                content.setPage(Integer.parseInt(array[0]));
-                content.setTotalPages(Integer.parseInt(array[1]));
-            }
+        if (tab.equals("recent")){
+            Element titleElement = document.head().getElementsByTag("title").get(0);
+            String[] array = titleElement.text().replace("V2EX › 最近的主题 ","").split("/");
+            content.setPage(Integer.valueOf(array[0]));
+            content.setTotalPages(Integer.valueOf(array[1]));
         }
         return content;
     }
 
     public static TabContent parseNodeTopics(String node, String nodeName, String response) {
         TabContent content = new TabContent();
-        List<Topic> topics = new ArrayList<>();
+        ArrayList<Topic> topics = new ArrayList<>();
         content.setName(node);
         Document document = Jsoup.parse(response);
         Element body = document.body();
@@ -111,12 +108,13 @@ public class JsoupUtil {
                 Elements spanNodes = tdNode.getElementsByTag("span");
                 for (Element spanNode : spanNodes) {
                     String spanStr = spanNode.text();
-                    String[] array = spanStr.split("  •  ");
+                    String[] array = spanStr.split("•");
                     if (!isParseNode) {
                         topic.setCreateTime(array[0]);
                     } else {
-                        if (array.length >= 3)
+                        if (array.length >= 3){
                             topic.setCreateTime(array[2]);
+                        }
                         else topic.setCreateTime("");
                     }
                 }

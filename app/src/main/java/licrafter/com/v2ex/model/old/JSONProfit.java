@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.model;
+package licrafter.com.v2ex.model.old;
 
 /**
  * Created by shell on 15-11-15.

@@ -13,7 +13,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.model.JSONProfit;
+import licrafter.com.v2ex.model.old.JSONProfit;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.MyTopicsAdapter;
 

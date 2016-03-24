@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import butterknife.Bind;
 import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.event.LogoutEvent;
 import licrafter.com.v2ex.event.UserEvent;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.util.Constant;
@@ -44,6 +45,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     private ImageView userAvatarImageView;
     protected MenuItem old = null;
     private Subscription userSubscription;
+    private Subscription logoutSubscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +79,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         userSubscription = RxBus.getDefault().toObserverable(UserEvent.class).subscribe(new Action1<UserEvent>() {
             @Override
             public void call(UserEvent userEvent) {
+                android.util.Log.d("ljx", "login");
                 setUserInfo(userEvent);
             }
         }, new Action1<Throwable>() {
@@ -85,14 +88,23 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
 
             }
         });
+        logoutSubscription = RxBus.getDefault().toObserverable(LogoutEvent.class).subscribe(new Action1<LogoutEvent>() {
+            @Override
+            public void call(LogoutEvent logoutEvent) {
+                android.util.Log.d("ljx", "logout");
+                setUserInfo(null);
+            }
+        });
     }
 
     protected void setUserInfo(UserEvent userEvent) {
         if (userEvent == null) {
-            Glide.with(BaseDrawerLayoutActivity.this).load(SharedPreferenceUtils.getString("user_avatar", "")).into(userAvatarImageView);
-            userInfoTextView.setText(SharedPreferenceUtils.getString("user_name", "请登录"));
+            Glide.with(BaseDrawerLayoutActivity.this).load(SharedPreferenceUtils.getString("user_avatar", ""))
+                    .into(userAvatarImageView);
+            userInfoTextView.setText(SharedPreferenceUtils.getString("user_name", getString(R.string.please_login)));
         } else {
-            Glide.with(BaseDrawerLayoutActivity.this).load(userEvent.getAvatar()).into(userAvatarImageView);
+            Glide.with(BaseDrawerLayoutActivity.this).load(userEvent.getAvatar())
+                    .into(userAvatarImageView);
             userInfoTextView.setText(userEvent.getName());
         }
     }
@@ -218,6 +230,9 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         super.onDestroy();
         if (!userSubscription.isUnsubscribed()) {
             userSubscription.unsubscribe();
+        }
+        if (!logoutSubscription.isUnsubscribed()) {
+            logoutSubscription.unsubscribe();
         }
     }
 }

@@ -13,8 +13,8 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import java.util.List;
 
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.model.JsonTopic;
-import licrafter.com.v2ex.model.SeriableTopic;
+import licrafter.com.v2ex.model.old.JsonTopic;
+import licrafter.com.v2ex.model.old.SeriableTopic;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;

@@ -82,4 +82,8 @@ public class SharedPreferenceUtils {
     public static boolean contains(String key) {
         return getSP().contains(key);
     }
+
+    public static void clearAll() {
+        getEditor().clear().apply();
+    }
 }

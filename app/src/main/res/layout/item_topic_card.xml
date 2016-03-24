@@ -7,30 +7,27 @@
     android:layout_marginLeft="@dimen/margin_small"
     android:layout_marginRight="@dimen/margin_small"
     android:layout_marginTop="@dimen/margin_smaller"
-    android:background="@color/white"
-    android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground"
     card_view:cardCornerRadius="4dp"
     card_view:cardElevation="2dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/bg_card_ripple"
+        android:clickable="true"
         android:padding="@dimen/margin_normal">
 
-        <com.makeramen.roundedimageview.RoundedImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/iv_avatar"
-            android:layout_marginRight="@dimen/margin_normal"
             android:layout_width="45dp"
             android:layout_height="45dp"
+            android:layout_marginRight="@dimen/margin_normal"
             android:scaleType="centerCrop"
             app:riv_corner_radius="4dip"
             app:riv_oval="false" />
 
         <TextView
             android:id="@+id/tv_title"
-            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/iv_avatar"
@@ -38,50 +35,51 @@
             android:layout_toRightOf="@+id/iv_avatar"
             android:maxLines="3"
             android:text=""
+            android:textColor="@color/black"
             android:textSize="@dimen/text_normal" />
 
 
-
         <LinearLayout
-            android:layout_toLeftOf="@+id/tv_replies"
-            android:layout_toRightOf="@+id/iv_avatar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/tv_title"
             android:layout_marginTop="@dimen/margin_normal"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_toLeftOf="@+id/tv_replies"
+            android:layout_toRightOf="@+id/iv_avatar"
+            android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/tv_node"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="1dp"
-                android:paddingBottom="1dp"
-                android:paddingRight="2dp"
-                android:paddingLeft="2dp"
-                android:text="裤工作"
-                android:textColor="@color/a700"
                 android:layout_marginRight="@dimen/margin_large"
                 android:background="@color/grey200"
+                android:paddingBottom="1dp"
+                android:paddingLeft="2dp"
+                android:paddingRight="2dp"
+                android:paddingTop="1dp"
+                android:text="裤工作"
+                android:textColor="@color/a700"
                 android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/tv_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="2dp"
                 android:padding="1dp"
                 android:text="shell"
                 android:textColor="@color/black"
-                android:layout_marginRight="2dp"
                 android:textSize="@dimen/text_small" />
 
             <TextView
                 android:id="@+id/tv_create_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:padding="1dp"
-                android:text="3分钟前"
                 android:drawableLeft="@mipmap/ic_circle_grey"
                 android:drawablePadding="2dp"
+                android:padding="1dp"
+                android:text="3分钟前"
                 android:textColor="@color/grey400"
                 android:textSize="@dimen/text_small" />
 
@@ -94,9 +92,9 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:background="@drawable/bg_oval_blue"
             android:padding="3dp"
             android:text="23"
-            android:background="@drawable/bg_oval_blue"
             android:textColor="@color/white"
             android:textSize="@dimen/text_small" />
 

@@ -1,8 +1,7 @@
 package licrafter.com.v2ex.mvp.views;
 
-import java.util.ArrayList;
 
-import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.TabContent;
 
 /**
  * author: lijinxiang
@@ -10,5 +9,5 @@ import licrafter.com.v2ex.model.Topic;
  **/
 public interface TopicListView extends MvpView{
 
-     void onGetTopicSuccess(ArrayList<Topic> topics);
+     void onGetTopicSuccess(TabContent topics);
 }

@@ -1,6 +1,9 @@
-package licrafter.com.v2ex.model;
+package licrafter.com.v2ex.model.old;
 
 import java.io.Serializable;
+
+import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.old.JsonTopic;
 
 /**
  * Created by shell on 15-11-13.

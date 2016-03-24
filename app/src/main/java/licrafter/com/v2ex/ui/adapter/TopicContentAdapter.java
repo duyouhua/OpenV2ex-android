@@ -9,11 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.model.Response.TopicResponse;
+import licrafter.com.v2ex.model.old.TopicResponse;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.ui.widget.RichTextView;
