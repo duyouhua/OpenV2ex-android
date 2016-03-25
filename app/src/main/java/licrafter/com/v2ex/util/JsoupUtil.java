@@ -20,13 +20,13 @@ import licrafter.com.v2ex.model.Topic;
  */
 public class JsoupUtil {
 
-    public static TabContent parse(String tab, String response) {
+    public static TabContent parseTabContent(String tab, String response) {
         TabContent content = new TabContent();
         ArrayList<Topic> topics = new ArrayList<>();
         content.setName(tab);
         Document document = Jsoup.parse(response);
         Element body = document.body();
-        Elements elements = body.getElementsByAttributeValue("class", "cell item");
+        Elements elements = body.select("div.cell").select("div.item");
         for (Element element : elements) {
             topics.add(parseContent(element, false, null, null, tab));
         }
@@ -35,9 +35,9 @@ public class JsoupUtil {
         Elements strongs = body.getElementsByTag("strong");
         content.setPage(1);
         content.setTotalPages(1);
-        if (tab.equals("recent")){
+        if (tab.equals("recent")) {
             Element titleElement = document.head().getElementsByTag("title").get(0);
-            String[] array = titleElement.text().replace("V2EX › 最近的主题 ","").split("/");
+            String[] array = titleElement.text().replace("V2EX › 最近的主题 ", "").split("/");
             content.setPage(Integer.valueOf(array[0]));
             content.setTotalPages(Integer.valueOf(array[1]));
         }
@@ -105,18 +105,19 @@ public class JsoupUtil {
                 } else {
                     topic.setLastedReviewer("");
                 }
-                Elements spanNodes = tdNode.getElementsByTag("span");
-                for (Element spanNode : spanNodes) {
-                    String spanStr = spanNode.text();
-                    String[] array = spanStr.split("•");
-                    if (!isParseNode) {
-                        topic.setCreateTime(array[0]);
+                Element spanNode = element.select("span.small").select("span.fade").get(0);
+                String spanStr = spanNode.text();
+                String[] array = spanStr.split("•");
+                if (!isParseNode) {
+                    if (array.length >= 3) {
+                        topic.setCreateTime(array[2]);
                     } else {
-                        if (array.length >= 3){
-                            topic.setCreateTime(array[2]);
-                        }
-                        else topic.setCreateTime("");
+                        topic.setCreateTime("");
                     }
+                } else {
+                    if (array.length >= 3) {
+                        topic.setCreateTime(array[2]);
+                    } else topic.setCreateTime("");
                 }
             }
         }
@@ -241,26 +242,26 @@ public class JsoupUtil {
         return comment;
     }
 
-    public static String parseOnce(String response){
+    public static String parseOnce(String response) {
         String once = "";
         Document document = Jsoup.parse(response);
         Element body = document.body();
         Elements inputNodes = body.getElementsByAttributeValue("name", "once");
-        for (Element input : inputNodes){
+        for (Element input : inputNodes) {
             once = input.attr("value");
-            android.util.Log.d("ljx",once);
+            android.util.Log.d("ljx", once);
         }
         return once;
     }
 
     public static LoginResult parseLoginResult(String response) {
-        LoginResult loginResult=null;
+        LoginResult loginResult = null;
         Element body = Jsoup.parse(response).body();
         Element td = body.select("div#Rightbar").select("div.box").get(0).getElementsByTag("td").get(0);
-        String userId = td.getElementsByTag("a").get(0).attr("href").replace("/member/","");
-        String src = "http:"+td.getElementsByTag("img").get(0).attr("src");
-        android.util.Log.d("ljx","userid = "+userId+" src = "+src);
-        loginResult = new LoginResult(userId,src);
+        String userId = td.getElementsByTag("a").get(0).attr("href").replace("/member/", "");
+        String src = "http:" + td.getElementsByTag("img").get(0).attr("src");
+        android.util.Log.d("ljx", "userid = " + userId + " src = " + src);
+        loginResult = new LoginResult(userId, src);
         return loginResult;
     }
 }

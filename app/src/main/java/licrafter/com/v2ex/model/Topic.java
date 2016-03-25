@@ -15,7 +15,7 @@ public class Topic {
     private String lastedReviewer;          //最新回复的用户id
     private String createTime;              //发布时间
     private int replies;                    //回复次数
-    private boolean read;                   //是否已读
+    private boolean hasRead;                   //是否已读
     private String tabName;
 
     public String getTopicId() {
@@ -90,12 +90,12 @@ public class Topic {
         this.replies = replies;
     }
 
-    public boolean isRead() {
-        return read;
+    public boolean isHasRead() {
+        return hasRead;
     }
 
-    public void setRead(boolean read) {
-        this.read = read;
+    public void setHasRead(boolean hasRead) {
+        this.hasRead = hasRead;
     }
 
     public String getTabName() {

@@ -5,6 +5,7 @@ package licrafter.com.v2ex;/**
 import android.app.Application;
 import android.content.Context;
 
+import io.realm.RealmConfiguration;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
@@ -14,15 +15,22 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
 public class BaseApplication extends Application {
 
     private static Context context;
+    private static RealmConfiguration realmConfiguration;
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        realmConfiguration = new RealmConfiguration.Builder(context)
+                .name("v2ex.realm").build();
     }
 
     public static Context getContext() {
         return context;
+    }
+
+    public static RealmConfiguration getRealmConfiguration() {
+        return realmConfiguration;
     }
 
     public static boolean isLogin() {

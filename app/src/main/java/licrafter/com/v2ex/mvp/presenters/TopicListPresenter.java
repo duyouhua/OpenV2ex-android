@@ -2,14 +2,17 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/18.
  */
 
+import io.realm.Realm;
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.TabContent;
+import licrafter.com.v2ex.model.realm.RealmTabContent;
 import licrafter.com.v2ex.ui.fragment.TopicListFragment;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -19,6 +22,13 @@ import rx.schedulers.Schedulers;
  **/
 public class TopicListPresenter extends BasePresenter<TopicListFragment> {
 
+    private Realm realm;
+
+    @Override
+    public void attachView(TopicListFragment view) {
+        super.attachView(view);
+        realm = Realm.getDefaultInstance();
+    }
 
     private Observable<String> getObservable(String tabTitle, int pageIndex) {
         if (tabTitle.equals("recent")) {
@@ -32,8 +42,14 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
         compositeSubscription.add(getObservable(tabTitle, pageIndex)
                 .map(new Func1<String, TabContent>() {
                     @Override
-                    public TabContent call(String s) {
-                        return JsoupUtil.parse(tabTitle, s);
+                    public TabContent call(String response) {
+                        return JsoupUtil.parseTabContent(tabTitle, response);
+                    }
+                })
+                .doOnNext(new Action1<TabContent>() {
+                    @Override
+                    public void call(TabContent content) {
+                        storeTabContent(isRefresh,content);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -63,5 +79,21 @@ public class TopicListPresenter extends BasePresenter<TopicListFragment> {
                         }
                     }
                 }));
+    }
+
+    private void storeTabContent(boolean isRefresh,TabContent tabContent){
+        if (isRefresh){
+            boolean contains = realm.where(RealmTabContent.class).equalTo("name",tabContent.getName());
+            android.util.Log.d("ljx",tabCount+"个tab");
+            if (tabCount)
+        }
+    }
+
+    @Override
+    public void detachView() {
+        super.detachView();
+        if (!realm.isClosed()) {
+            realm.close();
+        }
     }
 }

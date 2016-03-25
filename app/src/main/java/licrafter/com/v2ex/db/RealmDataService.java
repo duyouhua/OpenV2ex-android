@@ -2,7 +2,8 @@ package licrafter.com.v2ex.db;/**
  * Created by Administrator on 2016/3/24.
  */
 
-import android.content.Context;
+import io.realm.Realm;
+import licrafter.com.v2ex.model.TabContent;
 
 /**
  * author: lijinxiang
@@ -10,11 +11,10 @@ import android.content.Context;
  **/
 public class RealmDataService {
 
-    private Context context;
+    private static Realm realm;
 
-    public RealmDataService(Context context){
-        this.context = context;
+    public static void storeTabContent(TabContent tabContent){
+        realm = Realm.getDefaultInstance();
+
     }
-
-
 }

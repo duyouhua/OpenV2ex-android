@@ -155,7 +155,12 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             holder.getTextView(R.id.tv_title).setText(topic.getTitle());
             holder.getTextView(R.id.tv_node).setText(topic.getNodeName());
             holder.getTextView(R.id.tv_author).setText(topic.getUserId());
-            holder.getTextView(R.id.tv_create_time).setText(topic.getCreateTime());
+            if (topic.getCreateTime().equals("")){
+                holder.getTextView(R.id.tv_create_time).setVisibility(View.GONE);
+            }else {
+                holder.getTextView(R.id.tv_create_time).setVisibility(View.VISIBLE);
+                holder.getTextView(R.id.tv_create_time).setText(topic.getCreateTime());
+            }
             holder.getTextView(R.id.tv_replies).setText(String.valueOf(topic.getReplies()));
         }
     }
