@@ -28,7 +28,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.TopicDetailActivity"
+            android:name=".ui.activity.OldTopicDetailActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.ProfitActivity"
@@ -42,6 +42,10 @@
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.activity.SettingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.activity.TopicDetailActivity"
+            android:label="@string/topic_detail"
             android:screenOrientation="portrait" />
     </application>
 

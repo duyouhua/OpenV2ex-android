@@ -12,4 +12,5 @@
     <string name="network_connect_error">网络连接错误，请检测手机网络!</string>
     <string name="forbidden">访问服务器频繁，请过会访问!</string>
     <string name="logout_success">退出成功，请重新登录!</string>
+    <string name="topic_detail">帖子详情</string>
 </resources>

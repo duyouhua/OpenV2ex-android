@@ -1,6 +1,7 @@
 package licrafter.com.v2ex.ui.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +18,8 @@ import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.mvp.presenters.TopicListPresenter;
 import licrafter.com.v2ex.mvp.views.TopicListView;
+import licrafter.com.v2ex.ui.activity.OldTopicDetailActivity;
+import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
 import licrafter.com.v2ex.util.CustomUtil;
 
@@ -140,10 +143,13 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
 
         @Override
         protected void getItemViewHolder(final CommonRecyclerAdapter.ItemViewHolder viewHolder) {
-            viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
+            viewHolder.getView(R.id.rootView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     android.util.Log.d("ljx", "item = " + mDatas.get(viewHolder.getAdapterPosition()).getTitle());
+                    Intent intent = new Intent(getActivity(), TopicDetailActivity.class);
+                    intent.putExtra("topic",mDatas.get(viewHolder.getAdapterPosition()));
+                    startActivity(intent);
                 }
             });
         }

@@ -12,10 +12,9 @@ import java.util.List;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Node;
-import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
+import licrafter.com.v2ex.ui.activity.OldTopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
-import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 
 /**
@@ -58,7 +57,7 @@ public class NodeListAdapter extends AnimationRecyclerAdapter {
             vh.getConvertView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, TopicDetailActivity.class);
+                    Intent intent = new Intent(mContext, OldTopicDetailActivity.class);
                     //intent.putExtra(Constant.EXTRA.NODE,node);
                     mContext.startActivity(intent);
                 }

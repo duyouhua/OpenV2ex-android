@@ -6,7 +6,6 @@
     </style>
 
     <style name="topicContentStyle" parent="TextAppearance.AppCompat.Body1">
-
     </style>
 
     <!-- dialog从中间弹出动画-->

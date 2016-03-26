@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import licrafter.com.v2ex.model.LoginResult;
+import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.model.old.TopicResponse;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
@@ -149,50 +150,53 @@ public class JsoupUtil {
         return array;
     }
 
-    public static TopicResponse parseTopicRes(Context context, String response) {
-        TopicResponse topic = new TopicResponse();
-        TopicResponse.TopicDetail detail = new TopicResponse.TopicDetail();
-        List<TopicResponse.Comment> comments = new ArrayList<>();
+    public static TopicDetail parseTopicDetail(String response) {
+        TopicDetail detail = new TopicDetail();
         Document document = Jsoup.parse(response);
         Element body = document.body();
-        //解析帖子内容
-        Elements divNodes = body.getElementsByTag("div");
-        for (Element div : divNodes) {
-            String divStr = div.toString();
-            if (divStr.contains("class=\"topic_content\"")) {
-                detail.content = divStr;
-                detail.repliesCount = "0 回复";
-            } else if (divStr.contains("class=\"fr\"")) {
-                Elements spans = div.getElementsByTag("span");
-                for (Element span : spans) {
-                    String spanStr = span.toString();
-                    if (spanStr.contains("class=\"gray\"")) {
-                        String text = span.text();
-                        detail.repliesCount = text.substring(0, text.indexOf("+"));
-                    }
-                }
-            }
-        }
-        //解析点击数和发布时间
-        Elements smallNodes = body.getElementsByTag("small");
-        for (Element small : smallNodes) {
-            String smallStr = small.toString();
-            if (smallStr.contains("class=\"gray\"")) {
-                String text = small.text();
-                detail.createTime = text.replace("&nbsp;", "").substring(text.indexOf("at"));
-            }
-        }
+        Element small = body.select("small.gray").first();
+        String[] arry = small.text().split(" · ");
+        detail.setCreateTime(arry[1]);
+        detail.setClickCount(arry[2]);
+        Element content = body.select("div.topic_content").first();
+        detail.setContent(content.toString());
+//        //解析帖子内容
+//        Elements divNodes = body.getElementsByTag("div");
+//        for (Element div : divNodes) {
+//            String divStr = div.toString();
+//            if (divStr.contains("class=\"topic_content\"")) {
+//                detail.content = divStr;
+//                detail.repliesCount = "0 回复";
+//            } else if (divStr.contains("class=\"fr\"")) {
+//                Elements spans = div.getElementsByTag("span");
+//                for (Element span : spans) {
+//                    String spanStr = span.toString();
+//                    if (spanStr.contains("class=\"gray\"")) {
+//                        String text = span.text();
+//                        detail.repliesCount = text.substring(0, text.indexOf("+"));
+//                    }
+//                }
+//            }
+//        }
+//        //解析点击数和发布时间
+//        Elements smallNodes = body.getElementsByTag("small");
+//        for (Element small : smallNodes) {
+//            String smallStr = small.toString();
+//            if (smallStr.contains("class=\"gray\"")) {
+//                String text = small.text();
+//                detail.createTime = text.replace("&nbsp;", "").substring(text.indexOf("at"));
+//            }
+//        }
 
-        topic.setDetail(detail);
-        //解析回复列表
-        Elements tableNodes = body.getElementsByTag("table");
-        for (Element table : tableNodes) {
-            if (table != null && table.toString().contains("class=\"reply_content\"")) {
-                comments.add(parseComments(table));
-            }
-        }
-        topic.setComments(comments);
-        return topic;
+//        //解析回复列表
+//        Elements tableNodes = body.getElementsByTag("table");
+//        for (Element table : tableNodes) {
+//            if (table != null && table.toString().contains("class=\"reply_content\"")) {
+//                comments.add(parseComments(table));
+//            }
+//        }
+//        topic.setComments(comments);
+        return detail;
     }
 
     public static TopicResponse.Comment parseComments(Element table) {
