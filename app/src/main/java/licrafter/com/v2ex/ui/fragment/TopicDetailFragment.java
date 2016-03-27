@@ -4,7 +4,9 @@ package licrafter.com.v2ex.ui.fragment;/**
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.NestedScrollView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -13,6 +15,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
+import licrafter.com.v2ex.base.BaseToolbarActivity;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
@@ -37,6 +40,8 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
     TextView mTitleView;
     @Bind(R.id.tv_content)
     RichTextView mRichTextView;
+    @Bind(R.id.detail_ScrollView)
+    NestedScrollView mDetailScrollView;
 
     private TopicDetailPresenter mPresenter;
 
@@ -80,7 +85,6 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
 
     @Override
     protected void setListeners() {
-
     }
 
     @Override

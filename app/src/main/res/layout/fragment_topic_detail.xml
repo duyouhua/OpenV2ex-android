@@ -2,11 +2,11 @@
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/tools"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/detail_ScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:fillViewport="true"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,8 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-35dp">
+            android:layout_marginTop="-35dp"
+            android:paddingBottom="50dp">
 
             <licrafter.com.v2ex.ui.widget.RichTextView
                 android:id="@+id/tv_content"
@@ -36,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="75dp"
-                android:padding="@dimen/padding_normal"
+                android:padding="@dimen/padding_large"
                 android:textColor="@color/grey600"
                 android:textSize="@dimen/text_normal" />
 

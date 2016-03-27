@@ -11,10 +11,10 @@ import licrafter.com.v2ex.model.TabContent;
  **/
 public class RealmDataService {
 
-    private static Realm realm;
-
-    public static void storeTabContent(TabContent tabContent){
-        realm = Realm.getDefaultInstance();
-
-    }
+//    private static Realm realm;
+//
+//    public static void storeTabContent(TabContent tabContent){
+//        realm = Realm.getDefaultInstance();
+//
+//    }
 }

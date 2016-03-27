@@ -19,6 +19,7 @@
 
     <color name="grey600">#757575</color>
     <color name="grey500">#9E9E9E</color>
+    <color name="grey100">#F5F5F5</color>
     <color name="grey200">#EEEEEE</color>
     <color name="grey300">#E0E0E0</color>
     <color name="grey400">#BDBDBD</color>
