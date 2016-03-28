@@ -1,18 +1,15 @@
 package licrafter.com.v2ex.util;
 
-import android.content.Context;
-
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import licrafter.com.v2ex.model.LoginResult;
+import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.model.TopicDetail;
-import licrafter.com.v2ex.model.old.TopicResponse;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 
@@ -199,8 +196,19 @@ public class JsoupUtil {
         return detail;
     }
 
-    public static TopicResponse.Comment parseComments(Element table) {
-        TopicResponse.Comment comment = new TopicResponse.Comment();
+    public static ArrayList<TopicComment> parseComments(String response) {
+        ArrayList<TopicComment> comments = new ArrayList<>();
+        Elements tableNodes = Jsoup.parse(response).body().getElementsByTag("table");
+        for (Element table : tableNodes) {
+            if (table != null && table.toString().contains("class=\"reply_content\"")) {
+                comments.add(parseComment(table));
+            }
+        }
+        return comments;
+    }
+
+    public static TopicComment parseComment(Element table) {
+        TopicComment comment = new TopicComment();
         Elements imgNodes = table.getElementsByTag("img");
         for (Element img : imgNodes) {
             if (img != null) {

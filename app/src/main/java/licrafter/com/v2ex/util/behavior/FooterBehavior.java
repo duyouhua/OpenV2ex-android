@@ -2,14 +2,12 @@ package licrafter.com.v2ex.util.behavior;
 
 import android.animation.Animator;
 import android.content.Context;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.animation.Interpolator;
 
@@ -22,9 +20,7 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
     private int directionChange;
-    private int directionDistance;
     private boolean isBottom;
-    private boolean hasListener;
 
     public FooterBehavior(Context context, AttributeSet attr) {
         super(context, attr);
@@ -39,37 +35,39 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
     @Override
     public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final View child, View target, int dxConsumed, final int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
         super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        final NestedScrollView scrollView = ((NestedScrollView) target);
-        if (!hasListener){
+        if (target instanceof NestedScrollView) {
+            final NestedScrollView scrollView = ((NestedScrollView) target);
+
             scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
                 @Override
                 public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+
                     if ((scrollView.getHeight() + scrollY) == v.getChildAt(v.getChildCount() - 1).getBottom()) {
                         isBottom = true;
                         show(child);
-                        android.util.Log.d("ljx","onbottom");
-                    }else {
+                    } else {
                         isBottom = false;
                     }
                 }
             });
-            hasListener = true;
         }
     }
 
     @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
-        if (dy > 0 && directionChange < 0 || dy < 0 && directionChange > 0) {
-            child.animate().cancel();
-            directionChange = 0;
-        }
-        directionChange += dy;
+        if (target instanceof NestedScrollView){
+            if (dy > 0 && directionChange < 0 || dy < 0 && directionChange > 0) {
+                child.animate().cancel();
+                directionChange = 0;
+            }
+            directionChange += dy;
 
-        if (directionChange > child.getHeight() && child.getVisibility() == View.VISIBLE&&!isBottom) {
-            hide(child);
-        } else if (directionChange < 0 && child.getVisibility() == View.GONE) {
-            show(child);
+            if (directionChange > child.getHeight() && child.getVisibility() == View.VISIBLE && !isBottom) {
+                hide(child);
+            } else if (directionChange < 0 && child.getVisibility() == View.GONE) {
+                show(child);
+            }
         }
     }
 
@@ -122,6 +120,5 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
             }
         });
         animator.start();
-
     }
 }

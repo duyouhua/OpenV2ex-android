@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +14,6 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
-import licrafter.com.v2ex.base.BaseToolbarActivity;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
@@ -27,7 +25,7 @@ import licrafter.com.v2ex.ui.widget.RichTextView;
  * author: lijinxiang
  * date: 2016/3/26
  **/
-public class TopicDetailFragment extends BaseFragment implements MvpView{
+public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private Topic topic;
     @Bind(R.id.iv_avatar)
@@ -44,6 +42,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
     NestedScrollView mDetailScrollView;
 
     private TopicDetailPresenter mPresenter;
+    private TopicDetail topicDetail;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -75,7 +74,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
     @Override
     protected void initViews(View view) {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(false);
-
+        ((TopicDetailActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
         if (topic != null) {
             mTitleView.setText(topic.getTitle());
             Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
@@ -85,11 +84,16 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
 
     @Override
     protected void setListeners() {
+
     }
 
     @Override
     protected void loadData() {
-        mPresenter.getTopicDetail(topic.getTopicId());
+        if (topicDetail == null) {
+            mPresenter.getTopicDetail(topic.getTopicId());
+        } else {
+            parseTopicDetail(topicDetail);
+        }
     }
 
     @Override
@@ -98,8 +102,9 @@ public class TopicDetailFragment extends BaseFragment implements MvpView{
     }
 
     public void parseTopicDetail(TopicDetail topicDetail) {
+        this.topicDetail = topicDetail;
         mRichTextView.setRichText(topicDetail.getContent());
-        mCreatTimeView.setText("发布于 "+topicDetail.getCreateTime()+" "+topicDetail.getClickCount());
+        mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
     }
 
     @Override

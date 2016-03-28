@@ -22,7 +22,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Node;
-import licrafter.com.v2ex.model.old.TopicResponse;
 import licrafter.com.v2ex.model.old.SeriableTopic;
 import licrafter.com.v2ex.ui.adapter.HeaderViewRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.TopicContentAdapter;
@@ -47,7 +46,6 @@ public class OldTopicDetailActivity extends BaseActivity implements SwipeRefresh
     private RichTextView tv_content;
     private RelativeLayout rl_profit;
     private SeriableTopic topic;
-    private TopicResponse mData;
     private TopicContentAdapter mAdapter;
     private HeaderViewRecyclerAdapter mHeaderAdapter;
 
@@ -132,14 +130,14 @@ public class OldTopicDetailActivity extends BaseActivity implements SwipeRefresh
         tv_content.setRichText("");
     }
 
-    private void updateView(TopicResponse res) {
-        tv_replies.setText("全部 " + res.getDetail().repliesCount);
-        tv_create_time.setText(res.getDetail().createTime);
-        if (res.getDetail().content != null) {
-            tv_content.setRichText(res.getDetail().content);
-        }
-        mAdapter.setData(res.getComments());
-    }
+//    private void updateView(TopicResponse res) {
+//        tv_replies.setText("全部 " + res.getDetail().repliesCount);
+//        tv_create_time.setText(res.getDetail().createTime);
+//        if (res.getDetail().content != null) {
+//            tv_content.setRichText(res.getDetail().content);
+//        }
+//        mAdapter.setData(res.getComments());
+//    }
 
     private void setTopicTitle() {
         String title = topic.getTitle() + " > " + topic.getNodeName();

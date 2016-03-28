@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import java.net.ConnectException;
 import java.net.UnknownHostException;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -30,6 +31,9 @@ public class ApiErrorUtil {
                 Toast.makeText(BaseApplication.getContext(), BaseApplication
                         .getContext().getString(R.string.forbidden), Toast.LENGTH_SHORT).show();
             }
+        } else if (e instanceof TimeoutException) {
+            Toast.makeText(BaseApplication.getContext(), BaseApplication
+                    .getContext().getString(R.string.time_out), Toast.LENGTH_SHORT).show();
         }
     }
 
