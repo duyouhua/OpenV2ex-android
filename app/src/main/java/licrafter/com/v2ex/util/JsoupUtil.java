@@ -170,7 +170,33 @@ public class JsoupUtil {
                 }
             }
         }
+
+        Element favoriteE = body.select("div.topic_buttons").first();
+        if (favoriteE.toString().contains("加入收藏")) {
+            detail.setFravorite(false);
+        } else if (favoriteE.toString().contains("取消收藏")) {
+            detail.setFravorite(true);
+        }
         return detail;
+    }
+
+    public static String parseCsrfToken(String response) {
+        String csrf = "false";
+        Document document = Jsoup.parse(response);
+        Elements tokenEs = document.getElementsByTag("script");
+        for (Element element : tokenEs) {
+            if (element.toString().contains("csrfToken ")) {
+                String script = element.toString();
+                int end = script.lastIndexOf(";");
+                String token = script.substring(end - 33, end - 1);
+                if (token.contains("csrfToken")) {
+                    csrf = "false";
+                } else {
+                    csrf = token;
+                }
+            }
+        }
+        return csrf;
     }
 
     public static TopicComment parseComments(String response) {

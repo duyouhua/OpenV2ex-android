@@ -72,18 +72,6 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         if (getArguments() != null) {
             topic = (Topic) getArguments().getSerializable("topic");
         }
-        mFavoriteSubscription = RxBus.getDefault().toObserverable(FavoriteEvent.class)
-                .subscribe(new Action1<FavoriteEvent>() {
-                    @Override
-                    public void call(FavoriteEvent favoriteEvent) {
-                        if (BaseApplication.isLogin() && !topicDetail.getCsrfToken().equals("false")) {
-                            mPresenter.favoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
-                        } else {
-                            Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getActivity(), LoginActivity.class));
-                        }
-                    }
-                });
     }
 
     @Override
@@ -113,6 +101,24 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     @Override
     protected void setListeners() {
+        mFavoriteSubscription = RxBus.getDefault().toObserverable(FavoriteEvent.class)
+                .subscribe(new Action1<FavoriteEvent>() {
+                    @Override
+                    public void call(FavoriteEvent favoriteEvent) {
+                        if (BaseApplication.isLogin() && !topicDetail.getCsrfToken().equals("false")) {
+                            mRefreshLayout.setRefreshing(true);
+                            if (topicDetail.isFravorite()) {
+                                mPresenter.unFavoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
+                            } else {
+                                mPresenter.favoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                            getActivity().finish();
+                        }
+                    }
+                });
     }
 
     @Override
@@ -131,10 +137,13 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     }
 
     public void parseTopicDetail(TopicDetail topicDetail) {
-        mRefreshLayout.setRefreshing(false);
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
         this.topicDetail = topicDetail;
         mRichTextView.setRichText(topicDetail.getContent());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
+        ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
     }
 
     @Override
@@ -152,4 +161,15 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
             mFavoriteSubscription.unsubscribe();
         }
     }
+
+    public void parseFavorite(String token, boolean isFavorite) {
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        Toast.makeText(getActivity(),"操作成功",Toast.LENGTH_SHORT).show();
+        topicDetail.setCsrfToken(token);
+        topicDetail.setFravorite(isFavorite);
+        ((TopicDetailActivity) getActivity()).setShoucangStatus(isFavorite);
+    }
+
 }

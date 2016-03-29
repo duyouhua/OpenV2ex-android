@@ -105,8 +105,8 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
         compositeSubscription.add(AuthService.getInstance().auth().favoriteTopic(referer, topicId, csrfToken)
                 .map(new Func1<String, String>() {
                     @Override
-                    public String call(String s) {
-                        return null;
+                    public String call(String response) {
+                        return JsoupUtil.parseCsrfToken(response);
                     }
                 })
                 .subscribeOn(Schedulers.io())
@@ -125,9 +125,42 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
                     }
 
                     @Override
-                    public void onNext(String s) {
+                    public void onNext(String token) {
                         if (getView() != null) {
+                            ((TopicDetailFragment) getView()).parseFavorite(token, true);
+                        }
+                    }
+                }));
+    }
 
+    public void unFavoriteTopic(String topicId, String scrfToken) {
+        String referer = "http://www.v2ex.com/t/" + topicId;
+        compositeSubscription.add(AuthService.getInstance().auth().unFavoriteTopic(referer, topicId, scrfToken)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String response) {
+                        return JsoupUtil.parseCsrfToken(response);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            getView().onFailure(ApiErrorUtil.handleError(e));
+                        }
+                    }
+
+                    @Override
+                    public void onNext(String token) {
+                        if (getView() != null) {
+                            ((TopicDetailFragment) getView()).parseFavorite(token, false);
                         }
                     }
                 }));

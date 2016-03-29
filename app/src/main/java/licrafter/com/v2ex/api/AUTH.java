@@ -72,5 +72,15 @@ public interface AUTH {
     @GET("/favorite/topic/{topicId}")
     Observable<String> favoriteTopic(@Header("Referer") String referer, @Path("topicId") String topicId, @Query("t") String t);
 
+    /**
+     * 取消收藏
+     * @param referer
+     * @param topicId
+     * @param t
+     * @return
+     */
+    @GET("/unfavorite/topic/{topicId}")
+    Observable<String> unFavoriteTopic(@Header("Referer") String referer,@Path("topicId")String topicId,@Query("t")String t);
+
 
 }

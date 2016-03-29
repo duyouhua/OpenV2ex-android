@@ -13,6 +13,7 @@ public class TopicDetail {
     public String repliesCount;
     public String clickCount;
     private String csrfToken;
+    private boolean isFravorite;
 
     public String getContent() {
         return content;
@@ -52,5 +53,13 @@ public class TopicDetail {
 
     public void setCsrfToken(String csrfToken) {
         this.csrfToken = csrfToken;
+    }
+
+    public boolean isFravorite() {
+        return isFravorite;
+    }
+
+    public void setFravorite(boolean fravorite) {
+        isFravorite = fravorite;
     }
 }
