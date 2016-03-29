@@ -20,21 +20,23 @@ import retrofit2.adapter.rxjava.HttpException;
  **/
 public class ApiErrorUtil {
 
-    public static void handleError(Throwable e) {
+    public static String handleError(Throwable e) {
+        String error = e.toString();
         android.util.Log.d("v2ex", "error:" + e.toString());
         if (e instanceof ConnectException || e instanceof UnknownHostException) {
-            Toast.makeText(BaseApplication.getContext(), BaseApplication
-                    .getContext().getString(R.string.network_connect_error), Toast.LENGTH_SHORT).show();
+            error = BaseApplication.getContext().getString(R.string.network_connect_error);
+            Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
         } else if (e instanceof HttpException) {
             int code = ((HttpException) e).code();
             if (code == 403) {
-                Toast.makeText(BaseApplication.getContext(), BaseApplication
-                        .getContext().getString(R.string.forbidden), Toast.LENGTH_SHORT).show();
+                error = BaseApplication.getContext().getString(R.string.forbidden);
+                Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
             }
         } else if (e instanceof TimeoutException) {
-            Toast.makeText(BaseApplication.getContext(), BaseApplication
-                    .getContext().getString(R.string.time_out), Toast.LENGTH_SHORT).show();
+            error = BaseApplication.getContext().getString(R.string.time_out);
+            Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
         }
+        return error;
     }
 
     /**

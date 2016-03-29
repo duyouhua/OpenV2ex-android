@@ -157,99 +157,51 @@ public class JsoupUtil {
         detail.setClickCount(arry[2]);
         Element content = body.select("div.topic_content").first();
         detail.setContent(content.toString());
-//        //解析帖子内容
-//        Elements divNodes = body.getElementsByTag("div");
-//        for (Element div : divNodes) {
-//            String divStr = div.toString();
-//            if (divStr.contains("class=\"topic_content\"")) {
-//                detail.content = divStr;
-//                detail.repliesCount = "0 回复";
-//            } else if (divStr.contains("class=\"fr\"")) {
-//                Elements spans = div.getElementsByTag("span");
-//                for (Element span : spans) {
-//                    String spanStr = span.toString();
-//                    if (spanStr.contains("class=\"gray\"")) {
-//                        String text = span.text();
-//                        detail.repliesCount = text.substring(0, text.indexOf("+"));
-//                    }
-//                }
-//            }
-//        }
-//        //解析点击数和发布时间
-//        Elements smallNodes = body.getElementsByTag("small");
-//        for (Element small : smallNodes) {
-//            String smallStr = small.toString();
-//            if (smallStr.contains("class=\"gray\"")) {
-//                String text = small.text();
-//                detail.createTime = text.replace("&nbsp;", "").substring(text.indexOf("at"));
-//            }
-//        }
-
-//        //解析回复列表
-//        Elements tableNodes = body.getElementsByTag("table");
-//        for (Element table : tableNodes) {
-//            if (table != null && table.toString().contains("class=\"reply_content\"")) {
-//                comments.add(parseComments(table));
-//            }
-//        }
-//        topic.setComments(comments);
         return detail;
     }
 
-    public static ArrayList<TopicComment> parseComments(String response) {
-        ArrayList<TopicComment> comments = new ArrayList<>();
-        Elements tableNodes = Jsoup.parse(response).body().getElementsByTag("table");
+    public static TopicComment parseComments(String response) {
+        TopicComment topicComment = new TopicComment();
+        Element body = Jsoup.parse(response).body();
+        Elements tableNodes = body.getElementsByTag("table");
         for (Element table : tableNodes) {
             if (table != null && table.toString().contains("class=\"reply_content\"")) {
-                comments.add(parseComment(table));
+                topicComment.getComments().add((parseComment(table)));
             }
         }
-        return comments;
+        Elements pageinput = body.select("input.page_input");
+        if (pageinput.size() > 0) {
+            int totalPage = Integer.valueOf(pageinput.get(0).attr("max"));
+            int page = Integer.valueOf(pageinput.get(0).attr("value"));
+            topicComment.setPage(page);
+            topicComment.setTotalPage(totalPage);
+        } else {
+            topicComment.setPage(1);
+            topicComment.setTotalPage(1);
+        }
+
+        return topicComment;
     }
 
-    public static TopicComment parseComment(Element table) {
-        TopicComment comment = new TopicComment();
-        Elements imgNodes = table.getElementsByTag("img");
-        for (Element img : imgNodes) {
-            if (img != null) {
-                String imgStr = img.toString();
-                if (imgStr.contains("class=\"avatar\"")) {
-                    String avatar = img.attr("src");
-                    if (avatar.startsWith("//")) {
-                        comment.avatar = ("http:" + avatar);
-                    }
-                }
-            }
-
-        }
-        Elements aNodes = table.getElementsByTag("a");
-        for (Element a : aNodes) {
-            if (a != null) {
-                String aStr = a.toString();
-                if (aStr.contains("/member/")) {
-                    comment.userName = a.attr("href").replace("/member/", "");
-                }
-            }
-        }
-        Elements spanNodes = table.getElementsByTag("span");
-        for (Element span : spanNodes) {
-            if (span != null) {
-                String spanStr = span.toString();
-                if (spanStr.contains("class=\"fade small\"")) {
-                    comment.createTime = span.text();
-                } else if (spanStr.contains("class=\"no\"")) {
-                    comment.rank = span.text();
-                }
-            }
+    private static TopicComment.Comment parseComment(Element table) {
+        TopicComment.Comment comment = new TopicComment.Comment();
+        Element avatarImg = table.select("img.avatar").first();
+        String avatar = avatarImg.attr("src");
+        if (avatar.startsWith("//")) {
+            comment.avatar = ("http:" + avatar);
         }
 
-        Elements divNodes = table.getElementsByTag("div");
-        for (Element div : divNodes) {
-            String divStr = div.toString();
-            if (divStr.contains("class=\"reply_content\"")) {
-                comment.content = divStr;
-            }
-        }
+        Element userNameE = table.select("a.dark").first();
+        comment.userName = userNameE.attr("href").replace("/member/", "");
+
+        Element createTimeE = table.select("span.fade").select("span.small").first();
+        comment.createTime = createTimeE.text();
+
+        Element rankE = table.select("span.no").first();
+        comment.rank = rankE.text();
+
+        Element contentE = table.select("div.reply_content").first();
+        comment.content = contentE.toString();
 
         return comment;
     }

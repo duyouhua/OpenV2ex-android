@@ -31,8 +31,7 @@ public class NodeListPresenter extends BasePresenter<NodeListFragment> {
                     @Override
                     public void onError(Throwable e) {
                         if (getView()!=null){
-                            ApiErrorUtil.handleError(e);
-                            getView().onFailure(e);
+                            getView().onFailure(ApiErrorUtil.handleError(e));
                         }
                     }
 

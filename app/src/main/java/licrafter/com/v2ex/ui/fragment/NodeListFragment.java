@@ -80,10 +80,11 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
     }
 
     @Override
-    public void onFailure(Throwable e) {
+    public void onFailure(String e) {
         if (mSwipeRefreshLayout.isRefreshing()){
             mSwipeRefreshLayout.setRefreshing(false);
         }
+        mAdapter.setErrorInfo(e);
     }
 
     @Override

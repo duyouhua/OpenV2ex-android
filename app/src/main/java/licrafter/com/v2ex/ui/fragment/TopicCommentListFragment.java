@@ -5,22 +5,30 @@ package licrafter.com.v2ex.ui.fragment;/**
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.bumptech.glide.Glide;
+import com.makeramen.roundedimageview.RoundedImageView;
+
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
+import licrafter.com.v2ex.listener.OnScrollBottomListener;
+import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
+import licrafter.com.v2ex.ui.widget.RichTextView;
+import licrafter.com.v2ex.util.CustomUtil;
 
 /**
  * author: lijinxiang
@@ -30,15 +38,16 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
 
     @Bind(R.id.commentRecyclerView)
     RecyclerView mCommentRecyclerView;
-    @Bind(R.id.commentInput)
-    EditText mcommentInput;
-    @Bind(R.id.sendBtn)
-    ImageButton sendBtn;
+    @Bind(R.id.swipe_layout)
+    SwipeRefreshLayout mRefreshLayout;
 
     private String mTopicTitle = "";
     private String mTopicId = "";
     private CommentAdapter mAdapter;
     private TopicDetailPresenter mPresenter;
+
+    private int pageIndex = 1;
+    private int totalPage;
 
     public static TopicCommentListFragment getInstance(String topicTitle, String topicId) {
         TopicCommentListFragment fragment = new TopicCommentListFragment();
@@ -74,6 +83,8 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(true);
         ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(mTopicTitle);
 
+        CustomUtil.initStyle(mRefreshLayout);
+        mRefreshLayout.setProgressViewOffset(false, 0, 25);
         mAdapter = new CommentAdapter(getContext(), R.layout.item_comment);
         mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mCommentRecyclerView.setHasFixedSize(true);
@@ -82,12 +93,28 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
 
     @Override
     protected void setListeners() {
-
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                pageIndex = 1;
+                mPresenter.getCommentsList(mTopicId, pageIndex, true);
+            }
+        });
+        mCommentRecyclerView.addOnScrollListener(new OnScrollBottomListener() {
+            @Override
+            public void onBottom() {
+                super.onBottom();
+                if (pageIndex <= totalPage) {
+                    mPresenter.getCommentsList(mTopicId, pageIndex, false);
+                }
+            }
+        });
     }
 
     @Override
     protected void loadData() {
-        mPresenter.getCommentsList(mTopicId, 1);
+        mRefreshLayout.setRefreshing(true);
+        mPresenter.getCommentsList(mTopicId, 1, true);
     }
 
     @Override
@@ -95,16 +122,39 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
         mPresenter.detachView();
     }
 
-    public void parseComments(ArrayList<TopicComment> comments) {
-        mAdapter.addData(comments);
+    public void parseComments(TopicComment topicComment) {
+        mRefreshLayout.setRefreshing(false);
+        loadMoreUIHandler(topicComment);
+        mAdapter.setData(topicComment.getComments());
     }
 
     @Override
-    public void onFailure(Throwable e) {
-
+    public void onFailure(String e) {
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        mAdapter.setErrorInfo(e);
     }
 
-    class CommentAdapter extends CommonRecyclerAdapter<TopicComment> {
+    public void onLoadMoreSuccess(TopicComment topicComment) {
+        loadMoreUIHandler(topicComment);
+        mAdapter.addData(topicComment.getComments());
+    }
+
+    private void loadMoreUIHandler(TopicComment topicComment) {
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        pageIndex = topicComment.getPage() + 1;
+        totalPage = topicComment.getTotalPage();
+        if (pageIndex > totalPage) {
+            mAdapter.hasNextPage(false);
+        } else {
+            mAdapter.hasNextPage(true);
+        }
+    }
+
+    class CommentAdapter extends CommonRecyclerAdapter<TopicComment.Comment> {
 
         protected CommentAdapter(Context context, int itemLayoutId) {
             super(context, itemLayoutId);
@@ -117,6 +167,12 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
 
         @Override
         protected void bindData(ItemViewHolder viewHolder, int position) {
+            TopicComment.Comment comment = mDatas.get(position);
+            Glide.with(mContext).load(comment.getAvatar()).into((RoundedImageView) viewHolder.getView(R.id.iv_avatar));
+            viewHolder.getTextView(R.id.tv_username).setText(comment.getUserName());
+            viewHolder.getTextView(R.id.tv_create_time).setText(comment.getCreateTime());
+            ((RichTextView) viewHolder.getView(R.id.tv_content)).setRichText(comment.getContent());
+            viewHolder.getTextView(R.id.tv_rank).setText(comment.getRank());
 
         }
     }

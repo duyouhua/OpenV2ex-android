@@ -9,6 +9,10 @@ import android.text.Html;
 import android.widget.TextView;
 
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
+
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.util.ScreenUtil;
 
@@ -25,7 +29,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
     public AsyncImageGetter(Context context, TextView view) {
         this.context = context;
         this.container = view;
-        mMaxWidth = ScreenUtil.getDisplayWidth(context) -  ScreenUtil.dp(context, 100);
+        mMaxWidth = ScreenUtil.getDisplayWidth(context) - ScreenUtil.dp(context, 100);
         defaultDrawable = context.getResources().getDrawable(R.mipmap.ic_launcher);
     }
 
@@ -38,40 +42,31 @@ public class AsyncImageGetter implements Html.ImageGetter {
     @Override
     public Drawable getDrawable(String source) {
         final URLDrawable urlDrawable = new URLDrawable();
-//        Target target = new Target() {
-//            @Override
-//            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-//                if (bitmap != null) {
-//                    int width;
-//                    int height;
-//                    if (bitmap.getWidth() > mMaxWidth) {
-//                        width = mMaxWidth;
-//                        height = mMaxWidth * bitmap.getHeight() / bitmap.getWidth();
-//                    } else {
-//                        width = bitmap.getWidth();
-//                        height = bitmap.getHeight();
-//                    }
-//                    Drawable drawable = new BitmapDrawable(context.getResources(), bitmap);
-//                    drawable.setBounds(0, 0, width, height);
-//                    urlDrawable.setBounds(0, 0, width, height);
-//                    urlDrawable.mDrawable = drawable;
-//                    //reset text to invalidate.
-//                    container.setText(container.getText());
-//                }
-//            }
-//
-//            @Override
-//            public void onBitmapFailed(Drawable errorDrawable) {
-//
-//            }
-//
-//            @Override
-//            public void onPrepareLoad(Drawable placeHolderDrawable) {
-//
-//            }
-//
-//        };
-//        Picasso.with(context).load(source).into(target);
+
+        Glide.with(context)
+                .load(source)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
+                        if (resource != null) {
+                            int width;
+                            int height;
+                            if (resource.getWidth() > mMaxWidth) {
+                                width = mMaxWidth;
+                                height = mMaxWidth * resource.getHeight() / resource.getWidth();
+                            } else {
+                                width = resource.getWidth();
+                                height = resource.getHeight();
+                            }
+                            Drawable drawable = new BitmapDrawable(context.getResources(), resource);
+                            drawable.setBounds(0, 0, width, height);
+                            urlDrawable.setBounds(0, 0, width, height);
+                            urlDrawable.mDrawable = drawable;
+                            container.setText(container.getText());
+                        }
+                    }
+                });
         return urlDrawable;
     }
 
@@ -81,9 +76,9 @@ public class AsyncImageGetter implements Html.ImageGetter {
 
         @Override
         public void draw(Canvas canvas) {
-            if (mDrawable!=null){
+            if (mDrawable != null) {
                 mDrawable.draw(canvas);
-            }else {
+            } else {
                 defaultDrawable.draw(canvas);
             }
         }

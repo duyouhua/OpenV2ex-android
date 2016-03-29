@@ -14,8 +14,7 @@ import java.util.List;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.old.JsonTopic;
-import licrafter.com.v2ex.model.old.SeriableTopic;
-import licrafter.com.v2ex.ui.activity.OldTopicDetailActivity;
+
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationRecyclerAdapter;
 import licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter.AnimationViewHolder;
 import licrafter.com.v2ex.util.Constant;
@@ -61,10 +60,10 @@ public class MyTopicsAdapter extends AnimationRecyclerAdapter {
             vh.getConvertView().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, OldTopicDetailActivity.class);
-                    SeriableTopic sTopic = new SeriableTopic(topic);
-                    intent.putExtra(Constant.EXTRA.TOPIC, sTopic);
-                    mContext.startActivity(intent);
+//                    Intent intent = new Intent(mContext, OldTopicDetailActivity.class);
+//                    SeriableTopic sTopic = new SeriableTopic(topic);
+//                    intent.putExtra(Constant.EXTRA.TOPIC, sTopic);
+//                    mContext.startActivity(intent);
                 }
             });
         }

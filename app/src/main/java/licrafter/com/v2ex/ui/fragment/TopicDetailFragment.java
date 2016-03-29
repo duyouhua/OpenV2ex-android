@@ -5,6 +5,8 @@ package licrafter.com.v2ex.ui.fragment;/**
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.DragEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,6 +22,7 @@ import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.widget.RichTextView;
+import licrafter.com.v2ex.util.CustomUtil;
 
 /**
  * author: lijinxiang
@@ -28,6 +31,8 @@ import licrafter.com.v2ex.ui.widget.RichTextView;
 public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private Topic topic;
+    @Bind(R.id.swipe_layout)
+    SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.iv_avatar)
     RoundedImageView mAvatarView;
     @Bind(R.id.tv_username)
@@ -43,6 +48,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
+
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -74,7 +80,10 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Override
     protected void initViews(View view) {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(false);
-        ((TopicDetailActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
+        ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
+        CustomUtil.initStyle(mRefreshLayout);
+        mRefreshLayout.setProgressViewOffset(false, 0, 25);
+        mRefreshLayout.setEnabled(false);
         if (topic != null) {
             mTitleView.setText(topic.getTitle());
             Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
@@ -84,12 +93,12 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     @Override
     protected void setListeners() {
-
     }
 
     @Override
     protected void loadData() {
         if (topicDetail == null) {
+            mRefreshLayout.setRefreshing(true);
             mPresenter.getTopicDetail(topic.getTopicId());
         } else {
             parseTopicDetail(topicDetail);
@@ -102,13 +111,17 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     }
 
     public void parseTopicDetail(TopicDetail topicDetail) {
+        mRefreshLayout.setRefreshing(false);
         this.topicDetail = topicDetail;
         mRichTextView.setRichText(topicDetail.getContent());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
     }
 
     @Override
-    public void onFailure(Throwable e) {
-
+    public void onFailure(String e) {
+        if (mRefreshLayout.isRefreshing()) {
+            mRefreshLayout.setRefreshing(false);
+        }
+        mRichTextView.setRichText(e);
     }
 }

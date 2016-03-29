@@ -2,7 +2,6 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/26.
  */
 
-import java.util.ArrayList;
 
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.TopicComment;
@@ -22,6 +21,8 @@ import rx.schedulers.Schedulers;
  * date: 2016/3/26
  **/
 public class TopicDetailPresenter extends BasePresenter<MvpView> {
+
+    private boolean isLoading;
 
     public void getTopicDetail(String topicId) {
         compositeSubscription.add(V2exService.getInstance().v2EX().getTopicDetailsById(topicId, 1)
@@ -43,8 +44,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
                     @Override
                     public void onError(Throwable e) {
                         if (getView() != null) {
-                            ApiErrorUtil.handleError(e);
-                            getView().onFailure(e);
+                            getView().onFailure(ApiErrorUtil.handleError(e));
                         }
                     }
 
@@ -57,17 +57,21 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
                 }));
     }
 
-    public void getCommentsList(String topicId, int page) {
-        compositeSubscription.add(V2exService.getInstance().v2EX().getTopicDetailsById(topicId, 1)
-                .map(new Func1<String, ArrayList<TopicComment>>() {
+    public void getCommentsList(String topicId, int pageIndex, final boolean isRefresh) {
+        if (isLoading) {
+            return;
+        }
+        isLoading = true;
+        compositeSubscription.add(V2exService.getInstance().v2EX().getTopicDetailsById(topicId, pageIndex)
+                .map(new Func1<String, TopicComment>() {
                     @Override
-                    public ArrayList<TopicComment> call(String response) {
+                    public TopicComment call(String response) {
                         return JsoupUtil.parseComments(response);
                     }
                 })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ArrayList<TopicComment>>() {
+                .subscribe(new Subscriber<TopicComment>() {
                     @Override
                     public void onCompleted() {
 
@@ -75,16 +79,21 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
                     @Override
                     public void onError(Throwable e) {
+                        isLoading = false;
                         if (getView() != null) {
-                            ApiErrorUtil.handleError(e);
-                            getView().onFailure(e);
+                            getView().onFailure(ApiErrorUtil.handleError(e));
                         }
                     }
 
                     @Override
-                    public void onNext(ArrayList<TopicComment> comments) {
+                    public void onNext(TopicComment topicComment) {
+                        isLoading = false;
                         if (getView() != null) {
-                            ((TopicCommentListFragment) getView()).parseComments(comments);
+                            if (isRefresh) {
+                                ((TopicCommentListFragment) getView()).parseComments(topicComment);
+                            } else {
+                                ((TopicCommentListFragment) getView()).onLoadMoreSuccess(topicComment);
+                            }
                         }
                     }
                 }));

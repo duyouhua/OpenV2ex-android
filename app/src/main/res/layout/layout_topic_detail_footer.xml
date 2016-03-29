@@ -21,9 +21,9 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
+        android:gravity="center"
         android:drawablePadding="2dp"
         android:drawableTop="@mipmap/ic_comment"
-        android:text="109"
         android:textColor="@color/grey500"
         android:textSize="@dimen/text_small" />
 

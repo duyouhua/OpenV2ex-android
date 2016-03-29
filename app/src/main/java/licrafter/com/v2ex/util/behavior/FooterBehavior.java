@@ -33,30 +33,9 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
     }
 
     @Override
-    public void onNestedScroll(final CoordinatorLayout coordinatorLayout, final View child, View target, int dxConsumed, final int dyConsumed, int dxUnconsumed, int dyUnconsumed) {
-        super.onNestedScroll(coordinatorLayout, child, target, dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed);
-        if (target instanceof NestedScrollView) {
-            final NestedScrollView scrollView = ((NestedScrollView) target);
-
-            scrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
-                @Override
-                public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-
-                    if ((scrollView.getHeight() + scrollY) == v.getChildAt(v.getChildCount() - 1).getBottom()) {
-                        isBottom = true;
-                        show(child);
-                    } else {
-                        isBottom = false;
-                    }
-                }
-            });
-        }
-    }
-
-    @Override
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
-        if (target instanceof NestedScrollView){
+        if (target instanceof NestedScrollView) {
             if (dy > 0 && directionChange < 0 || dy < 0 && directionChange > 0) {
                 child.animate().cancel();
                 directionChange = 0;

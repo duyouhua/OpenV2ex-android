@@ -6,5 +6,5 @@ package licrafter.com.v2ex.mvp.views;
  **/
 public interface MvpView {
 
-    void onFailure(Throwable e);
+    void onFailure(String e);
 }

@@ -113,7 +113,7 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
     }
 
     @Override
-    public void onFailure(Throwable e) {
+    public void onFailure(String e) {
         BaseApplication.setLogin(false);
         hideDialog();
     }

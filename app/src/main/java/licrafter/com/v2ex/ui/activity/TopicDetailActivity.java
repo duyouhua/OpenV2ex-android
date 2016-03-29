@@ -42,6 +42,7 @@ public class TopicDetailActivity extends BaseToolbarActivity {
         topic = (Topic) getIntent().getSerializableExtra("topic");
         FragmentUtil.replace(getSupportFragmentManager()
                 , R.id.container, TopicDetailFragment.newInstance(topic), false, "TopicDetailFragment");
+        mFooterCommentView.setText(String.valueOf(topic.getReplies()));
     }
 
     @Override

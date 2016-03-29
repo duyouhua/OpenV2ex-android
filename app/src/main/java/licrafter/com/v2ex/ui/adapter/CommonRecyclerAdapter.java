@@ -29,12 +29,14 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
     private int mItemLayoutId;
     private boolean mHasNextPage = true;
     private View mHeaderView;
+    private String error;
 
     protected CommonRecyclerAdapter(Context context, int itemLayoutId) {
         mDatas = new ArrayList<>();
         this.mContext = context;
         this.mItemLayoutId = itemLayoutId;
         mInflater = LayoutInflater.from(context);
+        error = mContext.getString(R.string.app_name);
     }
 
     @Override
@@ -71,6 +73,9 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         if (holder instanceof ItemViewHolder) {
             bindData((ItemViewHolder) holder,position);
         }
+        if (holder instanceof EmptyViewHolder){
+            ((EmptyViewHolder) holder).getTextView(R.id.tv_error).setText(error);
+        }
     }
 
     @Override
@@ -80,6 +85,11 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         } else {
             return mDatas.size() > 0 ? mDatas.size() + 2 : 2;
         }
+    }
+
+    public void setErrorInfo(String error){
+        this.error = error;
+        notifyDataSetChanged();
     }
 
     public void hasNextPage(boolean more) {
@@ -155,6 +165,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
 
         public EmptyViewHolder(View itemView) {
             super(itemView);
+
         }
     }
 

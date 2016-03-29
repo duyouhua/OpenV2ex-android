@@ -18,7 +18,6 @@ import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.mvp.presenters.TopicListPresenter;
 import licrafter.com.v2ex.mvp.views.TopicListView;
-import licrafter.com.v2ex.ui.activity.OldTopicDetailActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
 import licrafter.com.v2ex.util.CustomUtil;
@@ -81,7 +80,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             @Override
             public void onBottom() {
                 super.onBottom();
-                if (pageIndex < totalPage) {
+                if (pageIndex <= totalPage) {
                     mPresenter.getTopicList(mTabTitle, pageIndex, false);
                 }
             }
@@ -90,7 +89,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             @Override
             public void onRefresh() {
                 pageIndex = 1;
-                mPresenter.getTopicList(mTabTitle,pageIndex,true);
+                mPresenter.getTopicList(mTabTitle, pageIndex, true);
             }
         });
     }
@@ -113,8 +112,11 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     @Override
-    public void onFailure(Throwable e) {
-        mSwipeLayout.setRefreshing(false);
+    public void onFailure(String e) {
+        if (mSwipeLayout.isRefreshing()){
+            mSwipeLayout.setRefreshing(false);
+        }
+        mAdapter.setErrorInfo(e);
     }
 
     public void onLoadMoreSuccess(TabContent content) {
@@ -128,7 +130,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
         }
         pageIndex = content.getPage() + 1;
         totalPage = content.getTotalPages();
-        if (pageIndex >= totalPage) {
+        if (pageIndex > totalPage) {
             mAdapter.hasNextPage(false);
         } else {
             mAdapter.hasNextPage(true);
@@ -148,7 +150,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
                 public void onClick(View v) {
                     android.util.Log.d("ljx", "item = " + mDatas.get(viewHolder.getAdapterPosition()).getTitle());
                     Intent intent = new Intent(getActivity(), TopicDetailActivity.class);
-                    intent.putExtra("topic",mDatas.get(viewHolder.getAdapterPosition()));
+                    intent.putExtra("topic", mDatas.get(viewHolder.getAdapterPosition()));
                     startActivity(intent);
                 }
             });
@@ -161,9 +163,9 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             holder.getTextView(R.id.tv_title).setText(topic.getTitle());
             holder.getTextView(R.id.tv_node).setText(topic.getNodeName());
             holder.getTextView(R.id.tv_author).setText(topic.getUserId());
-            if (topic.getCreateTime().equals("")){
+            if (topic.getCreateTime().equals("")) {
                 holder.getTextView(R.id.tv_create_time).setVisibility(View.GONE);
-            }else {
+            } else {
                 holder.getTextView(R.id.tv_create_time).setVisibility(View.VISIBLE);
                 holder.getTextView(R.id.tv_create_time).setText(topic.getCreateTime());
             }

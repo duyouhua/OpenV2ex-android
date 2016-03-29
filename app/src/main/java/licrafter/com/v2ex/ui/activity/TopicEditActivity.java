@@ -85,7 +85,7 @@ public class TopicEditActivity extends BaseToolbarActivity implements MvpView {
     }
 
     @Override
-    public void onFailure(Throwable e) {
+    public void onFailure(String e) {
 
     }
 }
