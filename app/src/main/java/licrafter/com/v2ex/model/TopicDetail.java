@@ -12,6 +12,7 @@ public class TopicDetail {
     public String createTime;
     public String repliesCount;
     public String clickCount;
+    private String csrfToken;
 
     public String getContent() {
         return content;
@@ -43,5 +44,13 @@ public class TopicDetail {
 
     public void setClickCount(String clickCount) {
         this.clickCount = clickCount;
+    }
+
+    public String getCsrfToken() {
+        return csrfToken;
+    }
+
+    public void setCsrfToken(String csrfToken) {
+        this.csrfToken = csrfToken;
     }
 }

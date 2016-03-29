@@ -31,16 +31,6 @@ public interface V2EX {
     Observable<String> getRecentTopics(@Path("recent") String recent, @Query("p") int page);
 
     /**
-     * 获取帖子详细内容和评论列表(评论分页)
-     *
-     * @param topicId
-     * @param page
-     * @return
-     */
-    @GET("/t/{topicId}")
-    Observable<String> getTopicDetailsById(@Path("topicId") String topicId, @Query("p") int page);
-
-    /**
      * 根据借点id获取话题列表
      *
      * @param nodeId

@@ -85,7 +85,6 @@ public class AuthService {
         public Response intercept(Chain chain) throws IOException {
             Request newRequest = chain.request().newBuilder()
                     .addHeader("Origin", "https://www.v2ex.com")
-                    .addHeader("Referer", "https://www.v2ex.com/signin")
                     .addHeader("Content-Type", "application/x-www-form-urlencoded")
                     .build();
             return chain.proceed(newRequest);

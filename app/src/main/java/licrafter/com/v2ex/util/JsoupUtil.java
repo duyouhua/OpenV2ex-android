@@ -157,6 +157,19 @@ public class JsoupUtil {
         detail.setClickCount(arry[2]);
         Element content = body.select("div.topic_content").first();
         detail.setContent(content.toString());
+        Elements tokenEs = document.getElementsByTag("script");
+        for (Element element : tokenEs) {
+            if (element.toString().contains("csrfToken ")) {
+                String script = element.toString();
+                int end = script.lastIndexOf(";");
+                String token = script.substring(end - 33, end - 1);
+                if (token.contains("csrfToken")) {
+                    detail.setCsrfToken("false");
+                } else {
+                    detail.setCsrfToken(token);
+                }
+            }
+        }
         return detail;
     }
 

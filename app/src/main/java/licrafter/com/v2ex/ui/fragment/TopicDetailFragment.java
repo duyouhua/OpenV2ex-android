@@ -2,6 +2,7 @@ package licrafter.com.v2ex.ui.fragment;/**
  * Created by Administrator on 2016/3/26.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
@@ -9,20 +10,27 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import butterknife.Bind;
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
+import licrafter.com.v2ex.event.FavoriteEvent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
+import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 import licrafter.com.v2ex.util.CustomUtil;
+import licrafter.com.v2ex.util.RxBus;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * author: lijinxiang
@@ -48,7 +56,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
-
+    private Subscription mFavoriteSubscription;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -64,6 +72,18 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         if (getArguments() != null) {
             topic = (Topic) getArguments().getSerializable("topic");
         }
+        mFavoriteSubscription = RxBus.getDefault().toObserverable(FavoriteEvent.class)
+                .subscribe(new Action1<FavoriteEvent>() {
+                    @Override
+                    public void call(FavoriteEvent favoriteEvent) {
+                        if (BaseApplication.isLogin() && !topicDetail.getCsrfToken().equals("false")) {
+                            mPresenter.favoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
+                        } else {
+                            Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(getActivity(), LoginActivity.class));
+                        }
+                    }
+                });
     }
 
     @Override
@@ -123,5 +143,13 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
             mRefreshLayout.setRefreshing(false);
         }
         mRichTextView.setRichText(e);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!mFavoriteSubscription.isUnsubscribed()) {
+            mFavoriteSubscription.unsubscribe();
+        }
     }
 }

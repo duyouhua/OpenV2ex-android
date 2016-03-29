@@ -2,18 +2,23 @@ package licrafter.com.v2ex.ui.activity;/**
  * Created by Administrator on 2016/3/26.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
+import licrafter.com.v2ex.event.FavoriteEvent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.ui.fragment.TopicCommentListFragment;
 import licrafter.com.v2ex.ui.fragment.TopicDetailFragment;
 import licrafter.com.v2ex.util.FragmentUtil;
+import licrafter.com.v2ex.util.RxBus;
 
 /**
  * author: lijinxiang
@@ -26,6 +31,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     RelativeLayout mDetailFooterLayout;
     @Bind(R.id.footer_comment)
     TextView mFooterCommentView;
+    @Bind(R.id.footer_shoucang)
+    TextView mFooterShoucang;
 
     @Override
     protected int getLayoutId() {
@@ -64,6 +71,7 @@ public class TopicDetailActivity extends BaseToolbarActivity {
             }
         });
         mFooterCommentView.setOnClickListener(onClickListener);
+        mFooterShoucang.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -79,6 +87,9 @@ public class TopicDetailActivity extends BaseToolbarActivity {
                     FragmentUtil.replace(getSupportFragmentManager()
                             , R.id.container, TopicCommentListFragment.getInstance(topic.getTitle()
                                     , topic.getTopicId()), true, "TopicCommentListFragment");
+                    break;
+                case R.id.footer_shoucang:
+                    RxBus.getDefault().post(new FavoriteEvent());
                     break;
             }
         }

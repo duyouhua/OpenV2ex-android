@@ -3,6 +3,7 @@ package licrafter.com.v2ex.mvp.presenters;/**
  */
 
 
+import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.model.TopicDetail;
@@ -25,7 +26,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
     private boolean isLoading;
 
     public void getTopicDetail(String topicId) {
-        compositeSubscription.add(V2exService.getInstance().v2EX().getTopicDetailsById(topicId, 1)
+        compositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, 1)
                 .map(new Func1<String, TopicDetail>() {
                     @Override
                     public TopicDetail call(String response) {
@@ -62,7 +63,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
             return;
         }
         isLoading = true;
-        compositeSubscription.add(V2exService.getInstance().v2EX().getTopicDetailsById(topicId, pageIndex)
+        compositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, pageIndex)
                 .map(new Func1<String, TopicComment>() {
                     @Override
                     public TopicComment call(String response) {
@@ -94,6 +95,39 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
                             } else {
                                 ((TopicCommentListFragment) getView()).onLoadMoreSuccess(topicComment);
                             }
+                        }
+                    }
+                }));
+    }
+
+    public void favoriteTopic(String topicId, String csrfToken) {
+        String referer = "http://www.v2ex.com/t/" + topicId;
+        compositeSubscription.add(AuthService.getInstance().auth().favoriteTopic(referer, topicId, csrfToken)
+                .map(new Func1<String, String>() {
+                    @Override
+                    public String call(String s) {
+                        return null;
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            getView().onFailure(ApiErrorUtil.handleError(e));
+                        }
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        if (getView() != null) {
+
                         }
                     }
                 }));
