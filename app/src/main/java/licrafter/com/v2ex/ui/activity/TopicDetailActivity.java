@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
+import licrafter.com.v2ex.event.CommentEvent;
 import licrafter.com.v2ex.event.FavoriteEvent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.ui.fragment.TopicCommentListFragment;
@@ -35,6 +37,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     TextView mFooterCommentView;
     @Bind(R.id.footer_shoucang)
     TextView mFooterShoucang;
+    @Bind(R.id.commentActionbtn)
+    FloatingActionButton commentActionBtn;
 
     @Override
     protected int getLayoutId() {
@@ -67,13 +71,16 @@ public class TopicDetailActivity extends BaseToolbarActivity {
                 int fragmentCount = getSupportFragmentManager().getFragments().size();
                 if (getSupportFragmentManager().getFragments().get(fragmentCount - 1) instanceof TopicCommentListFragment) {
                     mDetailFooterLayout.setVisibility(View.GONE);
+                    commentActionBtn.setVisibility(View.VISIBLE);
                 } else {
                     mDetailFooterLayout.setVisibility(View.VISIBLE);
+                    commentActionBtn.setVisibility(View.GONE);
                 }
             }
         });
         mFooterCommentView.setOnClickListener(onClickListener);
         mFooterShoucang.setOnClickListener(onClickListener);
+        commentActionBtn.setOnClickListener(onClickListener);
     }
 
     @Override
@@ -92,6 +99,9 @@ public class TopicDetailActivity extends BaseToolbarActivity {
                     break;
                 case R.id.footer_shoucang:
                     RxBus.getDefault().post(new FavoriteEvent());
+                    break;
+                case R.id.commentActionbtn:
+                    RxBus.getDefault().post(new CommentEvent());
                     break;
             }
         }

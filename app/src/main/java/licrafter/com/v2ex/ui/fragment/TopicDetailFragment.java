@@ -2,13 +2,22 @@ package licrafter.com.v2ex.ui.fragment;/**
  * Created by Administrator on 2016/3/26.
  */
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.DragEvent;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +35,6 @@ import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
-import licrafter.com.v2ex.ui.widget.RichTextView;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.RxBus;
 import rx.Subscription;
@@ -39,8 +47,7 @@ import rx.functions.Action1;
 public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private Topic topic;
-    @Bind(R.id.swipe_layout)
-    SwipeRefreshLayout mRefreshLayout;
+
     @Bind(R.id.iv_avatar)
     RoundedImageView mAvatarView;
     @Bind(R.id.tv_username)
@@ -50,13 +57,14 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Bind(R.id.tv_title)
     TextView mTitleView;
     @Bind(R.id.tv_content)
-    RichTextView mRichTextView;
+    WebView mcontentWebView;
     @Bind(R.id.detail_ScrollView)
     NestedScrollView mDetailScrollView;
 
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
     private Subscription mFavoriteSubscription;
+    private float x, y;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -89,14 +97,12 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     protected void initViews(View view) {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(false);
         ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
-        CustomUtil.initStyle(mRefreshLayout);
-        mRefreshLayout.setProgressViewOffset(false, 0, 25);
-        mRefreshLayout.setEnabled(false);
         if (topic != null) {
             mTitleView.setText(topic.getTitle());
             Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
             mUserNameView.setText(topic.getUserId());
         }
+        initWebView();
     }
 
     @Override
@@ -106,7 +112,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                     @Override
                     public void call(FavoriteEvent favoriteEvent) {
                         if (BaseApplication.isLogin() && !topicDetail.getCsrfToken().equals("false")) {
-                            mRefreshLayout.setRefreshing(true);
+                            showLoadingDialog();
                             if (topicDetail.isFravorite()) {
                                 mPresenter.unFavoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
                             } else {
@@ -124,7 +130,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Override
     protected void loadData() {
         if (topicDetail == null) {
-            mRefreshLayout.setRefreshing(true);
+            showLoadingDialog();
             mPresenter.getTopicDetail(topic.getTopicId());
         } else {
             parseTopicDetail(topicDetail);
@@ -136,22 +142,53 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         mPresenter.detachView();
     }
 
+    @SuppressLint("JavascriptInterface")
+    public void initWebView() {
+        mcontentWebView.setWebViewClient(webViewClient);
+        WebSettings webSettings = mcontentWebView.getSettings();
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setSupportZoom(false);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setUseWideViewPort(false);
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLoadWithOverviewMode(true);
+        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+    }
+
     public void parseTopicDetail(TopicDetail topicDetail) {
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
-        }
+        hideLoadingDialog();
         this.topicDetail = topicDetail;
-        mRichTextView.setRichText(topicDetail.getContent());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
         ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
+        openWebView(topicDetail.getContent());
+    }
+
+    /**
+     * http://stackoverflow.com/questions/3099344/can-androids-webview-automatically-resize-huge-images
+     *
+     * @param data
+     */
+    @SuppressLint("NewApi")
+    private void openWebView(String data) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            mcontentWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        } else {
+            mcontentWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
+        }
+        mcontentWebView.loadDataWithBaseURL("file:///android_asset/", getHtmlData(data), "text/html", "utf-8", null);
+    }
+
+    private String getHtmlData(String bodyHTML) {
+        String head = "<head><style>img{max-width: 80%; width:auto; height: auto;}</style></head>";
+        return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
     }
 
     @Override
     public void onFailure(String e) {
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
-        }
-        mRichTextView.setRichText(e);
+        hideLoadingDialog();
+        mcontentWebView.loadData(e, "text/html; charset=UTF-8", null);
     }
 
     @Override
@@ -163,13 +200,30 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     }
 
     public void parseFavorite(String token, boolean isFavorite) {
-        if (mRefreshLayout.isRefreshing()) {
-            mRefreshLayout.setRefreshing(false);
-        }
-        Toast.makeText(getActivity(),"操作成功",Toast.LENGTH_SHORT).show();
+        hideLoadingDialog();
+        Toast.makeText(getActivity(), "操作成功", Toast.LENGTH_SHORT).show();
         topicDetail.setCsrfToken(token);
         topicDetail.setFravorite(isFavorite);
         ((TopicDetailActivity) getActivity()).setShoucangStatus(isFavorite);
     }
+
+    private WebViewClient webViewClient = new WebViewClient() {
+
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            if (url.contains(".jpg")) {
+                Toast.makeText(getContext(), "图片url = " + url, Toast.LENGTH_LONG).show();
+            } else {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                startActivity(intent);
+            }
+            return true;
+        }
+
+        public void onLoadResource(WebView view, String url) {
+            //android.util.Log.d("ljx","url = "+url);
+            super.onLoadResource(view, url);
+        }
+    };
 
 }

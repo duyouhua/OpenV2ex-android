@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
+import licrafter.com.v2ex.event.CommentEvent;
 import licrafter.com.v2ex.listener.OnScrollBottomListener;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.TopicComment;
@@ -29,6 +30,10 @@ import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 import licrafter.com.v2ex.util.CustomUtil;
+import licrafter.com.v2ex.util.RxBus;
+import rx.Subscriber;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * author: lijinxiang
@@ -45,6 +50,7 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
     private String mTopicId = "";
     private CommentAdapter mAdapter;
     private TopicDetailPresenter mPresenter;
+    private Subscription commentScription;
 
     private int pageIndex = 1;
     private int totalPage;
@@ -109,6 +115,13 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
                 }
             }
         });
+        commentScription = RxBus.getDefault().toObserverable(CommentEvent.class)
+                .subscribe(new Action1<CommentEvent>() {
+                    @Override
+                    public void call(CommentEvent commentEvent) {
+
+                    }
+                });
     }
 
     @Override
@@ -174,6 +187,14 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
             ((RichTextView) viewHolder.getView(R.id.tv_content)).setRichText(comment.getContent());
             viewHolder.getTextView(R.id.tv_rank).setText(comment.getRank());
 
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (!commentScription.isUnsubscribed()){
+            commentScription.unsubscribe();
         }
     }
 }

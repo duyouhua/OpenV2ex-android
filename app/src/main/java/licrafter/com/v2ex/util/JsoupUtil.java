@@ -155,8 +155,13 @@ public class JsoupUtil {
         String[] arry = small.text().split(" · ");
         detail.setCreateTime(arry[1]);
         detail.setClickCount(arry[2]);
-        Element content = body.select("div.topic_content").first();
-        detail.setContent(content.toString());
+        Elements contents = body.select("div.topic_content");
+        if (contents.size() > 0) {
+            String content = contents.first().toString().replaceAll("max-width","");
+            detail.setContent(content );
+        } else {
+            detail.setContent("");
+        }
         Elements tokenEs = document.getElementsByTag("script");
         for (Element element : tokenEs) {
             if (element.toString().contains("csrfToken ")) {

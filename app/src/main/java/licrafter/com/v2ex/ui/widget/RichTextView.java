@@ -95,4 +95,5 @@ public class RichTextView extends TextView {
         //添加超链接,不加链接点不了
         setMovementMethod(LinkMovementMethod.getInstance());
     }
+
 }

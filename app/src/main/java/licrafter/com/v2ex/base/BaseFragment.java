@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import licrafter.com.v2ex.ui.widget.LoadingDialog;
 
 /**
  * Created by Administrator on 2016/2/2.
@@ -18,6 +19,8 @@ public abstract class BaseFragment extends Fragment {
     private boolean isVisible;
     private boolean isPrepare;
     private BaseToolbarActivity activity;
+
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onAttach(Context context) {
@@ -38,6 +41,7 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        loadingDialog = new LoadingDialog(getActivity());
         attachView();
         initViews(view);
         setListeners();
@@ -65,6 +69,18 @@ public abstract class BaseFragment extends Fragment {
 
     public BaseToolbarActivity getBaseActivity() {
         return activity;
+    }
+
+    public void showLoadingDialog() {
+        if (loadingDialog != null && !loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
+    }
+
+    public void hideLoadingDialog() {
+        if (loadingDialog != null && loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
+        }
     }
 
     @Override

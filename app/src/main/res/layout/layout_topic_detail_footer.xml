@@ -36,7 +36,7 @@
         android:layout_toLeftOf="@id/footer_comment"
         android:drawablePadding="2dp"
         android:drawableTop="@mipmap/ic_shoucang"
-        android:text="收藏"
+        android:text="添加收藏"
         android:textColor="@color/grey500"
         android:textSize="@dimen/text_small" />
 </RelativeLayout>
