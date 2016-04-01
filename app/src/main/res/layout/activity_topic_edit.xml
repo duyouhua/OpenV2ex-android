@@ -1,28 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <include layout="@layout/include_app_bar_layout"/>
-
-    <EditText
-        android:id="@+id/nodeInputEditText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/titleInputText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <include layout="@layout/include_app_bar_layout" />
 
-    <EditText
-        android:id="@+id/contentInputText"
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+        <TextView
+            android:id="@+id/nodeSelectTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:background="@drawable/bg_ripple"
+            android:padding="@dimen/padding_small"
+            android:text="请选择节点"
+            android:textSize="@dimen/text_small" />
 
-    <Button
-        android:id="@+id/submitBtn"
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/titleInputText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_topic_title"
+            android:padding="@dimen/padding_normal"
+            android:textColorHint="@color/grey400"
+            android:textSize="@dimen/text_large" />
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/contentInputText"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="top"
+            android:hint="@string/hint_topic_content"
+            android:padding="@dimen/padding_normal"
+            android:textColorHint="@color/grey400"
+            android:textSize="@dimen/text_large" />
+
+        <Button
+            android:id="@+id/submitBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <licrafter.com.v2ex.ui.widget.searchView.LJSearchView
+        android:id="@+id/searchView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-</LinearLayout>
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        app:hint_color="@color/grey300"
+        app:hint_text="@string/app_name" />
+</FrameLayout>

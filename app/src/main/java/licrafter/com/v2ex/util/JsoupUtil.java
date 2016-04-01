@@ -157,8 +157,8 @@ public class JsoupUtil {
         detail.setClickCount(arry[2]);
         Elements contents = body.select("div.topic_content");
         if (contents.size() > 0) {
-            String content = contents.first().toString().replaceAll("max-width","");
-            detail.setContent(content );
+            String content = contents.first().toString().replaceAll("max-width", "");
+            detail.setContent(content);
         } else {
             detail.setContent("");
         }

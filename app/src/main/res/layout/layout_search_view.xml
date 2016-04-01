@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/searchViewRelativeLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/search_box_height"
+        android:layout_margin="4dp"
+        android:background="@drawable/bg_search_box"
+        android:elevation="5dp">
+
+        <ImageView
+            android:id="@+id/searchBackButton"
+            android:layout_width="@dimen/search_box_height"
+            android:layout_height="@dimen/search_box_height"
+            android:padding="15dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_leftarrow" />
+
+        <ImageView
+            android:id="@+id/searchCancelButton"
+            android:layout_width="@dimen/search_box_height"
+            android:layout_height="@dimen/search_box_height"
+            android:layout_alignParentRight="true"
+            android:padding="15dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_cancel" />
+
+        <EditText
+            android:id="@+id/queryEditText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@id/searchBackButton"
+            android:layout_toLeftOf="@id/searchCancelButton"
+            android:layout_toRightOf="@id/searchBackButton"
+            android:layout_toStartOf="@id/searchCancelButton"
+            android:background="@android:color/transparent"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:singleLine="true" />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/searchResultRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@color/white" />
+</LinearLayout>

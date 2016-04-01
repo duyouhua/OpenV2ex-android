@@ -95,7 +95,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_new) {
             startActivity(new Intent(this, TopicEditActivity.class));
             return true;
         }

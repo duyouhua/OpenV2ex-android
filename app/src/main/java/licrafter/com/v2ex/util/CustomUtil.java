@@ -2,11 +2,14 @@ package licrafter.com.v2ex.util;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,5 +94,11 @@ public class CustomUtil {
 
         // finally change the color
         window.setStatusBarColor(activity.getResources().getColor(R.color.teal500));
+    }
+
+    public static void showInputMethod(View view) {
+        final InputMethodManager manager = (InputMethodManager) view.getContext()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        manager.showSoftInput(view, 0);
     }
 }

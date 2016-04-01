@@ -29,14 +29,12 @@
         </activity>
 
         <activity
-            android:name=".ui.activity.ProfitActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.LoginActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.activity.TopicEditActivity"
             android:screenOrientation="portrait"
+            android:label="@string/edit_post"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name=".ui.activity.SettingActivity"

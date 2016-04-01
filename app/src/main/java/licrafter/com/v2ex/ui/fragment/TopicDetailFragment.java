@@ -145,6 +145,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @SuppressLint("JavascriptInterface")
     public void initWebView() {
         mcontentWebView.setWebViewClient(webViewClient);
+
         WebSettings webSettings = mcontentWebView.getSettings();
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(false);
@@ -155,6 +156,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         webSettings.setDomStorageEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
+        mcontentWebView.addJavascriptInterface(new JavascriptInterface(getActivity()),"imagelistner");
     }
 
     public void parseTopicDetail(TopicDetail topicDetail) {
@@ -220,10 +222,43 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
             return true;
         }
 
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            super.onPageFinished(view, url);
+            addImageClickListner();
+        }
+
         public void onLoadResource(WebView view, String url) {
             //android.util.Log.d("ljx","url = "+url);
             super.onLoadResource(view, url);
         }
     };
+
+    // 注入js函数监听
+    private void addImageClickListner() {
+        // 这段js函数的功能就是，遍历所有的img几点，并添加onclick函数，函数的功能是在图片点击的时候调用本地java接口并传递url过去
+        mcontentWebView.loadUrl("javascript:(function(){" +
+                "var objs = document.getElementsByTagName(\"img\"); " +
+                "for(var i=0;i<objs.length;i++)  " +
+                "{"
+                + "    objs[i].onclick=function()  " +
+                "    {  "
+                + "        window.imagelistner.openImage(this.src);  " +
+                "    }  " +
+                "}" +
+                "})()");
+    }
+
+    public class JavascriptInterface{
+        private Context context;
+
+        public JavascriptInterface(Context context){
+            this.context = context;
+        }
+
+        public void openImage(String img){
+            android.util.Log.d("ljx","url = "+img);
+        }
+    }
 
 }
