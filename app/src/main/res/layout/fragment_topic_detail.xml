@@ -31,7 +31,7 @@
             android:layout_marginTop="-35dp"
             android:paddingBottom="50dp">
 
-            <WebView
+            <licrafter.com.v2ex.ui.widget.LJWebView
                 android:id="@+id/tv_content"
                 style="@style/topicContentStyle"
                 android:layout_width="match_parent"

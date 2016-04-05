@@ -8,21 +8,22 @@ package licrafter.com.v2ex.ui.widget.searchView;/**
  **/
 public class SearchItem {
 
-    private String text;
+    private String title;
+    private String name;
 
     private boolean hasIcon;
 
-    public SearchItem(String text, boolean hasIcon) {
-        this.text = text;
-        this.hasIcon = hasIcon;
+    public SearchItem(String title, String name) {
+        this.title = title;
+        this.name = name;
     }
 
-    public String getText() {
-        return text;
+    public String getTitle() {
+        return title;
     }
 
-    public void setText(String text) {
-        this.text = text;
+    public void setTitle(String text) {
+        this.title = text;
     }
 
     public boolean isHasIcon() {
@@ -31,5 +32,13 @@ public class SearchItem {
 
     public void setHasIcon(boolean hasIcon) {
         this.hasIcon = hasIcon;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

@@ -44,6 +44,10 @@ public class AuthService {
         return instance;
     }
 
+    public PersistentCookieStore getCookieStore(){
+        return persistentCookieStore;
+    }
+
     public AuthService() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

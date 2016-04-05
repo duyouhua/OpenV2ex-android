@@ -1,32 +1,5 @@
 package licrafter.com.v2ex.ui.widget.searchView;/**
- * Created by Administrator on 2016/4/1.
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- * <p>
- * author: lijinxiang
- * date: 2016/4/1
- **/
-
-/**
+ * /**
  * author: lijinxiang
  * date: 2016/4/1
  **/
@@ -42,35 +15,25 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.util.CustomUtil;
-import rx.Observable;
 
-/**
- * author: lijinxiang
- * date: 2016/3/16
- **/
-public class LJSearchView extends FrameLayout implements View.OnClickListener, TextWatcher, TextView.OnEditorActionListener
-        , Filter.FilterListener {
+public class LJSearchView extends FrameLayout implements View.OnClickListener, TextWatcher, Filter.FilterListener {
 
     private int hintTextColor;
     private String hintText;
-    private OnSearchListener searchListener;
 
     private EditText queryEditText;
     private RelativeLayout searchViewRelativeLayout;
@@ -79,7 +42,6 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
     private RecyclerView historyRecyclerView;
 
     private SearchAdapter historyAdapter;
-    private ArrayList<SearchItem> mResults;
 
     public LJSearchView(Context context) {
         this(context, null);
@@ -93,6 +55,7 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
+
 
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.layout_search_view, this, true);
@@ -120,14 +83,10 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
         queryEditText.addTextChangedListener(this);
         cancelButton.setOnClickListener(this);
         backButton.setOnClickListener(this);
-        queryEditText.setOnEditorActionListener(this);
     }
 
     public void show() {
-        if (searchListener == null) {
-            throw new RuntimeException("Please add LJSearchView.OnSearchListener");
-        }
-        searchListener.onQueryStart();
+
         setVisibility(VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Animator animator = ViewAnimationUtils.createCircularReveal(searchViewRelativeLayout, searchViewRelativeLayout.getWidth() / 2
@@ -158,10 +117,15 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
     private Animator.AnimatorListener hideListener = new AnimatorListenerAdapter() {
 
         @Override
+        public void onAnimationStart(Animator animation) {
+            super.onAnimationStart(animation);
+            historyRecyclerView.setVisibility(GONE);
+        }
+
+        @Override
         public void onAnimationEnd(Animator animation) {
             setVisibility(GONE);
             queryEditText.setText("");
-            searchListener.onQueryEnd();
         }
     };
 
@@ -171,12 +135,9 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
         public void onAnimationEnd(Animator animation) {
             queryEditText.requestFocus();
             CustomUtil.showInputMethod(queryEditText);
+            historyRecyclerView.setVisibility(VISIBLE);
         }
     };
-
-    public void addOnSearchListener(OnSearchListener listener) {
-        this.searchListener = listener;
-    }
 
     @Override
     public void onClick(View v) {
@@ -195,23 +156,12 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        startFilter(s);
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        searchListener.onQueryTextChanged(s.toString());
-        startFilter(s.toString());
-    }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (actionId != EditorInfo.IME_ACTION_SEARCH) {
-            return false;
-        } else {
-            String queryText = v.getText().toString();
-            return searchListener.onQuerySubmit(queryText);
-        }
     }
 
     public void setAdapter(SearchAdapter adapter) {
@@ -235,16 +185,6 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
 
     @Override
     public void onFilterComplete(int count) {
-
     }
 
-    public interface OnSearchListener {
-        void onQueryStart();
-
-        void onQueryTextChanged(String text);
-
-        boolean onQuerySubmit(String query);
-
-        void onQueryEnd();
-    }
 }

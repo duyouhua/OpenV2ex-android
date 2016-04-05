@@ -1,6 +1,4 @@
-package licrafter.com.v2ex.ui.widget.searchView;/**
- * Created by Administrator on 2016/4/1.
- */
+package licrafter.com.v2ex.ui.widget.searchView;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -27,23 +25,30 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
     private Context mContext;
     private ArrayList<SearchItem> mDatas;
     private ArrayList<SearchItem> mResult;
+    private OnItemClickListener listener;
 
-    public SearchAdapter(Context context, ArrayList<SearchItem> data) {
+    public SearchAdapter(Context context) {
         this.mContext = context;
-        mDatas = data;
-        mResult = data;
+        mResult = new ArrayList<>();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        ItemViewHolder holder = new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_search_result, parent, false));
+        final ItemViewHolder holder = new ItemViewHolder(LayoutInflater.from(mContext).inflate(R.layout.item_search_result, parent, false));
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SearchItem item = mResult.get(holder.getAdapterPosition());
+                listener.onClick(item.getName(), item.getTitle());
+            }
+        });
         return holder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemViewHolder) {
-            ((ItemViewHolder) holder).textView.setText(mResult.get(position).getText());
+            ((ItemViewHolder) holder).textView.setText(mResult.get(position).getTitle() + " / " + mResult.get(position).getName());
         }
     }
 
@@ -62,7 +67,7 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
                     String key = constraint.toString().toLowerCase(Locale.getDefault());
                     ArrayList<SearchItem> searchData = new ArrayList<>();
                     for (SearchItem item : mDatas) {
-                        String str = item.getText().toString().toLowerCase(Locale.getDefault());
+                        String str = item.getTitle().toString().toLowerCase(Locale.getDefault());
                         if (str.contains(key)) {
                             searchData.add(item);
                         }
@@ -101,4 +106,16 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
         }
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public void setData(ArrayList<SearchItem> items) {
+        mDatas = items;
+        mResult.addAll(mDatas);
+    }
+
+    public interface OnItemClickListener {
+        public void onClick(String name, String title);
+    }
 }

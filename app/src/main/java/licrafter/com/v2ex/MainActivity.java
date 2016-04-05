@@ -7,8 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
+import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.SettingActivity;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.ui.fragment.CategoryFragment;
@@ -96,7 +98,12 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_new) {
-            startActivity(new Intent(this, TopicEditActivity.class));
+            if (BaseApplication.isLogin()) {
+                startActivity(new Intent(this, TopicEditActivity.class));
+            } else {
+                Toast.makeText(this, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, LoginActivity.class));
+            }
             return true;
         }
 

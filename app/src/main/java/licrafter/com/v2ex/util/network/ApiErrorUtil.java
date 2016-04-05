@@ -25,17 +25,15 @@ public class ApiErrorUtil {
         android.util.Log.d("v2ex", "error:" + e.toString());
         if (e instanceof ConnectException || e instanceof UnknownHostException) {
             error = BaseApplication.getContext().getString(R.string.network_connect_error);
-            Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
         } else if (e instanceof HttpException) {
             int code = ((HttpException) e).code();
             if (code == 403) {
                 error = BaseApplication.getContext().getString(R.string.forbidden);
-                Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
             }
         } else if (e instanceof TimeoutException) {
             error = BaseApplication.getContext().getString(R.string.time_out);
-            Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
         }
+        Toast.makeText(BaseApplication.getContext(), error, Toast.LENGTH_SHORT).show();
         return error;
     }
 

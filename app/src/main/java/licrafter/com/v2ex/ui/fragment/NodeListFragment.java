@@ -3,6 +3,7 @@ package licrafter.com.v2ex.ui.fragment;/**
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -17,6 +18,7 @@ import licrafter.com.v2ex.base.BaseFragment;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.mvp.presenters.NodeListPresenter;
 import licrafter.com.v2ex.mvp.views.NodeListView;
+import licrafter.com.v2ex.ui.activity.WebViewActivity;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
 import licrafter.com.v2ex.util.CustomUtil;
 
@@ -52,7 +54,7 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
     @Override
     protected void initViews(View view) {
         CustomUtil.initStyle(mSwipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewOffset(false,0,30);
+        mSwipeRefreshLayout.setProgressViewOffset(false, 0, 30);
         mAdapter = new NodeListAdapter(getContext(), R.layout.item_node);
         mNodeRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mNodeRecyclerView.setAdapter(mAdapter);
@@ -81,7 +83,7 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
 
     @Override
     public void onFailure(String e) {
-        if (mSwipeRefreshLayout.isRefreshing()){
+        if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         mAdapter.setErrorInfo(e);
@@ -89,7 +91,7 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
 
     @Override
     public void onGetNodeListSuccess(ArrayList<Node> nodes) {
-        if (mSwipeRefreshLayout.isRefreshing()){
+        if (mSwipeRefreshLayout.isRefreshing()) {
             mSwipeRefreshLayout.setRefreshing(false);
         }
         mAdapter.setData(nodes);
@@ -102,11 +104,13 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
         }
 
         @Override
-        protected void getItemViewHolder(ItemViewHolder viewHolder) {
-            viewHolder.getConvertView().setOnClickListener(new View.OnClickListener() {
+        protected void getItemViewHolder(final ItemViewHolder viewHolder) {
+            viewHolder.getView(R.id.card_linearlayout).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "点击了", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(mContext, WebViewActivity.class);
+                    intent.putExtra("url", mDatas.get(viewHolder.getAdapterPosition()).getUrl());
+                    startActivity(intent);
                 }
             });
         }

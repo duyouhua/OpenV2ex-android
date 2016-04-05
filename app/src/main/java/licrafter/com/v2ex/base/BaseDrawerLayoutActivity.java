@@ -21,6 +21,7 @@ import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.event.LogoutEvent;
 import licrafter.com.v2ex.event.UserEvent;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
+import licrafter.com.v2ex.ui.activity.WebViewActivity;
 import licrafter.com.v2ex.util.Constant;
 import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
@@ -66,7 +67,13 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         userInfoTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(BaseDrawerLayoutActivity.this, LoginActivity.class));
+                if (!BaseApplication.isLogin()) {
+                    startActivity(new Intent(BaseDrawerLayoutActivity.this, LoginActivity.class));
+                } else {
+                    Intent intent = new Intent(BaseDrawerLayoutActivity.this, WebViewActivity.class);
+                    intent.putExtra("url", ("https://www.v2ex.com/member/" + SharedPreferenceUtils.getString("user_name", "")));
+                    startActivity(intent);
+                }
             }
         });
         if (BaseApplication.isLogin()) {
@@ -79,7 +86,6 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         userSubscription = RxBus.getDefault().toObserverable(UserEvent.class).subscribe(new Action1<UserEvent>() {
             @Override
             public void call(UserEvent userEvent) {
-                android.util.Log.d("ljx", "login");
                 setUserInfo(userEvent);
             }
         }, new Action1<Throwable>() {
@@ -91,7 +97,6 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         logoutSubscription = RxBus.getDefault().toObserverable(LogoutEvent.class).subscribe(new Action1<LogoutEvent>() {
             @Override
             public void call(LogoutEvent logoutEvent) {
-                android.util.Log.d("ljx", "logout");
                 setUserInfo(null);
             }
         });

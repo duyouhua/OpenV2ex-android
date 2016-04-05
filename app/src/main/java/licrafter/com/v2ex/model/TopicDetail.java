@@ -2,6 +2,8 @@ package licrafter.com.v2ex.model;/**
  * Created by Administrator on 2016/3/26.
  */
 
+import java.util.ArrayList;
+
 /**
  * author: lijinxiang
  * date: 2016/3/26
@@ -14,6 +16,7 @@ public class TopicDetail {
     public String clickCount;
     private String csrfToken;
     private boolean isFravorite;
+    private ArrayList<String> imgUrls = new ArrayList<>();
 
     public String getContent() {
         return content;
@@ -61,5 +64,13 @@ public class TopicDetail {
 
     public void setFravorite(boolean fravorite) {
         isFravorite = fravorite;
+    }
+
+    public ArrayList<String> getImgUrls() {
+        return imgUrls;
+    }
+
+    public void setImgUrls(ArrayList<String> imgUrls) {
+        this.imgUrls = imgUrls;
     }
 }

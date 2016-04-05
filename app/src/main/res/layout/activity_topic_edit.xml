@@ -35,6 +35,7 @@
             android:id="@+id/contentInputText"
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_marginBottom="20dp"
             android:gravity="top"
             android:hint="@string/hint_topic_content"
             android:padding="@dimen/padding_normal"
@@ -44,7 +45,10 @@
         <Button
             android:id="@+id/submitBtn"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/margin_normal"
+            android:background="@drawable/bg_ripple"
+            android:text="发表" />
     </LinearLayout>
 
     <licrafter.com.v2ex.ui.widget.searchView.LJSearchView

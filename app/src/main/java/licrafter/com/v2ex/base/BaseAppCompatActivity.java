@@ -5,7 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import butterknife.ButterKnife;
-import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
+import licrafter.com.v2ex.ui.widget.LoadingDialog;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
@@ -13,7 +13,7 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
  */
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
-    private ProgressbarDialog progressbarDialog;
+    private LoadingDialog loadingDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         SharedPreferenceUtils.init(getApplicationContext());
-        progressbarDialog = new ProgressbarDialog();
+        loadingDialog = new LoadingDialog(this);
         this.initToolbar(savedInstanceState);
         this.attachVeiw();
         this.initView(savedInstanceState);
@@ -38,12 +38,14 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     protected void showDialog() {
-        progressbarDialog.show(getSupportFragmentManager(), "");
+        if (!loadingDialog.isShowing()) {
+            loadingDialog.show();
+        }
     }
 
     protected void hideDialog() {
-        if (!progressbarDialog.isHidden()) {
-            progressbarDialog.dismiss();
+        if (loadingDialog.isShowing()) {
+            loadingDialog.dismiss();
         }
     }
 

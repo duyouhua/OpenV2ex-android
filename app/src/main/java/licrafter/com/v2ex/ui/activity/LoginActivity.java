@@ -98,6 +98,9 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
             SharedPreferenceUtils.save("user_avatar", result.getUserAvatar());
             RxBus.getDefault().post(new UserEvent(result.getUserId(), result.getUserAvatar()));
             Toast.makeText(this, "欢迎  " + result.getUserId() + "  登录客户端", Toast.LENGTH_LONG).show();
+            SharedPreferenceUtils.save("user_name",result.getUserId());
+            SharedPreferenceUtils.save("user_avatar",result.getUserAvatar());
+            setResult(RESULT_OK);
             finish();
         } else {
             BaseApplication.setLogin(false);

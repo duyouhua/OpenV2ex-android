@@ -11,6 +11,8 @@
     <string name="setting">设置</string>
     <string name="edit_post">编辑帖子</string>
     <string name="please_login">请登录</string>
+    <string name="topic_title_is_null">帖子标题不能为空</string>
+    <string name="create_success">创建成功！</string>
     <string name="hint_topic_title">帖子标题</string>
     <string name="hint_topic_content">请输入帖子内容，如果帖子标题能够表达完整的内容，此处可以为空</string>
     <string name="network_connect_error">网络连接错误，请检测手机网络!</string>

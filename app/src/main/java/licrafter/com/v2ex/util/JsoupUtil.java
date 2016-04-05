@@ -6,12 +6,15 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.response.CreateTopicResponse;
+import licrafter.com.v2ex.util.network.ApiErrorUtil;
 
 /**
  * Created by shell on 15-11-8.
@@ -158,7 +161,7 @@ public class JsoupUtil {
         Elements contents = body.select("div.topic_content");
         if (contents.size() > 0) {
             String content = contents.first().toString().replaceAll("max-width", "");
-            detail.setContent(content);
+            parseImg(detail, contents.first(), content);
         } else {
             detail.setContent("");
         }
@@ -177,12 +180,28 @@ public class JsoupUtil {
         }
 
         Element favoriteE = body.select("div.topic_buttons").first();
-        if (favoriteE.toString().contains("加入收藏")) {
-            detail.setFravorite(false);
-        } else if (favoriteE.toString().contains("取消收藏")) {
-            detail.setFravorite(true);
+        if (favoriteE != null) {
+            if (favoriteE.toString().contains("加入收藏")) {
+                detail.setFravorite(false);
+            } else if (favoriteE.toString().contains("取消收藏")) {
+                detail.setFravorite(true);
+            }
         }
         return detail;
+    }
+
+    private static void parseImg(TopicDetail detail, Element element, String content) {
+        Elements imgEs = element.getElementsByTag("img");
+        ArrayList<String> urls = new ArrayList<>();
+        for (Element img : imgEs) {
+            String imgStr = img.toString();
+            String src = img.attr("src");
+            urls.add(src);
+            String newImgStr = "<a href=\"" + src + "\">" + imgStr + "</a>";
+            content = content.replace(imgStr, newImgStr);
+        }
+        detail.setContent(content);
+        detail.setImgUrls(urls);
     }
 
     public static String parseCsrfToken(String response) {
@@ -202,6 +221,17 @@ public class JsoupUtil {
             }
         }
         return csrf;
+    }
+
+    public static CreateTopicResponse parseNewTopicResponse(String response) {
+        CreateTopicResponse resp = new CreateTopicResponse();
+        Document document = Jsoup.parse(response);
+        Element link = document.getElementsByAttributeValue("rel","canonical").first();
+        if (link != null) {
+            resp.setUrl(link.attr("href"));
+        }
+        resp.setMessage(ApiErrorUtil.getErrorMsg(response));
+        return resp;
     }
 
     public static TopicComment parseComments(String response) {

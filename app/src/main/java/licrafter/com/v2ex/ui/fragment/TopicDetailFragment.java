@@ -3,6 +3,7 @@ package licrafter.com.v2ex.ui.fragment;/**
  */
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -36,6 +37,7 @@ import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
+import licrafter.com.v2ex.ui.widget.LJWebView;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.network.TokenCache;
@@ -49,6 +51,7 @@ import rx.functions.Action1;
 public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     private Topic topic;
+    private static final int REQ_LOGIN = 0x001;
 
     @Bind(R.id.iv_avatar)
     RoundedImageView mAvatarView;
@@ -59,7 +62,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Bind(R.id.tv_title)
     TextView mTitleView;
     @Bind(R.id.tv_content)
-    WebView mcontentWebView;
+    LJWebView mcontentWebView;
     @Bind(R.id.detail_ScrollView)
     NestedScrollView mDetailScrollView;
 
@@ -104,7 +107,6 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
             Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
             mUserNameView.setText(topic.getUserId());
         }
-        initWebView();
     }
 
     @Override
@@ -122,8 +124,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                             }
                         } else {
                             Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getActivity(), LoginActivity.class));
-                            getActivity().finish();
+                            startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_LOGIN);
                         }
                     }
                 });
@@ -144,49 +145,12 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         mPresenter.detachView();
     }
 
-    @SuppressLint("JavascriptInterface")
-    public void initWebView() {
-        mcontentWebView.setWebViewClient(webViewClient);
-
-        WebSettings webSettings = mcontentWebView.getSettings();
-        webSettings.setDisplayZoomControls(false);
-        webSettings.setSupportZoom(false);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setUseWideViewPort(false);
-        webSettings.setJavaScriptEnabled(true);
-        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
-        webSettings.setDomStorageEnabled(true);
-        webSettings.setLoadWithOverviewMode(true);
-        webSettings.setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mcontentWebView.addJavascriptInterface(new JavascriptInterface(getActivity()),"imagelistner");
-    }
-
     public void parseTopicDetail(TopicDetail topicDetail) {
         hideLoadingDialog();
         this.topicDetail = topicDetail;
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
         ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
-        openWebView(topicDetail.getContent());
-    }
-
-    /**
-     * http://stackoverflow.com/questions/3099344/can-androids-webview-automatically-resize-huge-images
-     *
-     * @param data
-     */
-    @SuppressLint("NewApi")
-    private void openWebView(String data) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            mcontentWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-        } else {
-            mcontentWebView.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-        }
-        mcontentWebView.loadDataWithBaseURL("file:///android_asset/", getHtmlData(data), "text/html", "utf-8", null);
-    }
-
-    private String getHtmlData(String bodyHTML) {
-        String head = "<head><style>img{max-width: 80%; width:auto; height: auto;}</style></head>";
-        return "<html>" + head + "<body>" + bodyHTML + "</body></html>";
+        mcontentWebView.loadHtml(topicDetail.getContent());
     }
 
     @Override
@@ -211,44 +175,14 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         ((TopicDetailActivity) getActivity()).setShoucangStatus(isFavorite);
     }
 
-    private WebViewClient webViewClient = new WebViewClient() {
 
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains(".jpg")) {
-                Toast.makeText(getContext(), "图片url = " + url, Toast.LENGTH_LONG).show();
-            } else {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                startActivity(intent);
-            }
-            return true;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQ_LOGIN) {
+            showLoadingDialog();
+            mPresenter.getTopicDetail(topic.getTopicId());
         }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-            addImageClickListner();
-        }
-
-        public void onLoadResource(WebView view, String url) {
-            //android.util.Log.d("ljx","url = "+url);
-            super.onLoadResource(view, url);
-        }
-    };
-
-    // 注入js函数监听
-    private void addImageClickListner() {
-        // 这段js函数的功能就是，遍历所有的img几点，并添加onclick函数，函数的功能是在图片点击的时候调用本地java接口并传递url过去
-        mcontentWebView.loadUrl("javascript:(function(){" +
-                "var objs = document.getElementsByTagName(\"img\"); " +
-                "for(var i=0;i<objs.length;i++)  " +
-                "{"
-                + "    objs[i].onclick=function()  " +
-                "    {  "
-                + "        window.imagelistner.openImage(this.src);  " +
-                "    }  " +
-                "}" +
-                "})()");
     }
 
     public class JavascriptInterface{

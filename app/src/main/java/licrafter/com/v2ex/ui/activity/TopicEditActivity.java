@@ -2,17 +2,21 @@ package licrafter.com.v2ex.ui.activity;/**
  * Created by Administrator on 2016/3/23.
  */
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
+import licrafter.com.v2ex.model.response.CreateTopicResponse;
 import licrafter.com.v2ex.mvp.presenters.TopicEditPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.widget.searchView.LJSearchView;
@@ -34,10 +38,11 @@ public class TopicEditActivity extends BaseToolbarActivity implements MvpView {
     @Bind(R.id.submitBtn)
     Button mSubmitButton;
     @Bind(R.id.searchView)
-    LJSearchView searchView;
+    LJSearchView mSearchView;
 
     private TopicEditPresenter mPresenter;
-    private ArrayList<SearchItem> items;
+    private SearchAdapter mSearchAdapter;
+    private String mTopicNode;
 
     @Override
     protected int getLayoutId() {
@@ -52,42 +57,25 @@ public class TopicEditActivity extends BaseToolbarActivity implements MvpView {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        items = new ArrayList<>();
-        items.add(new SearchItem("apple", false));
-        items.add(new SearchItem("v2ex", false));
-        items.add(new SearchItem("1990", false));
-        items.add(new SearchItem("3ds", false));
-        searchView.setAdapter(new SearchAdapter(this, items));
+        mSearchAdapter = new SearchAdapter(this);
     }
 
     @Override
     protected void loadData() {
-
+        showDialog();
+        mPresenter.getSearchList();
     }
 
     @Override
     protected void initListener() {
         mSubmitButton.setOnClickListener(onClickListener);
         mNodeInput.setOnClickListener(onClickListener);
-        searchView.addOnSearchListener(new LJSearchView.OnSearchListener() {
+        mSearchAdapter.setOnItemClickListener(new SearchAdapter.OnItemClickListener() {
             @Override
-            public void onQueryStart() {
-
-            }
-
-            @Override
-            public void onQueryTextChanged(String text) {
-
-            }
-
-            @Override
-            public boolean onQuerySubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public void onQueryEnd() {
-
+            public void onClick(String name, String title) {
+                mTopicNode = name;
+                mNodeInput.setText(title);
+                mSearchView.hide();
             }
         });
     }
@@ -99,23 +87,22 @@ public class TopicEditActivity extends BaseToolbarActivity implements MvpView {
                 case R.id.submitBtn:
                     String title = mTitleInput.getText().toString();
                     String content = mContentInput.getText().toString();
-                    if (!checkNull(title, content)) {
-                        mPresenter.postTopic(title, content, "apple");
+                    if (!checkNull(title)) {
+                        showDialog();
+                        mPresenter.postTopic(title, content, mTopicNode);
+                    } else {
+                        Toast.makeText(TopicEditActivity.this, getString(R.string.topic_title_is_null), Toast.LENGTH_SHORT).show();
                     }
                     break;
                 case R.id.nodeSelectTextView:
-                    searchView.show();
+                    mSearchView.show();
                     break;
             }
         }
     };
 
-    private boolean checkNull(String title, String content) {
-        if (title == null || content == null) {
-            return true;
-        } else {
-            return false;
-        }
+    private boolean checkNull(String title) {
+        return TextUtils.isEmpty(title);
     }
 
     @Override
@@ -125,6 +112,29 @@ public class TopicEditActivity extends BaseToolbarActivity implements MvpView {
 
     @Override
     public void onFailure(String e) {
+        hideDialog();
+    }
 
+    public void getSearchListSuccess(ArrayList<SearchItem> searchItems) {
+        hideDialog();
+        mSearchAdapter.setData(searchItems);
+        mSearchView.setAdapter(mSearchAdapter);
+
+    }
+
+    public void onCreatTopicSuccess(CreateTopicResponse response) {
+        hideDialog();
+        if (response.getMessage() == null) {
+            Toast.makeText(this, getString(R.string.create_success), Toast.LENGTH_SHORT).show();
+            if (response.getUrl()!=null){
+                Intent intent = new Intent(this,WebViewActivity.class);
+                intent.putExtra("url",response.getUrl());
+                android.util.Log.d("ljx",response.getUrl());
+                startActivity(intent);
+            }
+            finish();
+        } else {
+            Toast.makeText(this, response.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
