@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -37,6 +38,7 @@ import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.RxBus;
+import licrafter.com.v2ex.util.network.TokenCache;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -258,6 +260,14 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
         public void openImage(String img){
             android.util.Log.d("ljx","url = "+img);
+        }
+    }
+
+    private void addCookie() {
+        if (BaseApplication.isLogin()) {
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.setCookie("https://www.v2ex.com", "token=" + TokenCache.getToken());
         }
     }
 
