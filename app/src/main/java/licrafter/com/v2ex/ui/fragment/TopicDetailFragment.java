@@ -69,7 +69,6 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
     private Subscription mFavoriteSubscription;
-    private float x, y;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -176,32 +175,11 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     }
 
 
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQ_LOGIN) {
             showLoadingDialog();
             mPresenter.getTopicDetail(topic.getTopicId());
-        }
-    }
-
-    public class JavascriptInterface{
-        private Context context;
-
-        public JavascriptInterface(Context context){
-            this.context = context;
-        }
-
-        public void openImage(String img){
-            android.util.Log.d("ljx","url = "+img);
-        }
-    }
-
-    private void addCookie() {
-        if (BaseApplication.isLogin()) {
-            CookieManager cookieManager = CookieManager.getInstance();
-            cookieManager.setAcceptCookie(true);
-            cookieManager.setCookie("https://www.v2ex.com", "token=" + TokenCache.getToken());
         }
     }
 

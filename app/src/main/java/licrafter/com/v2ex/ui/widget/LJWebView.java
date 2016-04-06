@@ -7,13 +7,16 @@ import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.util.network.TokenCache;
 
 /**
  * author: shell
@@ -42,8 +45,8 @@ public class LJWebView extends WebView {
 
     @SuppressLint("JavascriptInterface")
     private void initWebView() {
+        addCookie();
         this.setWebViewClient(webViewClient);
-
         WebSettings webSettings = getSettings();
         webSettings.setDisplayZoomControls(false);
         webSettings.setSupportZoom(false);
@@ -91,4 +94,18 @@ public class LJWebView extends WebView {
             return true;
         }
     };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        addCookie();
+    }
+
+    private void addCookie() {
+        if (BaseApplication.isLogin()) {
+            CookieManager cookieManager = CookieManager.getInstance();
+            cookieManager.setAcceptCookie(true);
+            cookieManager.setCookie("https://www.v2ex.com", "token=" + TokenCache.getToken());
+        }
+    }
 }
