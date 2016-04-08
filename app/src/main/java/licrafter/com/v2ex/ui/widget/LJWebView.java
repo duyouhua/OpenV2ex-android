@@ -105,7 +105,6 @@ public class LJWebView extends WebView {
         if (BaseApplication.isLogin()) {
             CookieManager cookieManager = CookieManager.getInstance();
             cookieManager.setAcceptCookie(true);
-            cookieManager.setCookie("https://www.v2ex.com", "token=" + TokenCache.getToken());
         }
     }
 }

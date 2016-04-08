@@ -2,7 +2,6 @@ package licrafter.com.v2ex.ui.adapter;/**
  * Created by Administrator on 2016/3/21.
  */
 
-import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;

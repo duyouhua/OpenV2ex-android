@@ -148,7 +148,6 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             viewHolder.getView(R.id.rootView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    android.util.Log.d("ljx", "item = " + mDatas.get(viewHolder.getAdapterPosition()).getTitle());
                     Intent intent = new Intent(getActivity(), TopicDetailActivity.class);
                     intent.putExtra("topic", mDatas.get(viewHolder.getAdapterPosition()));
                     startActivity(intent);
