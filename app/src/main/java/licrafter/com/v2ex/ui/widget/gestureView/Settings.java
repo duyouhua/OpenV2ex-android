@@ -1,11 +1,18 @@
-package licrafter.com.v2ex.ui.widget.gestureView.controller;
+package licrafter.com.v2ex.ui.widget.gestureView;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.Gravity;
 
+import licrafter.com.v2ex.ui.widget.gestureView.views.interfaces.GestureView;
 
+/**
+ * Various settings needed for {@link GestureController} and for {@link StateController}.
+ * <p/>
+ * Required settings are viewport size ({@link #setViewport(int, int)})
+ * and image size {@link #setImage(int, int)}
+ */
 public class Settings {
 
     public static final float MAX_ZOOM = 2f;
@@ -102,7 +109,11 @@ public class Settings {
         // Package private constructor
     }
 
-
+    /**
+     * Setting viewport size.
+     * <p/>
+     * Should only be used when implementing custom {@link GestureView}.
+     */
     public Settings setViewport(int width, int height) {
         viewportW = width;
         viewportH = height;
@@ -120,7 +131,11 @@ public class Settings {
         return this;
     }
 
-
+    /**
+     * Setting full image size.
+     * <p/>
+     * Should only be used when implementing custom {@link GestureView}.
+     */
     public Settings setImage(int width, int height) {
         imageW = width;
         imageH = height;

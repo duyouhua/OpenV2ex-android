@@ -1,28 +1,27 @@
-package licrafter.com.v2ex.ui.adapter.AnimationRecyclerViewAdapter;
+package licrafter.com.v2ex.ui.adapter.base;/**
+ * Created by Administrator on 2016/3/21.
+ */
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.util.SparseArray;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 /**
- * Created by shell on 15-11-9.
- */
-public class AnimationViewHolder extends RecyclerView.ViewHolder {
+ * author: lijinxiang
+ * date: 2016/3/21
+ **/
+public class BaseViewHolder extends RecyclerView.ViewHolder {
 
     private final SparseArray<View> mViews;
     private View mConvertView;
-    protected AnimatorSet animatorSet;
 
-    public AnimationViewHolder(View itemView) {
+    public BaseViewHolder(View itemView) {
         super(itemView);
         this.mViews = new SparseArray<>();
         this.mConvertView = itemView;
-        animatorSet = new AnimatorSet();
-        animatorSet.playTogether(ObjectAnimator.ofFloat(itemView, "translationY", 100, 0),
-                ObjectAnimator.ofFloat(itemView, "alpha", 0, 1.0f));
-        animatorSet.setDuration(500);
     }
 
 
@@ -38,7 +37,17 @@ public class AnimationViewHolder extends RecyclerView.ViewHolder {
         return (T) view;
     }
 
-    public View getConvertView(){
+    public TextView getTextView(int viewId){
+        return getView(viewId);
+    }
+    public ProgressBar getProgressBar(int viewId){
+        return getView(viewId);
+    }
+    public ImageView getImageView(int viewId){
+        return getView(viewId);
+    }
+
+    public View getConvertView() {
         return this.mConvertView;
     }
 }

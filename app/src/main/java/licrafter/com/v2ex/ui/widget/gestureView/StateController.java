@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.ui.widget.gestureView.controller;
+package licrafter.com.v2ex.ui.widget.gestureView;
 
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -6,10 +6,23 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 
-import licrafter.com.v2ex.ui.widget.gestureView.MovementBounds;
-import licrafter.com.v2ex.ui.widget.gestureView.stats.State;
+import licrafter.com.v2ex.ui.widget.gestureView.internal.MovementBounds;
 
-
+/**
+ * Helper class that holds reference to {@link Settings} object and controls some aspects of view
+ * {@link State}, such as movement bounds restrictions
+ * (see {@link #getEffectiveMovementArea(RectF, State)}) and dynamic min / max zoom levels
+ * (see {@link #getEffectiveMinZoom()} and {@link #getEffectiveMaxZoom()}).
+ * <p/>
+ * It also provides few static methods that can be useful:
+ * <ul>
+ * <li>{@link #restrict(float, float, float) restrict()} float value,</li>
+ * <li>{@link #interpolate(float, float, float) interpolate()} float value</li>
+ * <li>{@link #interpolate(State, State, State, float) interpolate()} {@link State} object</li>
+ * <li>{@link #interpolate(State, State, float, float, State, float, float, float) interpolate()}
+ * {@link State} object with specified pivot point</li>
+ * </ul>
+ */
 public class StateController {
 
     // Temporary objects
@@ -75,6 +88,7 @@ public class StateController {
 
     /**
      * @return Max zoom level as it's used by state controller.
+     * Note, that it may be different than {@link Settings#getMaxZoom()}.
      */
     @SuppressWarnings("unused") // Public API
     public float getEffectiveMaxZoom() {
@@ -141,10 +155,13 @@ public class StateController {
 
         boolean isStateChanged = false;
 
+        //是否要强制转动90的倍数
         if (restrictRotation && settings.isRestrictRotation()) {
+            //强制修正后的转动角度，90度的倍数
             float rotation = Math.round(state.getRotation() / 90f) * 90f;
+            //如果强制修正后的角度和实际滚动的角度不相等，则强制转动到修正后的角度
             if (!State.equals(rotation, state.getRotation())) {
-                state.rotateTo(rotation, pivotX, pivotY);
+                state.rotateTo(rotation, pivotX, pivotY);   // TODO: 2016/4/11 研究rotateTo
                 isStateChanged = true;
             }
         }
@@ -268,6 +285,7 @@ public class StateController {
 
     /**
      * Returns area in which {@link State#getX()} & {@link State#getY()} values can change.
+     * Note, that this is different than {@link Settings#setMovementArea(int, int)} which defines
      * part of the viewport in which image can move.
      *
      * @param out Result will be stored in this rect.
@@ -287,6 +305,7 @@ public class StateController {
     private boolean adjustZoomLevels(State state) {
         maxZoom = settings.getMaxZoom();
 
+        //合适的缩放比例
         float fittingZoom = 1f;
 
         boolean isCorrectSize = settings.hasImageSize() && settings.hasViewportSize();
@@ -298,6 +317,7 @@ public class StateController {
             float areaWidth = settings.getMovementAreaW();
             float areaHeight = settings.getMovementAreaH();
 
+            //center_inside
             if (settings.getFitMethod() == Settings.Fit.OUTSIDE) {
                 // Computing movement area size taking rotation into account. We need to inverse
                 // rotation, since it will be applied to the area, not to the image itself.

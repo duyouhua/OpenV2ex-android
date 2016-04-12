@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
+import licrafter.com.v2ex.ui.activity.GestureActivitgy;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.SettingActivity;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
@@ -69,7 +70,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
                 actionBarHelper.setTitle(getString(R.string.node_list));
                 break;
             case R.id.settingDrawerMenuItem:
-                startActivity(new Intent(this, SettingActivity.class));
+                startActivity(new Intent(this, GestureActivitgy.class));
             default:
                 break;
         }

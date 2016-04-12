@@ -50,6 +50,8 @@
             android:name=".ui.activity.TopicDetailActivity"
             android:label="@string/topic_detail"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".ui.activity.GestureActivitgy"/>
     </application>
 
 </manifest>

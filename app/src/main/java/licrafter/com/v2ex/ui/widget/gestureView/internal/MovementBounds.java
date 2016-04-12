@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.ui.widget.gestureView;
+package licrafter.com.v2ex.ui.widget.gestureView.internal;
 
 import android.graphics.Matrix;
 import android.graphics.Point;
@@ -7,17 +7,14 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.Gravity;
 
-import licrafter.com.v2ex.ui.widget.gestureView.controller.Settings;
-import licrafter.com.v2ex.ui.widget.gestureView.controller.StateController;
-import licrafter.com.v2ex.ui.widget.gestureView.stats.State;
-
+import licrafter.com.v2ex.ui.widget.gestureView.Settings;
+import licrafter.com.v2ex.ui.widget.gestureView.State;
+import licrafter.com.v2ex.ui.widget.gestureView.StateController;
 
 /**
  * Encapsulates logic related to movement bounds restriction. It will also apply image gravity
- * provided by {@link Settings#getGravity()} method.
  * <p/>
  * Movement bounds can be represented using regular rectangle most of the time. But if fit method
- * is set to {@link Settings.Fit#OUTSIDE} and image has rotation != 0 than movement bounds will be
  * a rotated rectangle. That will complicate restrictions logic a bit.
  */
 public class MovementBounds {

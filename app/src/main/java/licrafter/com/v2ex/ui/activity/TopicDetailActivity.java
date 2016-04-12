@@ -7,6 +7,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     TextView mFooterShoucang;
     @Bind(R.id.commentActionbtn)
     FloatingActionButton commentActionBtn;
+    @Bind(R.id.transition_pager)
+    ViewPager viewPager;
 
     @Override
     protected int getLayoutId() {

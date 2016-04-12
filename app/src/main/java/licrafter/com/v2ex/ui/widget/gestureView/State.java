@@ -1,4 +1,4 @@
-package licrafter.com.v2ex.ui.widget.gestureView.stats;
+package licrafter.com.v2ex.ui.widget.gestureView;
 
 import android.graphics.Matrix;
 
