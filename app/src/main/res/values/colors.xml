@@ -26,7 +26,7 @@
     <color name="grey800">#424242</color>
     <color name="grey900">#212121</color>
     <color name="black">#000000</color>
-    <color name="transparent_background">#60000000</color>
+    <color name="transparent_background">#80000000</color>
 
     <color name="a100">#B9F6CA</color>
     <color name="a200">#69F0AE</color>

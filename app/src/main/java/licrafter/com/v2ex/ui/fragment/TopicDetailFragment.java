@@ -147,6 +147,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     public void parseTopicDetail(TopicDetail topicDetail) {
         hideLoadingDialog();
         this.topicDetail = topicDetail;
+        ((TopicDetailActivity)getActivity()).onImageLoadSuccess(topicDetail.getImgUrls());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
         ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
         mcontentWebView.loadHtml(topicDetail.getContent());

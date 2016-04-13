@@ -36,7 +36,7 @@ public class GestureActivitgy extends BaseAppCompatActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        Glide.with(this).load(R.drawable.nav_header_bg)
+        Glide.with(this).load("http://i.imgur.com/EBTYNhV.png")
                 .into(gestureImageView);
     }
 

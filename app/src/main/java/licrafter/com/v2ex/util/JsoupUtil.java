@@ -196,9 +196,9 @@ public class JsoupUtil {
         for (Element img : imgEs) {
             String imgStr = img.toString();
             String src = img.attr("src");
-            urls.add(src);
             String newImgStr = "<a href=\"" + src + "\">" + imgStr + "</a>";
             content = content.replace(imgStr, newImgStr);
+            urls.add(src);
         }
         detail.setContent(content);
         detail.setImgUrls(urls);
@@ -226,7 +226,7 @@ public class JsoupUtil {
     public static CreateTopicResponse parseNewTopicResponse(String response) {
         CreateTopicResponse resp = new CreateTopicResponse();
         Document document = Jsoup.parse(response);
-        Element link = document.getElementsByAttributeValue("rel","canonical").first();
+        Element link = document.getElementsByAttributeValue("rel", "canonical").first();
         if (link != null) {
             resp.setUrl(link.attr("href"));
         }

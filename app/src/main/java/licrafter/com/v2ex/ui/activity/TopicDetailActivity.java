@@ -12,6 +12,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
@@ -19,11 +23,16 @@ import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
 import licrafter.com.v2ex.event.CommentEvent;
 import licrafter.com.v2ex.event.FavoriteEvent;
+import licrafter.com.v2ex.event.ImageClickEvent;
 import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.ui.adapter.ImagePagerAdapter;
 import licrafter.com.v2ex.ui.fragment.TopicCommentListFragment;
 import licrafter.com.v2ex.ui.fragment.TopicDetailFragment;
+import licrafter.com.v2ex.ui.widget.gestureView.views.interfaces.GestureView;
 import licrafter.com.v2ex.util.FragmentUtil;
 import licrafter.com.v2ex.util.RxBus;
+import rx.Subscription;
+import rx.functions.Action1;
 
 /**
  * author: lijinxiang
@@ -42,6 +51,10 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     FloatingActionButton commentActionBtn;
     @Bind(R.id.transition_pager)
     ViewPager viewPager;
+    @Bind(R.id.transition_full_background)
+    View transition_background;
+
+    private ImagePagerAdapter pagerAdapter;
 
     @Override
     protected int getLayoutId() {
@@ -59,6 +72,10 @@ public class TopicDetailActivity extends BaseToolbarActivity {
         FragmentUtil.replace(getSupportFragmentManager()
                 , R.id.container, TopicDetailFragment.newInstance(topic), false, "TopicDetailFragment");
         mFooterCommentView.setText(String.valueOf(topic.getReplies()));
+
+        pagerAdapter = new ImagePagerAdapter(viewPager, settingsSetupListener);
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_normal));
     }
 
     @Override
@@ -117,5 +134,47 @@ public class TopicDetailActivity extends BaseToolbarActivity {
         Drawable unScDrawable = getResources().getDrawable(R.mipmap.ic_unshoucang);
         unScDrawable.setBounds(0, 0, unScDrawable.getIntrinsicHeight(), unScDrawable.getIntrinsicWidth());
         mFooterShoucang.setCompoundDrawables(null, isFavorite ? unScDrawable : scDrawable, null, null);
+    }
+
+    private Subscription imageClickSubscription = RxBus.getDefault().toObserverable(ImageClickEvent.class)
+            .subscribe(new Action1<ImageClickEvent>() {
+                @Override
+                public void call(ImageClickEvent imageClickEvent) {
+                    pagerAdapter.setCurrentItem(imageClickEvent.getUrl());
+                    setImagePageVisible(View.VISIBLE);
+                }
+            });
+
+    public void onImageLoadSuccess(ArrayList<String> urls) {
+        pagerAdapter.setData(urls);
+    }
+
+    private ImagePagerAdapter.GestureSettingsSetupListener settingsSetupListener = new ImagePagerAdapter.GestureSettingsSetupListener() {
+        @Override
+        public void onSetupGestureView(GestureView view) {
+
+        }
+    };
+
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getVisibility()==View.VISIBLE){
+            setImagePageVisible(View.GONE);
+        }else {
+            super.onBackPressed();
+        }
+    }
+
+    public void setImagePageVisible(int visible){
+        viewPager.setVisibility(visible);
+        transition_background.setVisibility(visible);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!imageClickSubscription.isUnsubscribed()) {
+            imageClickSubscription.unsubscribe();
+        }
     }
 }

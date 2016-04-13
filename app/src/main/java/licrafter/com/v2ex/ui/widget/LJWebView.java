@@ -8,6 +8,7 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -16,6 +17,8 @@ import android.widget.Toast;
 
 import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
+import licrafter.com.v2ex.event.ImageClickEvent;
+import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.network.TokenCache;
 
 /**
@@ -83,8 +86,11 @@ public class LJWebView extends WebView {
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            if (url.contains(".jpg")) {
-                Toast.makeText(getContext(), "图片url = " + url, Toast.LENGTH_LONG).show();
+            if (url.contains(".jpg")||url.contains(".png")||url.contains(".gif")||url.contains(".jpeg")) {
+                if (url.contains("file://")){
+                    url = url.substring(6,url.length());
+                }
+                RxBus.getDefault().post(new ImageClickEvent(url));
             } else if (url.contains("www.v2ex.com")) {
                 view.loadUrl(url);
             } else {
@@ -93,6 +99,7 @@ public class LJWebView extends WebView {
             }
             return true;
         }
+
     };
 
     @Override

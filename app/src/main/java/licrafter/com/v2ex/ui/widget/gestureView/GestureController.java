@@ -439,7 +439,6 @@ public class GestureController implements View.OnTouchListener {
 
     protected boolean onFling(@NonNull MotionEvent e1, @NonNull MotionEvent e2,
                               float vx, float vy) {
-        android.util.Log.d("ljx","onfling");
 
         if (!settings.isPanEnabled() || isAnimatingState()) {
             return false;

@@ -83,12 +83,12 @@ public class Settings {
     /**
      * Whether rotation gesture is enabled or not.
      */
-    private boolean isRotationEnabled = false;
+    private boolean isRotationEnabled = true;
 
     /**
      * Whether image rotation should stick to 90 degrees or can be free.
      */
-    private boolean isRestrictRotation = false;
+    private boolean isRestrictRotation = true;
 
     /**
      * Whether zooming by double tap is enabled or not.

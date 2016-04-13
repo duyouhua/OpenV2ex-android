@@ -4,13 +4,17 @@ package licrafter.com.v2ex.ui.adapter;/**
 
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 
+import java.util.ArrayList;
+
 import licrafter.com.v2ex.ui.adapter.base.RecyclePagerAdapter;
 import licrafter.com.v2ex.ui.widget.gestureView.views.GestureImageView;
 import licrafter.com.v2ex.ui.widget.gestureView.views.interfaces.GestureView;
+import licrafter.com.v2ex.util.GlideUtil;
 
 /**
  * author: lijinxiang
@@ -19,12 +23,12 @@ import licrafter.com.v2ex.ui.widget.gestureView.views.interfaces.GestureView;
 public class ImagePagerAdapter extends RecyclePagerAdapter<ImagePagerAdapter.ViewHolder> {
 
     private final ViewPager viewPager;
-    private final String[] imageUrls;
+    private ArrayList<String> imageUrls;
     private final GestureSettingsSetupListener setupListener;
 
-    public ImagePagerAdapter(ViewPager viewPager, String[] imageUrls, GestureSettingsSetupListener setupListener) {
+    public ImagePagerAdapter(ViewPager viewPager, GestureSettingsSetupListener setupListener) {
         this.viewPager = viewPager;
-        this.imageUrls = imageUrls;
+        this.imageUrls = new ArrayList<>();
         this.setupListener = setupListener;
     }
 
@@ -40,17 +44,25 @@ public class ImagePagerAdapter extends RecyclePagerAdapter<ImagePagerAdapter.Vie
         if (setupListener != null) {
             setupListener.onSetupGestureView(holder.image);
         }
-        Glide.with(holder.image.getContext()).load(imageUrls[position])
-                .into(holder.image);
+        GlideUtil.loadResource(imageUrls.get(position), holder.image);
     }
 
     public static GestureImageView getImage(RecyclePagerAdapter.ViewHolder holder) {
         return ((ViewHolder) holder).image;
     }
 
+    public void setData(ArrayList<String> urls) {
+        this.imageUrls = urls;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        return imageUrls.length;
+        return imageUrls.size();
+    }
+
+    public void setCurrentItem(String currentItem) {
+        viewPager.setCurrentItem(imageUrls.indexOf(currentItem));
     }
 
     static class ViewHolder extends RecyclePagerAdapter.ViewHolder {
