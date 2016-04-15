@@ -10,6 +10,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.GlideDrawableImageViewTarget;
 import com.bumptech.glide.request.target.SizeReadyCallback;
 
+import licrafter.com.v2ex.R;
+
 /**
  * author: lijinxiang
  * date: 2016/4/13
@@ -24,6 +26,7 @@ public class GlideUtil {
         Glide.with(imageView.getContext())
                 .load(url)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .placeholder(R.drawable.anim_loading)
                 .into(new GlideDrawableImageViewTarget(imageView) {
                     @Override
                     public void getSize(SizeReadyCallback cb) {

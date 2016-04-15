@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 import licrafter.com.v2ex.model.LoginResult;
+import licrafter.com.v2ex.model.ProfitTopic;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.model.TabContent;
@@ -301,5 +302,18 @@ public class JsoupUtil {
         android.util.Log.d("ljx", "userid = " + userId + " src = " + src);
         loginResult = new LoginResult(userId, src);
         return loginResult;
+    }
+
+    public static ArrayList<ProfitTopic> parseProfitTopic(String response) {
+        Element body = Jsoup.parse(response).body();
+        Elements divs = body.select("div.cell").select("div.item");
+        ArrayList<ProfitTopic> topics = new ArrayList<>();
+        for (Element div : divs) {
+            ProfitTopic topic = new ProfitTopic();
+            topic.setTitle(div.select("span.item_title").first().text());
+            topic.setOtherInfo(div.select("span.small").select("span.fade").first().text());
+            topics.add(topic);
+        }
+        return topics;
     }
 }

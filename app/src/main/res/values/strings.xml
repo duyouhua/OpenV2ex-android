@@ -10,6 +10,7 @@
     <string name="node_list">节点列表</string>
     <string name="setting">设置</string>
     <string name="edit_post">编辑帖子</string>
+    <string name="profit">个人详情</string>
     <string name="please_login">请登录</string>
     <string name="topic_title_is_null">帖子标题不能为空</string>
     <string name="create_success">创建成功！</string>
@@ -20,4 +21,5 @@
     <string name="logout_success">退出成功，请重新登录!</string>
     <string name="time_out">连接服务器超时</string>
     <string name="topic_detail">帖子详情</string>
+    <string name="no_data">没有数据</string>
 </resources>

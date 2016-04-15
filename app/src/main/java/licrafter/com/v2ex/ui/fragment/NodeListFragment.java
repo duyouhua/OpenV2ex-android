@@ -54,7 +54,6 @@ public class NodeListFragment extends BaseFragment implements NodeListView {
     @Override
     protected void initViews(View view) {
         CustomUtil.initStyle(mSwipeRefreshLayout);
-        mSwipeRefreshLayout.setProgressViewOffset(false, 0, 30);
         mAdapter = new NodeListAdapter(getContext(), R.layout.item_node);
         mNodeRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL));
         mNodeRecyclerView.setAdapter(mAdapter);

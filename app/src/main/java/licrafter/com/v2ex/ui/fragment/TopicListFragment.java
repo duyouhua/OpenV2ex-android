@@ -68,7 +68,6 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             mTabTitle = getArguments().getString("mTabTitle");
         }
         CustomUtil.initStyle(mSwipeLayout);
-        mSwipeLayout.setProgressViewOffset(false, 0, 30);
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mListView.setHasFixedSize(true);
         mListView.setAdapter(mAdapter);

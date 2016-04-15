@@ -90,7 +90,6 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
         ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(mTopicTitle);
 
         CustomUtil.initStyle(mRefreshLayout);
-        mRefreshLayout.setProgressViewOffset(false, 0, 25);
         mAdapter = new CommentAdapter(getContext(), R.layout.item_comment);
         mCommentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mCommentRecyclerView.setHasFixedSize(true);

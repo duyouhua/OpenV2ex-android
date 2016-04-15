@@ -40,4 +40,7 @@ public interface V2EX {
     @GET("/go/{nodeId}")
     Observable<String> getTopicsByNodeId(@Path("nodeId") String nodeId, @Query("p") int page);
 
+    @GET("/member/{userId}/topics")
+    Observable<String> getTopicsByUserId(@Path("userId") String userId);
+
 }

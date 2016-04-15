@@ -27,16 +27,21 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
     protected Context mContext;
     private LayoutInflater mInflater;
     private int mItemLayoutId;
-    private boolean mHasNextPage = true;
-    private View mHeaderView;
+    private int mHeadLayoutId;
+    private boolean mHasNextPage = false;
     private String error;
 
     protected CommonRecyclerAdapter(Context context, int itemLayoutId) {
+        this(context, itemLayoutId, 0);
+    }
+
+    protected CommonRecyclerAdapter(Context context, int itemLayoutId, int headerLayoutId) {
         mDatas = new ArrayList<>();
         this.mContext = context;
         this.mItemLayoutId = itemLayoutId;
+        this.mHeadLayoutId = headerLayoutId;
         mInflater = LayoutInflater.from(context);
-        error = mContext.getString(R.string.app_name);
+        error = mContext.getString(R.string.no_data);
     }
 
     @Override
@@ -49,8 +54,10 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
                 getItemViewHolder(item);
                 return item;
             case TYPE_HEADER:
-                HeaderViewHolder header = new HeaderViewHolder(mHeaderView);
-                return header;
+                if (mHeadLayoutId != 0) {
+                    HeaderViewHolder header = new HeaderViewHolder(mInflater.inflate(mHeadLayoutId, parent, false));
+                    return header;
+                }
             case TYPE_FOOTER:
                 FooterViewHolder footer = new FooterViewHolder(mInflater.inflate(R.layout.item_footer, parent, false));
                 return footer;
@@ -71,23 +78,29 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
             }
         }
         if (holder instanceof ItemViewHolder) {
-            bindData((ItemViewHolder) holder,position);
+            if (mHeadLayoutId != 0) {
+                position -= 1;
+            }
+            bindData((ItemViewHolder) holder, position);
         }
-        if (holder instanceof EmptyViewHolder){
+        if (holder instanceof HeaderViewHolder) {
+            bindHeader((HeaderViewHolder) holder, position);
+        }
+        if (holder instanceof EmptyViewHolder) {
             ((EmptyViewHolder) holder).getTextView(R.id.tv_error).setText(error);
         }
     }
 
     @Override
     public int getItemCount() {
-        if (mHeaderView == null) {
+        if (mHeadLayoutId == 0) {
             return mDatas.size() > 0 ? mDatas.size() + 1 : 1;
         } else {
             return mDatas.size() > 0 ? mDatas.size() + 2 : 2;
         }
     }
 
-    public void setErrorInfo(String error){
+    public void setErrorInfo(String error) {
         this.error = error;
         notifyDataSetChanged();
     }
@@ -97,15 +110,9 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void setHeaderView(View headerView) {
-        this.mHeaderView = headerView;
-        notifyDataSetChanged();
-    }
-
-
     @Override
     public int getItemViewType(int position) {
-        if (mHeaderView == null) {
+        if (mHeadLayoutId == 0) {
             if (mDatas.size() <= 0) {
                 return TYPE_EMPTY;
             } else {
@@ -118,13 +125,12 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         } else {
             if (position == 0) {
                 return TYPE_HEADER;
-            }
-            if (mDatas.size() <= 0 && position == 1) {
+            } else if (position == mDatas.size() + 1 && mDatas.size() > 0) {
                 return TYPE_FOOTER;
-            } else if (mDatas.size() > 0 && position <= mDatas.size()) {
-                return TYPE_ITEM;
+            } else if (position == mDatas.size() + 1 && mDatas.size() == 0) {
+                return TYPE_EMPTY;
             } else {
-                return TYPE_FOOTER;
+                return TYPE_ITEM;
             }
         }
     }
@@ -135,7 +141,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         notifyDataSetChanged();
     }
 
-    public void addData(ArrayList<T> list){
+    public void addData(ArrayList<T> list) {
         mDatas.addAll(list);
         notifyDataSetChanged();
     }
@@ -171,5 +177,9 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
 
     protected abstract void getItemViewHolder(ItemViewHolder viewHolder);
 
-    protected abstract void bindData(ItemViewHolder viewHolder,int position);
+    protected abstract void bindData(ItemViewHolder viewHolder, int position);
+
+    protected void bindHeader(HeaderViewHolder viewHolder, int position) {
+
+    }
 }

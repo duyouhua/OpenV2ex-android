@@ -17,12 +17,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.model.Topic;
-import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
 
 /**
  * Created by shell on 15-11-7.
@@ -51,22 +47,9 @@ public class CustomUtil {
         return topics;
     }
 
-    /**
-     * 得到自定义dialog
-     *
-     * @param message
-     * @return
-     */
-    public static ProgressbarDialog getCustomProgressDialog(String message) {
-        ProgressbarDialog dialog = new ProgressbarDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString("message", message);
-        dialog.setArguments(bundle);
-        return dialog;
-    }
-
     public static void initStyle(SwipeRefreshLayout swipeRefreshLayout) {
         if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setProgressViewOffset(false, 0, 30);
             swipeRefreshLayout.setColorSchemeResources(
                     R.color.loading_color_1,
                     R.color.loading_color_2,

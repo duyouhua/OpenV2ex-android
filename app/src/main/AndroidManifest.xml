@@ -51,6 +51,11 @@
             android:label="@string/topic_detail"
             android:screenOrientation="portrait" />
 
+        <activity android:name=".ui.activity.ProfitActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:label="@string/profit"/>
+
         <activity android:name=".ui.activity.GestureActivitgy"/>
     </application>
 

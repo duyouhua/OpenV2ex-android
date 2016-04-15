@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    tools:showIn="@layout/header_myprofit">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_pressed_white_blue"
+        android:background="@drawable/bg_card_ripple"
         android:clickable="true"
         android:padding="@dimen/padding_normal">
 
@@ -24,14 +25,14 @@
 
         <TextView
             android:id="@+id/tv_twitter"
-            android:layout_toRightOf="@+id/tv_info1"
-            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/tv_info1"
             android:drawablePadding="5dp"
             android:drawableRight="@mipmap/ic_arrow_right_grey"
             android:gravity="center_vertical|right"
+            android:singleLine="true"
             android:text="无该项设置"
             android:textColor="@color/grey500"
             android:textSize="@dimen/text_normal" />
@@ -45,7 +46,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_pressed_white_blue"
+        android:background="@drawable/bg_card_ripple"
         android:clickable="true"
         android:padding="@dimen/padding_normal">
 
@@ -62,14 +63,14 @@
 
         <TextView
             android:id="@+id/tv_home"
-            android:layout_toRightOf="@+id/tv_info2"
-            android:singleLine="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/tv_info2"
             android:drawablePadding="5dp"
             android:drawableRight="@mipmap/ic_arrow_right_grey"
             android:gravity="center_vertical|right"
+            android:singleLine="true"
             android:text="无该项设置"
             android:textColor="@color/grey500"
             android:textSize="@dimen/text_normal" />
@@ -83,7 +84,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_pressed_white_blue"
+        android:background="@drawable/bg_card_ripple"
         android:clickable="true"
         android:padding="@dimen/padding_normal">
 
@@ -100,17 +101,17 @@
 
         <TextView
             android:id="@+id/tv_mylocation"
-            android:singleLine="true"
-            android:layout_toRightOf="@+id/tv_info3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_toRightOf="@+id/tv_info3"
             android:drawablePadding="5dp"
             android:drawableRight="@mipmap/ic_arrow_right_grey"
             android:gravity="center_vertical|right"
+            android:singleLine="true"
             android:text="无该项设置"
             android:textColor="@color/grey500"
             android:textSize="@dimen/text_normal" />
     </RelativeLayout>
 
-</LinearLayout>
+</merge>

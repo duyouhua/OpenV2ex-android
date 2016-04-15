@@ -9,11 +9,11 @@
         android:layout_width="match_parent"
         android:layout_height="300dp">
 
-        <ImageView
+        <View
+            android:background="@color/teal500"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/ic_myheader" />
+            android:scaleType="centerCrop" />
 
         <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/iv_avatar"

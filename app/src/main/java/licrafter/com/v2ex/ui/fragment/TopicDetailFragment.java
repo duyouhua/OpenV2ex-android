@@ -20,6 +20,7 @@ import android.webkit.CookieManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +37,7 @@ import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
+import licrafter.com.v2ex.ui.activity.ProfitActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.widget.LJWebView;
 import licrafter.com.v2ex.util.CustomUtil;
@@ -65,6 +67,8 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     LJWebView mcontentWebView;
     @Bind(R.id.detail_ScrollView)
     NestedScrollView mDetailScrollView;
+    @Bind(R.id.rl_profit)
+    RelativeLayout mProfitRelative;
 
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
@@ -127,6 +131,14 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                         }
                     }
                 });
+        mProfitRelative.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ProfitActivity.class);
+                intent.putExtra("user_name", topic.getUserId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -147,7 +159,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     public void parseTopicDetail(TopicDetail topicDetail) {
         hideLoadingDialog();
         this.topicDetail = topicDetail;
-        ((TopicDetailActivity)getActivity()).onImageLoadSuccess(topicDetail.getImgUrls());
+        ((TopicDetailActivity) getActivity()).onImageLoadSuccess(topicDetail.getImgUrls());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
         ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
         mcontentWebView.loadHtml(topicDetail.getContent());

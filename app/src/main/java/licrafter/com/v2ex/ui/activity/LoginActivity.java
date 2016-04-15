@@ -17,7 +17,6 @@ import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.mvp.presenters.LoginPresenter;
 import licrafter.com.v2ex.mvp.views.LoginView;
 import licrafter.com.v2ex.util.CustomUtil;
-import licrafter.com.v2ex.ui.widget.ProgressbarDialog;
 import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
@@ -35,7 +34,6 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    private ProgressbarDialog dialog;
     private LoginPresenter mPresenter;
 
     @Override
@@ -53,7 +51,6 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
     protected void initView(Bundle savedInstanceState) {
         input_name.setText("ljx");
         input_pwd.setText("111111");
-        dialog = CustomUtil.getCustomProgressDialog("登陆中...");
         toolbar.setTitle("登陆");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

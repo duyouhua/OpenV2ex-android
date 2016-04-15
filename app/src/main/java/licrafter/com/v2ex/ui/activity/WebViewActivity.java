@@ -40,7 +40,6 @@ public class WebViewActivity extends BaseToolbarActivity {
         CustomUtil.initStyle(swipeRefreshLayout);
         if (getIntent().getStringExtra("url") != null) {
             swipeRefreshLayout.setRefreshing(true);
-            swipeRefreshLayout.setProgressViewOffset(false,25,0);
             url = getIntent().getStringExtra("url");
             webContent.setWebChromeClient(chromeClient);
             webContent.loadUrl(url);
