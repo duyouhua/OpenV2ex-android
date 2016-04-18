@@ -1,6 +1,7 @@
 package licrafter.com.v2ex;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,8 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
 
     private Handler handler;
+    private int keep = 0;
+
 
     @Override
     protected int getLayoutId() {
@@ -109,6 +112,11 @@ public class MainActivity extends BaseDrawerLayoutActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     public void switchFragment(final Fragment fragment) {

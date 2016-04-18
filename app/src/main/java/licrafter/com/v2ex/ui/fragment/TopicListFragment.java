@@ -3,6 +3,7 @@ package licrafter.com.v2ex.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,8 +38,9 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     private TopicListPresenter mPresenter;
     private TopicListAdapter mAdapter;
 
-    private int pageIndex = 1;
-    private int totalPage;
+    private int mPageIndex = 1;
+    private int mTotalPage;
+    private TabContent mTabContent;
 
     public static TopicListFragment getInstance(String tabTitle) {
         Bundle bundle = new Bundle();
@@ -62,11 +64,16 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     @Override
-    protected void initViews(View view) {
-        mAdapter = new TopicListAdapter(getContext(), R.layout.item_topic_card);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (getArguments().containsKey("mTabTitle")) {
             mTabTitle = getArguments().getString("mTabTitle");
         }
+    }
+
+    @Override
+    protected void initViews(View view) {
+        mAdapter = new TopicListAdapter(getContext(), R.layout.item_topic_card);
         CustomUtil.initStyle(mSwipeLayout);
         mListView.setLayoutManager(new LinearLayoutManager(getContext()));
         mListView.setHasFixedSize(true);
@@ -79,24 +86,29 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             @Override
             public void onBottom() {
                 super.onBottom();
-                if (pageIndex <= totalPage) {
-                    mPresenter.getTopicList(mTabTitle, pageIndex, false);
+                if (mPageIndex <= mTotalPage) {
+                    mPresenter.getTopicList(mTabTitle, mPageIndex, false);
                 }
             }
         });
         mSwipeLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pageIndex = 1;
-                mPresenter.getTopicList(mTabTitle, pageIndex, true);
+                mPageIndex = 1;
+                mPresenter.getTopicList(mTabTitle, mPageIndex, true);
             }
         });
     }
 
     @Override
     protected void loadData() {
-        mSwipeLayout.setRefreshing(true);
-        mPresenter.getTopicList(mTabTitle, pageIndex, true);
+        if (mTabContent == null) {
+            mSwipeLayout.setRefreshing(true);
+            mPresenter.getTopicList(mTabTitle, mPageIndex, true);
+        } else {
+            mAdapter.setData(mTabContent.getTopics());
+            loadMoreUIHandler(mTabContent);
+        }
     }
 
     @Override
@@ -106,19 +118,22 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
 
     @Override
     public void onGetTopicSuccess(TabContent content) {
+        mTabContent = content;
         loadMoreUIHandler(content);
         mAdapter.setData(content.getTopics());
     }
 
     @Override
     public void onFailure(String e) {
-        if (mSwipeLayout.isRefreshing()){
+        if (mSwipeLayout.isRefreshing()) {
             mSwipeLayout.setRefreshing(false);
         }
         mAdapter.setErrorInfo(e);
     }
 
     public void onLoadMoreSuccess(TabContent content) {
+        mTabContent.setPage(content.getPage());
+        mTabContent.getTopics().addAll(content.getTopics());
         loadMoreUIHandler(content);
         mAdapter.addData(content.getTopics());
     }
@@ -127,9 +142,9 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
         if (mSwipeLayout.isRefreshing()) {
             mSwipeLayout.setRefreshing(false);
         }
-        pageIndex = content.getPage() + 1;
-        totalPage = content.getTotalPages();
-        if (pageIndex > totalPage) {
+        mPageIndex = content.getPage() + 1;
+        mTotalPage = content.getTotalPages();
+        if (mPageIndex > mTotalPage) {
             mAdapter.hasNextPage(false);
         } else {
             mAdapter.hasNextPage(true);

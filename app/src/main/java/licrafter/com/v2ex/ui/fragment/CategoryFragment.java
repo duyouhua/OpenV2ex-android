@@ -1,5 +1,7 @@
 package licrafter.com.v2ex.ui.fragment;
 
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
@@ -34,6 +36,11 @@ public class CategoryFragment extends BaseFragment {
     @Override
     protected void attachView() {
 
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
     public static CategoryFragment newInstance() {
