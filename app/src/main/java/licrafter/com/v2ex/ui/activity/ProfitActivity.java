@@ -50,11 +50,6 @@ public class ProfitActivity extends BaseToolbarActivity implements MvpView {
     }
 
     @Override
-    protected void initToolbar(Bundle savedInstanceState) {
-
-    }
-
-    @Override
     protected void attachVeiw() {
         mPresenter = new ProfitPresenter();
         mPresenter.attachView(this);
