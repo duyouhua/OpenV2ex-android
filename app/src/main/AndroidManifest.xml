@@ -52,13 +52,11 @@
             android:label="@string/topic_detail"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".ui.activity.ProfitActivity"
-            android:label="@string/profit"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity android:name=".ui.activity.GestureActivitgy"
+            android:screenOrientation="portrait"/>
 
-        <activity android:name=".ui.activity.GestureActivitgy" />
+        <activity android:name=".ui.activity.ProfitActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

@@ -2,24 +2,12 @@ package licrafter.com.v2ex.ui.fragment;/**
  * Created by Administrator on 2016/3/26.
  */
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
 import android.view.View;
-import android.webkit.CookieManager;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +28,7 @@ import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.ProfitActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.widget.LJWebView;
-import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.RxBus;
-import licrafter.com.v2ex.util.network.TokenCache;
 import rx.Subscription;
 import rx.functions.Action1;
 
