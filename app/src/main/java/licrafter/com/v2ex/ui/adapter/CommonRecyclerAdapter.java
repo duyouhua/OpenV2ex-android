@@ -3,7 +3,9 @@ package licrafter.com.v2ex.ui.adapter;/**
  */
 
 import android.content.Context;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,7 +50,16 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         switch (viewType) {
             case TYPE_EMPTY:
-                return new EmptyViewHolder(mInflater.inflate(R.layout.item_empty, parent, false));
+                EmptyViewHolder empty = new EmptyViewHolder(mInflater.inflate(R.layout.item_empty, parent, false));
+                if (mHeadLayoutId == 0) {
+                    empty.getConvertView().getLayoutParams().height = parent.getHeight();
+                } else {
+                    empty.getConvertView().getLayoutParams().height = parent.getHeight() - parent.getChildAt(0).getHeight();
+                }
+                if (empty.getConvertView().getLayoutParams() instanceof StaggeredGridLayoutManager.LayoutParams) {
+                    ((StaggeredGridLayoutManager.LayoutParams) empty.getConvertView().getLayoutParams()).setFullSpan(true);
+                }
+                return empty;
             case TYPE_ITEM:
                 ItemViewHolder item = new ItemViewHolder(mInflater.inflate(mItemLayoutId, parent, false));
                 getItemViewHolder(item);
@@ -172,6 +183,31 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         public EmptyViewHolder(View itemView) {
             super(itemView);
 
+        }
+    }
+
+    public GridLayoutManager spanSizeLookupManager(int span) {
+        GridLayoutManager manager = new GridLayoutManager(mContext, span);
+        manager.setSpanSizeLookup(new AutoSpanSizeLookUp());
+        return manager;
+    }
+
+    class AutoSpanSizeLookUp extends GridLayoutManager.SpanSizeLookup {
+
+        @Override
+        public int getSpanSize(int position) {
+            switch (getItemViewType(position)) {
+                case TYPE_EMPTY:
+                    return 2;
+                case TYPE_HEADER:
+                    return 2;
+                case TYPE_ITEM:
+                    return 1;
+                case TYPE_FOOTER:
+                    return 2;
+                default:
+                    return 1;
+            }
         }
     }
 

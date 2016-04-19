@@ -74,6 +74,7 @@
         android:layout_margin="16dp"
         android:clickable="true"
         android:src="@mipmap/ic_shoucang"
+        app:backgroundTint="@color/white"
         app:layout_anchor="@id/appBarLayout"
         app:layout_anchorGravity="bottom|right|end" />
 

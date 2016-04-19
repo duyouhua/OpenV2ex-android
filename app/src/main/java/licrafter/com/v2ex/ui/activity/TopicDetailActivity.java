@@ -2,8 +2,6 @@ package licrafter.com.v2ex.ui.activity;/**
  * Created by Administrator on 2016/3/26.
  */
 
-import android.content.Intent;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,14 +10,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
-import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
 import licrafter.com.v2ex.event.CommentEvent;
 import licrafter.com.v2ex.event.FavoriteEvent;
@@ -158,14 +152,14 @@ public class TopicDetailActivity extends BaseToolbarActivity {
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getVisibility()==View.VISIBLE){
+        if (viewPager.getVisibility() == View.VISIBLE) {
             setImagePageVisible(View.GONE);
-        }else {
+        } else {
             super.onBackPressed();
         }
     }
 
-    public void setImagePageVisible(int visible){
+    public void setImagePageVisible(int visible) {
         viewPager.setVisibility(visible);
         transition_background.setVisibility(visible);
     }

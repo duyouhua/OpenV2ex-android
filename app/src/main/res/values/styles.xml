@@ -8,7 +8,7 @@
     <style name="Base.Theme.AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/teal500</item>
         <item name="colorPrimaryDark">@color/teal700</item>
-        <item name="colorAccent">@color/white</item>
+        <item name="colorAccent">@color/colorAccent</item>
     </style>
 
     <style name="topicContentStyle" parent="TextAppearance.AppCompat.Body1">
