@@ -44,17 +44,13 @@ public class LoginActivity extends BaseToolbarActivity implements View.OnClickLi
     @Override
     protected void attachVeiw() {
         mPresenter = new LoginPresenter();
-        mPresenter.attachView(this);
+       // mPresenter.attachView(this);
     }
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        input_name.setText("ljx");
-        input_pwd.setText("111111");
         toolbar.setTitle("登陆");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override

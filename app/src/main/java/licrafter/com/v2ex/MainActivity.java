@@ -17,6 +17,7 @@ import licrafter.com.v2ex.ui.activity.SettingActivity;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.ui.fragment.CategoryFragment;
 import licrafter.com.v2ex.ui.fragment.NodeListFragment;
+import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.util.FragmentUtil;
 
 /**
@@ -106,7 +107,8 @@ public class MainActivity extends BaseDrawerLayoutActivity {
                 startActivity(new Intent(this, TopicEditActivity.class));
             } else {
                 Toast.makeText(this, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(this, LoginActivity.class));
+                LoginDialog dialog = new LoginDialog(this);
+                dialog.show();
             }
             return true;
         }

@@ -5,6 +5,7 @@ package licrafter.com.v2ex.mvp.presenters;/**
 import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.ui.activity.LoginActivity;
+import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import rx.Observable;
@@ -17,7 +18,7 @@ import rx.schedulers.Schedulers;
  * author: lijinxiang
  * date: 2016/3/21
  **/
-public class LoginPresenter extends BasePresenter<LoginActivity> {
+public class LoginPresenter extends BasePresenter<LoginDialog> {
 
 
     public void login(final String username, final String password) {
@@ -65,7 +66,7 @@ public class LoginPresenter extends BasePresenter<LoginActivity> {
                     @Override
                     public void onNext(LoginResult result) {
                         if (getView() != null) {
-                            ((LoginActivity) getView()).onLoginSuccess(result);
+                            ((LoginDialog) getView()).onLoginSuccess(result);
                         }
                     }
                 }));

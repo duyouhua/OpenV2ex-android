@@ -12,6 +12,7 @@
     <color name="loading_color_5">#FF6766</color>
 
     <color name="white">#FFFFFF</color>
+    <color name="teal100">#B2DFDB</color>
     <color name="teal500">#009688</color>
     <color name="teal700">#00796B</color>
     <color name="teal500l">#3080CBC4</color>
