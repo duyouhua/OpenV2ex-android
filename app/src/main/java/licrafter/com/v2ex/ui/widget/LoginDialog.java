@@ -1,6 +1,5 @@
 package licrafter.com.v2ex.ui.widget;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.design.widget.TextInputLayout;
@@ -9,7 +8,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -53,9 +51,8 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
 
     private boolean isNameEmpty = true;
     private boolean isPswEmpty = true;
-    private String username;
-    private String psw;
     private LoginPresenter presenter;
+    private OnLoginListener listener;
 
     public LoginDialog(Context context) {
         super(context);
@@ -68,7 +65,6 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         getWindow().setAttributes(lp);
         presenter = new LoginPresenter();
-        presenter.attachView(this);
         inputName.setOnClickListener(this);
         inputPwd.setOnClickListener(this);
         inputName.addTextChangedListener(nameTextWatcher);
@@ -85,7 +81,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (count == 0) {
+            if (inputName.getText().length() == 0) {
                 isNameEmpty = true;
             } else {
                 isNameEmpty = false;
@@ -106,7 +102,7 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (count == 0) {
+            if (inputPwd.getText().length() == 0) {
                 isPswEmpty = true;
             } else {
                 isPswEmpty = false;
@@ -134,13 +130,17 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.loginBtn:
-                android.util.Log.d("ljx", "click");
                 if (!isFormClean()) {
                     showDialog(true);
-                    presenter.login(inputName.getText().toString(), inputName.getText().toString());
+                    presenter.login(inputName.getText().toString(), inputPwd.getText().toString());
                 } else {
                     Toast.makeText(getContext(), "请输入用户名和密码", Toast.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.registerBtn:
+                dismiss();
+                RegisterDialog registerDialog = new RegisterDialog(getContext());
+                registerDialog.show();
                 break;
         }
     }
@@ -148,12 +148,25 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
     @Override
     public void onFailure(String e) {
         showDialog(false);
+        if (listener != null) {
+            listener.onLoginFailed();
+        }
+    }
+
+    @Override
+    public void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        presenter.attachView(this);
     }
 
     @Override
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         presenter.detachView();
+    }
+
+    public void setOnLoginListener(OnLoginListener listener) {
+        this.listener = listener;
     }
 
     public void onLoginSuccess(LoginResult result) {
@@ -166,7 +179,9 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
             Toast.makeText(getContext(), "欢迎  " + result.getUserId() + "  登录客户端", Toast.LENGTH_LONG).show();
             SharedPreferenceUtils.save("user_name", result.getUserId());
             SharedPreferenceUtils.save("user_avatar", result.getUserAvatar());
-            loginSuccess();
+            if (listener != null) {
+                listener.onLoginSuccess();
+            }
             dismiss();
         } else {
             BaseApplication.setLogin(false);
@@ -181,8 +196,10 @@ public class LoginDialog extends Dialog implements View.OnClickListener, MvpView
         return true;
     }
 
-    private void loginSuccess() {
+    public interface OnLoginListener {
+        public void onLoginSuccess();
 
+        public void onLoginFailed();
     }
 
     private void showDialog(boolean show) {

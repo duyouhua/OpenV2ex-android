@@ -10,7 +10,6 @@ import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.model.response.CreateTopicResponse;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.ui.widget.searchView.SearchItem;
-import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import rx.Observable;

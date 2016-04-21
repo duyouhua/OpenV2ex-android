@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import licrafter.com.v2ex.ui.widget.LoadingDialog;
+import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
@@ -14,6 +15,7 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
     private LoadingDialog loadingDialog;
+    protected LoginDialog dialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

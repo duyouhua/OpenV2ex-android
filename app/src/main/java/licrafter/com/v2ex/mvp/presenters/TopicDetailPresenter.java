@@ -4,7 +4,6 @@ package licrafter.com.v2ex.mvp.presenters;/**
 
 
 import licrafter.com.v2ex.api.service.AuthService;
-import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.views.MvpView;

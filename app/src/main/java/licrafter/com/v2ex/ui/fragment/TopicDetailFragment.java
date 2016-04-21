@@ -24,10 +24,10 @@ import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
-import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.ProfitActivity;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
 import licrafter.com.v2ex.ui.widget.LJWebView;
+import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.util.RxBus;
 import rx.Subscription;
 import rx.functions.Action1;
@@ -37,9 +37,6 @@ import rx.functions.Action1;
  * date: 2016/3/26
  **/
 public class TopicDetailFragment extends BaseFragment implements MvpView {
-
-    private Topic topic;
-    private static final int REQ_LOGIN = 0x001;
 
     @Bind(R.id.iv_avatar)
     RoundedImageView mAvatarView;
@@ -56,9 +53,11 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Bind(R.id.rl_profit)
     RelativeLayout mProfitRelative;
 
+    private Topic topic;
     private TopicDetailPresenter mPresenter;
     private TopicDetail topicDetail;
     private Subscription mFavoriteSubscription;
+    private LoginDialog dialog;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
@@ -91,6 +90,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     protected void initViews(View view) {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(false);
         ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
+        dialog = new LoginDialog(getActivity());
         if (topic != null) {
             mTitleView.setText(topic.getTitle());
             Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
@@ -113,7 +113,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                             }
                         } else {
                             Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                            startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQ_LOGIN);
+                            dialog.show();
                         }
                     }
                 });
@@ -123,6 +123,19 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                 Intent intent = new Intent(getActivity(), ProfitActivity.class);
                 intent.putExtra("user_name", topic.getUserId());
                 startActivity(intent);
+            }
+        });
+
+        dialog.setOnLoginListener(new LoginDialog.OnLoginListener() {
+            @Override
+            public void onLoginSuccess() {
+                showLoadingDialog();
+                mPresenter.getTopicDetail(topic.getTopicId());
+            }
+
+            @Override
+            public void onLoginFailed() {
+
             }
         });
     }
@@ -172,14 +185,4 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
         topicDetail.setFravorite(isFavorite);
         ((TopicDetailActivity) getActivity()).setShoucangStatus(isFavorite);
     }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQ_LOGIN) {
-            showLoadingDialog();
-            mPresenter.getTopicDetail(topic.getTopicId());
-        }
-    }
-
 }

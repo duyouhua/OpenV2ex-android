@@ -316,4 +316,10 @@ public class JsoupUtil {
         }
         return topics;
     }
+
+    public static String parseRegisterCode(String response) {
+        Element body = Jsoup.parse(response).body();
+        Element once = body.select("input[name=once]").first();
+        return once.attr("value");
+    }
 }

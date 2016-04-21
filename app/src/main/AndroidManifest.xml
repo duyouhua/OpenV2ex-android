@@ -37,9 +37,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".ui.activity.LoginActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.activity.TopicEditActivity"
             android:label="@string/edit_post"
             android:screenOrientation="portrait"

@@ -20,9 +20,8 @@ import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.event.LogoutEvent;
 import licrafter.com.v2ex.event.UserEvent;
-import licrafter.com.v2ex.ui.activity.LoginActivity;
 import licrafter.com.v2ex.ui.activity.WebViewActivity;
-import licrafter.com.v2ex.util.Constant;
+import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.util.RxBus;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 import rx.Subscription;
@@ -51,6 +50,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dialog = new LoginDialog(this);
         this.navigationView.setNavigationItemSelectedListener(itemSelectedListener);
         this.drawerLayout.setDrawerListener(new EasyDrawerListener());
         Menu menu = navigationView.getMenu();
@@ -68,7 +68,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
             @Override
             public void onClick(View v) {
                 if (!BaseApplication.isLogin()) {
-                    startActivity(new Intent(BaseDrawerLayoutActivity.this, LoginActivity.class));
+                    dialog.show();
                 } else {
                     Intent intent = new Intent(BaseDrawerLayoutActivity.this, WebViewActivity.class);
                     intent.putExtra("url", ("https://www.v2ex.com/member/" + SharedPreferenceUtils.getString("user_name", "")));
