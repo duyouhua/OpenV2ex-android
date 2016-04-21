@@ -21,6 +21,7 @@ import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -141,15 +142,23 @@ public class LoginPresenter extends BasePresenter<MvpView> {
                 }));
     }
 
+    /**
+     * 解析bitmap的方法失败，只能使用现下载再添加的方法了。。。
+     *
+     * @param body
+     * @return
+     */
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         File futureStudioIconFile = new File(((RegisterDialog) getView()).getContext().getExternalFilesDir(null) + File.separator + "_code.png");
+
         try {
             // todo change the file location/name according to your needs
-            android.util.Log.d("ljx","path = "+futureStudioIconFile.getAbsolutePath());
+            android.util.Log.d("ljx", "path = " + futureStudioIconFile.getAbsolutePath());
             InputStream inputStream = null;
             OutputStream outputStream = null;
 
             try {
+                //不加@Steaming标注，会一次性把整张图片加载到内存，所以byte[]大小要大于图片所占大小
                 byte[] fileReader = new byte[4028];
 
                 long fileSize = body.contentLength();
@@ -185,7 +194,7 @@ public class LoginPresenter extends BasePresenter<MvpView> {
                 if (outputStream != null) {
                     outputStream.close();
                 }
-                ((RegisterDialog)getView()).parseCodeImage(futureStudioIconFile);
+                ((RegisterDialog) getView()).parseCodeImage(futureStudioIconFile);
             }
         } catch (IOException e) {
             return false;

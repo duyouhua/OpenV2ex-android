@@ -11,6 +11,7 @@ import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Streaming;
 import rx.Observable;
 
 /**
@@ -57,6 +58,7 @@ public interface AUTH {
             "Referer: https://www.v2ex.com/signup"
             ,"Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
     })
+    @Streaming
     @GET("_captcha")
     Observable<ResponseBody> getCodeImage(@Query("once") String once);
 

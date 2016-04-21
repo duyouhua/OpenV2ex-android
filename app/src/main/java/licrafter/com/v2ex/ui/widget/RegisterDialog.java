@@ -186,7 +186,9 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     }
 
     public void parseCodeImage(File file) {
-        Glide.with(getContext()).load(file).into(codeImage);
+        Glide.with(getContext()).load(file).diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .into(codeImage);
     }
 
     public interface OnRegisterListener {
