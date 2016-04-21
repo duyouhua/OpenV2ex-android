@@ -27,6 +27,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.model.stream.StreamModelLoader;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -181,17 +182,11 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     public void parseRegCode(String once) {
         codeProgerssbar.setVisibility(View.INVISIBLE);
         this.once = once;
-        android.util.Log.d("ljx", "getonce = " + once);
         presenter.getCodeImage(once);
     }
 
-    public void parseCodeImage(InputStream inputStream) {
-        BufferedInputStream buffer = new BufferedInputStream(inputStream);
-        android.util.Log.d("ljx",buffer.toString());
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        Bitmap bitmap = BitmapFactory.decodeStream(buffer,null,options);
-        android.util.Log.d("ljx","?"+(bitmap==null));
+    public void parseCodeImage(File file) {
+        Glide.with(getContext()).load(file).into(codeImage);
     }
 
     public interface OnRegisterListener {
