@@ -4,48 +4,26 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.io.OutputStream;
+
+import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.model.Topic;
+import okhttp3.ResponseBody;
 
 /**
  * Created by shell on 15-11-7.
  */
 public class CustomUtil {
-
-    public static String streamFormToString(InputStream inputStream) {
-        try {
-            int count = inputStream.available();
-            byte[] bytes = new byte[count];
-            inputStream.read(bytes);
-            inputStream.close();
-            return new String(bytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return "";
-    }
-
-    public static List<Topic> collectionToList(Collection<Topic> collections) {
-        List<Topic> topics = new ArrayList<>();
-        Iterator<Topic> iterator = collections.iterator();
-        while (iterator.hasNext()) {
-            topics.add(iterator.next());
-        }
-        return topics;
-    }
 
     public static void initStyle(SwipeRefreshLayout swipeRefreshLayout) {
         if (swipeRefreshLayout != null) {
@@ -83,5 +61,62 @@ public class CustomUtil {
         final InputMethodManager manager = (InputMethodManager) view.getContext()
                 .getSystemService(Context.INPUT_METHOD_SERVICE);
         manager.showSoftInput(view, 0);
+    }
+
+    /**
+     * 解析bitmap的方法失败，只能使用现下载再添加的方法了
+     *
+     * @param body
+     * @return
+     */
+    public static File writeResponseBodyToDisk(ResponseBody body) {
+        File codeImage = new File(BaseApplication.getContext().getExternalFilesDir(null) + File.separator + "_code.png");
+
+        try {
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            try {
+
+                byte[] fileReader = new byte[1024];
+
+                long fileSize = body.contentLength();
+                long fileSizeDownloaded = 0;
+
+                inputStream = body.byteStream();
+                outputStream = new FileOutputStream(codeImage);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                    android.util.Log.d("ljx", "file download: " + fileSizeDownloaded + " of " + fileSize);
+                }
+
+                outputStream.flush();
+
+                return codeImage;
+            } catch (IOException e) {
+                return null;
+            } finally {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+            }
+        } catch (IOException e) {
+            return null;
+        }
+
     }
 }

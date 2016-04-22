@@ -15,6 +15,8 @@ import licrafter.com.v2ex.model.TopicDetail;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
 import licrafter.com.v2ex.model.response.CreateTopicResponse;
+import licrafter.com.v2ex.model.response.LoginFormInfo;
+import licrafter.com.v2ex.model.response.RegFormInfo;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
 
 /**
@@ -317,9 +319,31 @@ public class JsoupUtil {
         return topics;
     }
 
-    public static String parseRegisterCode(String response) {
+    public static RegFormInfo parseRegFormInfo(String response) {
+        RegFormInfo formInfo = new RegFormInfo();
         Element body = Jsoup.parse(response).body();
         Element once = body.select("input[name=once]").first();
-        return once.attr("value");
+        formInfo.setOnce(once.attr("value"));
+
+        Element form = body.select("form[method=post]").first();
+        Elements inputs = form.getElementsByTag("input");
+        formInfo.setNameKey(inputs.get(0).attr("name"));
+        formInfo.setPswKey(inputs.get(1).attr("name"));
+        formInfo.setEmailKey(inputs.get(2).attr("name"));
+        formInfo.setCodeKey(inputs.get(3).attr("name"));
+        return formInfo;
+    }
+
+    public static LoginFormInfo parseLoginFormInfo(String response){
+        LoginFormInfo formInfo = new LoginFormInfo();
+        Element body = Jsoup.parse(response).body();
+        Element once = body.select("input[name=once]").first();
+        formInfo.setOnce(once.attr("value"));
+
+        Element form = body.select("form[method=post]").first();
+        Elements inputs = form.getElementsByTag("input");
+        formInfo.setNameKey(inputs.get(0).attr("name"));
+        formInfo.setPswKey(inputs.get(1).attr("name"));
+        return formInfo;
     }
 }

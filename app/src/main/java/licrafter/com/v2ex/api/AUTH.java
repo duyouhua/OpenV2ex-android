@@ -1,8 +1,11 @@
 package licrafter.com.v2ex.api;
 
+import java.util.HashMap;
+
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HEAD;
@@ -32,35 +35,40 @@ public interface AUTH {
     /**
      * 登录
      *
-     * @param u
-     * @param p
-     * @param once
      * @return
      */
     @FormUrlEncoded
     @Headers("Referer: https://www.v2ex.com/signin")
     @POST("/signin")
-    Observable<String> login(@Field("once") int once, @Field("u") String u, @Field("p") String p, @Field("next") String next);
+    Observable<String> login(@FieldMap HashMap<String, String> hashMap);
 
     /**
      * 获取注册once
      *
      * @return
      */
-    @Headers({
-            "Referer: https://www.v2ex.com/signout"
-            ,"cache-control:max-age=0"
-    })
     @GET("/signup")
     Observable<String> getRegisterCode();
 
-    @Headers({
-            "Referer: https://www.v2ex.com/signup"
-            ,"Accept:text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
-    })
+    /**
+     * get register code image
+     *
+     * @param once
+     * @return
+     */
     @Streaming
     @GET("_captcha")
     Observable<ResponseBody> getCodeImage(@Query("once") String once);
+
+    /**
+     * register
+     *
+     * @param map
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/signup")
+    Observable<String> register(@FieldMap HashMap<String, String> map);
 
     /**
      * 发表新的帖子

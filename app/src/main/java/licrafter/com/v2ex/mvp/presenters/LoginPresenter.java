@@ -2,26 +2,23 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/21.
  */
 
-import android.util.Log;
-
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.HashMap;
 
 import licrafter.com.v2ex.api.service.AuthService;
 import licrafter.com.v2ex.model.LoginResult;
+import licrafter.com.v2ex.model.response.LoginFormInfo;
+import licrafter.com.v2ex.model.response.RegFormInfo;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.widget.LoginDialog;
 import licrafter.com.v2ex.ui.widget.RegisterDialog;
+import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;
 import licrafter.com.v2ex.util.JsoupUtil;
 import okhttp3.ResponseBody;
 import rx.Observable;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
@@ -34,16 +31,21 @@ public class LoginPresenter extends BasePresenter<MvpView> {
 
     public void login(final String username, final String password) {
         compositeSubscription.add(AuthService.getInstance().auth().getOnceString()
-                .map(new Func1<String, String>() {
+                .map(new Func1<String, LoginFormInfo>() {
                     @Override
-                    public String call(String s) {
-                        return JsoupUtil.parseOnce(s);
+                    public LoginFormInfo call(String s) {
+                        return JsoupUtil.parseLoginFormInfo(s);
                     }
                 })
-                .flatMap(new Func1<String, Observable<String>>() {
+                .flatMap(new Func1<LoginFormInfo, Observable<String>>() {
                     @Override
-                    public Observable<String> call(String once) {
-                        return AuthService.getInstance().auth().login(Integer.valueOf(once), username, password, "/");
+                    public Observable<String> call(LoginFormInfo formInfo) {
+                        HashMap<String, String> hashMap = new HashMap<String, String>();
+                        hashMap.put(formInfo.getNameKey(), username);
+                        hashMap.put(formInfo.getPswKey(), password);
+                        hashMap.put("once", formInfo.getOnce());
+                        hashMap.put("next", "/");
+                        return AuthService.getInstance().auth().login(hashMap);
                     }
                 })
                 .map(new Func1<String, LoginResult>() {
@@ -86,12 +88,76 @@ public class LoginPresenter extends BasePresenter<MvpView> {
     public void getRegisterCode() {
         compositeSubscription.add(AuthService.getInstance().auth()
                 .getRegisterCode()
-                .map(new Func1<String, String>() {
+                .map(new Func1<String, RegFormInfo>() {
                     @Override
-                    public String call(String response) {
-                        return JsoupUtil.parseRegisterCode(response);
+                    public RegFormInfo call(String response) {
+                        return JsoupUtil.parseRegFormInfo(response);
                     }
                 })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<RegFormInfo>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            ApiErrorUtil.handleError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(RegFormInfo formInfo) {
+                        if (getView() != null) {
+                            ((RegisterDialog) getView()).parseRegCode(formInfo);
+                        }
+                    }
+                }));
+    }
+
+    public void getCodeImage(String once) {
+        compositeSubscription.add(AuthService.getInstance().auth().getCodeImage(once)
+                .map(new Func1<ResponseBody, File>() {
+                    @Override
+                    public File call(ResponseBody responseBody) {
+                        return CustomUtil.writeResponseBodyToDisk(responseBody);
+                    }
+                })
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<File>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (getView() != null) {
+                            ApiErrorUtil.handleError(e);
+                        }
+                    }
+
+                    @Override
+                    public void onNext(File codeImage) {
+                        if (getView() != null) {
+                            ((RegisterDialog) getView()).parseCodeImage(codeImage);
+                        }
+                    }
+                }));
+    }
+
+    public void register(RegFormInfo formInfo) {
+        HashMap<String, String> fieldMap = new HashMap<>();
+        fieldMap.put(formInfo.getNameKey(), formInfo.getNameValue());
+        fieldMap.put(formInfo.getPswKey(), formInfo.getPswValue());
+        fieldMap.put(formInfo.getEmailKey(), formInfo.getEmailValue());
+        fieldMap.put(formInfo.getCodeKey(), formInfo.getCodeValue());
+        fieldMap.put("once", formInfo.getOnce());
+        compositeSubscription.add(AuthService.getInstance().auth().register(fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
@@ -108,97 +174,12 @@ public class LoginPresenter extends BasePresenter<MvpView> {
                     }
 
                     @Override
-                    public void onNext(String once) {
+                    public void onNext(String response) {
                         if (getView() != null) {
-                            ((RegisterDialog) getView()).parseRegCode(once);
+                            String error = ApiErrorUtil.getErrorMsg(response);
+                            ((RegisterDialog) getView()).parseRegError(error);
                         }
                     }
                 }));
-    }
-
-    public void getCodeImage(String once) {
-        compositeSubscription.add(AuthService.getInstance().auth().getCodeImage(once)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<ResponseBody>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        if (getView() != null) {
-                            ApiErrorUtil.handleError(e);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(ResponseBody response) {
-                        if (getView() != null) {
-                            writeResponseBodyToDisk(response);
-                        }
-                    }
-                }));
-    }
-
-    /**
-     * 解析bitmap的方法失败，只能使用现下载再添加的方法了。。。
-     *
-     * @param body
-     * @return
-     */
-    private boolean writeResponseBodyToDisk(ResponseBody body) {
-        File futureStudioIconFile = new File(((RegisterDialog) getView()).getContext().getExternalFilesDir(null) + File.separator + "_code.png");
-
-        try {
-            // todo change the file location/name according to your needs
-            android.util.Log.d("ljx", "path = " + futureStudioIconFile.getAbsolutePath());
-            InputStream inputStream = null;
-            OutputStream outputStream = null;
-
-            try {
-                //不加@Steaming标注，会一次性把整张图片加载到内存，所以byte[]大小要大于图片所占大小
-                byte[] fileReader = new byte[4028];
-
-                long fileSize = body.contentLength();
-                long fileSizeDownloaded = 0;
-
-                inputStream = body.byteStream();
-                outputStream = new FileOutputStream(futureStudioIconFile);
-
-                while (true) {
-                    int read = inputStream.read(fileReader);
-
-                    if (read == -1) {
-                        break;
-                    }
-
-                    outputStream.write(fileReader, 0, read);
-
-                    fileSizeDownloaded += read;
-
-                    android.util.Log.d("ljx", "file download: " + fileSizeDownloaded + " of " + fileSize);
-                }
-
-                outputStream.flush();
-
-                return true;
-            } catch (IOException e) {
-                return false;
-            } finally {
-                if (inputStream != null) {
-                    inputStream.close();
-                }
-
-                if (outputStream != null) {
-                    outputStream.close();
-                }
-                ((RegisterDialog) getView()).parseCodeImage(futureStudioIconFile);
-            }
-        } catch (IOException e) {
-            return false;
-        }
-
     }
 }

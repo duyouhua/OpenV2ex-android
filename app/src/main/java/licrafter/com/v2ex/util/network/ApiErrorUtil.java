@@ -49,9 +49,11 @@ public class ApiErrorUtil {
         String errorContent;
         if (errorMatcher.find()) {
             errorContent = errorMatcher.group(1).replaceAll("<[^>]+>", "");
+            android.util.Log.d("ljx",errorContent);
         } else {
             errorContent = null;
         }
+
         return errorContent;
     }
 }

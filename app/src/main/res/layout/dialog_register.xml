@@ -58,18 +58,25 @@
     </android.support.design.widget.TextInputLayout>
 
     <FrameLayout
-        android:background="@drawable/bg_rec_grey"
         android:id="@+id/codeFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/emailInputLayout">
+        android:layout_below="@id/emailInputLayout"
+        android:paddingLeft="2dp"
+        android:paddingRight="2dp">
 
-        <ImageView
+        <View
+            android:id="@+id/v_code_background"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:background="@drawable/bg_rec_grey" />
+
+        <com.makeramen.roundedimageview.RoundedImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/codeImage"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop" />
+            android:layout_height="wrap_content"
+            app:riv_corner_radius="4dip"
+            app:riv_oval="false" />
 
         <ProgressBar
             android:id="@+id/codeProgressbar"

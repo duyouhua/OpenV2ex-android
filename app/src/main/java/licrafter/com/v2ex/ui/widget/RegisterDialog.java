@@ -4,9 +4,6 @@ package licrafter.com.v2ex.ui.widget;/**
 
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -21,15 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.data.DataFetcher;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.model.stream.StreamModelLoader;
+import com.makeramen.roundedimageview.RoundedImageView;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +29,7 @@ import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.event.UserEvent;
 import licrafter.com.v2ex.model.LoginResult;
+import licrafter.com.v2ex.model.response.RegFormInfo;
 import licrafter.com.v2ex.mvp.presenters.LoginPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.util.RxBus;
@@ -61,11 +54,13 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     @Bind(R.id.codeProgressbar)
     ProgressBar codeProgerssbar;
     @Bind(R.id.codeImage)
-    ImageView codeImage;
+    RoundedImageView codeImage;
     @Bind(R.id.regBtn)
     TextView registerBtn;
     @Bind(R.id.regFrameLayout)
     FrameLayout regFrameLayout;
+    @Bind(R.id.v_code_background)
+    View mCodeBackground;
 
     private boolean isNameEmpty = true;
     private boolean isPswEmpty = true;
@@ -73,27 +68,19 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     private boolean isCodeEmpty = true;
     private LoginPresenter presenter;
     private OnRegisterListener listener;
-    private String once;
+    private RegFormInfo formInfo;
 
     public RegisterDialog(Context context) {
         super(context);
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_register, null);
         setContentView(rootView);
         ButterKnife.bind(this);
+        codeImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         getWindow().setAttributes(lp);
-
-//        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-//        Display display = wm.getDefaultDisplay();
-//        DisplayMetrics metrics = new DisplayMetrics();
-//        display.getMetrics(metrics);
-//        Double width = metrics.widthPixels*.9;
-//        Double height = width*.9;
-//        Window win = getWindow();
-//        win.setLayout(width.intValue(), height.intValue());
 
         presenter = new LoginPresenter();
         inputName.addTextChangedListener(new InputTextWatcher(inputName));
@@ -103,7 +90,7 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         registerBtn.setOnClickListener(this);
     }
 
-    private void regEnable() {
+    private void refreshRegButtonStatus() {
         if (!isNameEmpty && !isPswEmpty && !isEmailEmpty && !isCodeEmpty) {
             registerBtn.setTextColor(getContext().getResources().getColor(R.color.teal500));
             registerBtn.setClickable(true);
@@ -116,20 +103,21 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.loginBtn:
-                if (!isFormClean()) {
-                    showDialog(true);
-                    presenter.login(inputName.getText().toString(), inputPwd.getText().toString());
-                } else {
-                    Toast.makeText(getContext(), "请输入用户名和密码", Toast.LENGTH_SHORT).show();
-                }
+            case R.id.regBtn:
+                showRegProgressbar(true);
+                formInfo.setNameValue(inputName.getText().toString());
+                formInfo.setPswValue(inputPwd.getText().toString());
+                formInfo.setEmailValue(inputEmail.getText().toString());
+                formInfo.setCodeValue(inputCode.getText().toString());
+                presenter.register(formInfo);
+                showRegProgressbar(true);
                 break;
         }
     }
 
     @Override
     public void onFailure(String e) {
-        showDialog(false);
+        showRegProgressbar(false);
         if (listener != null) {
             listener.onRegisterFailed();
         }
@@ -152,54 +140,39 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         this.listener = listener;
     }
 
-    public void onLoginSuccess(LoginResult result) {
-        showDialog(false);
-        if (result.getMessage() == null) {
-            BaseApplication.setLogin(true);
-            SharedPreferenceUtils.save("user_name", result.getUserId());
-            SharedPreferenceUtils.save("user_avatar", result.getUserAvatar());
-            RxBus.getDefault().post(new UserEvent(result.getUserId(), result.getUserAvatar()));
-            Toast.makeText(getContext(), "欢迎  " + result.getUserId() + "  登录客户端", Toast.LENGTH_LONG).show();
-            SharedPreferenceUtils.save("user_name", result.getUserId());
-            SharedPreferenceUtils.save("user_avatar", result.getUserAvatar());
-            if (listener != null) {
-                listener.onRegisterSuccess();
-            }
-            dismiss();
-        } else {
-            BaseApplication.setLogin(false);
-            Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_LONG).show();
-        }
-    }
-
-    private boolean isFormClean() {
-        if (!TextUtils.isEmpty(inputName.getText()) && !TextUtils.isEmpty(inputPwd.getText())) {
-            return false;
-        }
-        return true;
-    }
-
-    public void parseRegCode(String once) {
-        codeProgerssbar.setVisibility(View.INVISIBLE);
-        this.once = once;
-        presenter.getCodeImage(once);
+    public void parseRegCode(RegFormInfo formInfo) {
+        this.formInfo = formInfo;
+        presenter.getCodeImage(formInfo.getOnce());
     }
 
     public void parseCodeImage(File file) {
+        hideCodeProgressbar();
         Glide.with(getContext()).load(file).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
                 .into(codeImage);
     }
 
-    public interface OnRegisterListener {
-        public void onRegisterSuccess();
-
-        public void onRegisterFailed();
+    public void parseRegError(String error) {
+        showRegProgressbar(false);
+        if (error != null) {
+            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            presenter.getCodeImage(formInfo.getOnce());
+        } else {
+            Toast.makeText(getContext(), "注册成功", Toast.LENGTH_SHORT).show();
+            LoginDialog loginDialog = new LoginDialog(getContext());
+            dismiss();
+            loginDialog.show();
+        }
     }
 
-    private void showDialog(boolean show) {
+    private void showRegProgressbar(boolean show) {
         regProgressbar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
         registerBtn.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+    }
+
+    private void hideCodeProgressbar() {
+        mCodeBackground.setVisibility(View.INVISIBLE);
+        codeProgerssbar.setVisibility(View.INVISIBLE);
     }
 
     private class InputTextWatcher implements TextWatcher {
@@ -220,29 +193,31 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
             boolean value = editText.getText().length() == 0;
             switch (editText.getId()) {
                 case R.id.input_code:
-                    setStatus(isCodeEmpty, value);
+                    isCodeEmpty = value;
                     break;
                 case R.id.input_email:
-                    setStatus(isEmailEmpty, value);
+                    isEmailEmpty = value;
                     break;
                 case R.id.input_name:
-                    setStatus(isNameEmpty, value);
+                    isNameEmpty = value;
                     break;
                 case R.id.input_pwd:
-                    setStatus(isPswEmpty, value);
+                    isPswEmpty = value;
                     break;
             }
-            regEnable();
+            refreshRegButtonStatus();
         }
 
         @Override
         public void afterTextChanged(Editable s) {
 
         }
+    }
 
-        private void setStatus(boolean key, boolean value) {
-            key = value;
-        }
+    public interface OnRegisterListener {
+        public void onRegisterSuccess();
+
+        public void onRegisterFailed();
     }
 
 }
