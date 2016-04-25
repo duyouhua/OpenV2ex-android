@@ -5,6 +5,7 @@ package licrafter.com.v2ex.ui.activity;/**
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -123,9 +124,9 @@ public class TopicDetailActivity extends BaseToolbarActivity {
 
     public void setShoucangStatus(boolean isFavorite) {
         mFooterShoucang.setText(isFavorite ? "取消收藏" : "加入收藏");
-        Drawable scDrawable = getResources().getDrawable(R.mipmap.ic_shoucang);
+        Drawable scDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_shoucang);
         scDrawable.setBounds(0, 0, scDrawable.getIntrinsicHeight(), scDrawable.getIntrinsicWidth());
-        Drawable unScDrawable = getResources().getDrawable(R.mipmap.ic_unshoucang);
+        Drawable unScDrawable = ContextCompat.getDrawable(this, R.mipmap.ic_unshoucang);
         unScDrawable.setBounds(0, 0, unScDrawable.getIntrinsicHeight(), unScDrawable.getIntrinsicWidth());
         mFooterShoucang.setCompoundDrawables(null, isFavorite ? unScDrawable : scDrawable, null, null);
     }
