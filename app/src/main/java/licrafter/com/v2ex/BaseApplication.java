@@ -9,13 +9,9 @@ import java.util.ArrayList;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
-import licrafter.com.v2ex.api.service.V2exApiService;
 import licrafter.com.v2ex.model.Node;
 import licrafter.com.v2ex.util.SharedPreferenceUtils;
 import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * author: lijinxiang
@@ -32,7 +28,6 @@ public class BaseApplication extends Application {
         context = getApplicationContext();
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context)
                 .name("v2ex.realm").build();
-        Realm.deleteRealm(realmConfiguration);
         Realm.setDefaultConfiguration(realmConfiguration);
 
     }

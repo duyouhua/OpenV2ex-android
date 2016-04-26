@@ -1,5 +1,6 @@
 package licrafter.com.v2ex;
 
+import android.app.Application;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -11,7 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import licrafter.com.v2ex.base.BaseDrawerLayoutActivity;
-import licrafter.com.v2ex.ui.activity.GestureActivitgy;
+import licrafter.com.v2ex.ui.activity.SettingActivity;
 import licrafter.com.v2ex.ui.activity.TopicEditActivity;
 import licrafter.com.v2ex.ui.fragment.CategoryFragment;
 import licrafter.com.v2ex.ui.fragment.NodeListFragment;
@@ -68,7 +69,11 @@ public class MainActivity extends BaseDrawerLayoutActivity {
                 actionBarHelper.setTitle(getString(R.string.node_list));
                 break;
             case R.id.settingDrawerMenuItem:
-                startActivity(new Intent(this, GestureActivitgy.class));
+                startActivity(new Intent(this, SettingActivity.class));
+                break;
+            case R.id.aboutDrawerMenuItem:
+                Toast.makeText(this,"Source:https://github.com/shellljx/OpenV2ex-android",Toast.LENGTH_SHORT).show();
+                break;
             default:
                 break;
         }

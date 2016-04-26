@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import licrafter.com.v2ex.api.service.V2exApiService;
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.ProfitTopic;
-import licrafter.com.v2ex.model.old.JSONProfit;
+import licrafter.com.v2ex.model.JSONProfit;
 import licrafter.com.v2ex.ui.activity.ProfitActivity;
 import licrafter.com.v2ex.util.JsoupUtil;
 import licrafter.com.v2ex.util.network.ApiErrorUtil;

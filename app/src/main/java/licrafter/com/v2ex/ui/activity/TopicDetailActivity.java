@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -152,10 +153,19 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     };
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==android.R.id.home){
+            onBackPressed();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onBackPressed() {
         if (viewPager.getVisibility() == View.VISIBLE) {
             setImagePageVisible(View.GONE);
         } else {
+            setResult(RESULT_OK);
             super.onBackPressed();
         }
     }

@@ -1,5 +1,6 @@
 package licrafter.com.v2ex.ui.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,11 +13,14 @@ import android.view.View;
 import com.bumptech.glide.Glide;
 
 import butterknife.Bind;
+import io.realm.Realm;
+import io.realm.RealmResults;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
 import licrafter.com.v2ex.listener.OnScrollBottomListener;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.Topic;
+import licrafter.com.v2ex.model.realm.ReadHistory;
 import licrafter.com.v2ex.mvp.presenters.TopicListPresenter;
 import licrafter.com.v2ex.mvp.views.TopicListView;
 import licrafter.com.v2ex.ui.activity.TopicDetailActivity;
@@ -28,6 +32,8 @@ import licrafter.com.v2ex.util.CustomUtil;
  * date: 2016/3/18
  **/
 public class TopicListFragment extends BaseFragment implements TopicListView {
+
+    private static int REQ_TOPIC_DETIAL = 0x001;
 
     @Bind(R.id.rv_content)
     RecyclerView mListView;
@@ -41,6 +47,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     private int mPageIndex = 1;
     private int mTotalPage;
     private TabContent mTabContent;
+    private Realm realm;
 
     public static TopicListFragment getInstance(String tabTitle) {
         Bundle bundle = new Bundle();
@@ -50,6 +57,12 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
         TopicListFragment fragment = new TopicListFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        realm = realm.getDefaultInstance();
     }
 
     @Override
@@ -112,6 +125,12 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        realm.close();
+    }
+
+    @Override
     protected void detachView() {
         mPresenter.detachView();
     }
@@ -129,6 +148,14 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             mSwipeLayout.setRefreshing(false);
         }
         mAdapter.setErrorInfo(e);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode== Activity.RESULT_OK&&requestCode==REQ_TOPIC_DETIAL){
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void onLoadMoreSuccess(TabContent content) {
@@ -162,9 +189,10 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
             viewHolder.getView(R.id.rootView).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    addReadHistory(mDatas.get(viewHolder.getAdapterPosition()).getTopicId());
                     Intent intent = new Intent(getActivity(), TopicDetailActivity.class);
                     intent.putExtra("topic", mDatas.get(viewHolder.getAdapterPosition()));
-                    startActivity(intent);
+                    startActivityForResult(intent,REQ_TOPIC_DETIAL);
                 }
             });
         }
@@ -183,6 +211,36 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
                 holder.getTextView(R.id.tv_create_time).setText(topic.getCreateTime());
             }
             holder.getTextView(R.id.tv_replies).setText(String.valueOf(topic.getReplies()));
+            if (hasRead(topic.getTopicId())){
+                holder.getTextView(R.id.tv_replies).setBackgroundResource(R.drawable.bg_oval_grey);
+            }else {
+                holder.getTextView(R.id.tv_replies).setBackgroundResource(R.drawable.bg_oval_blue);
+            }
         }
+    }
+
+    private void addReadHistory(final String id){
+        realm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm bgRealm) {
+                ReadHistory history = bgRealm.createObject(ReadHistory.class);
+                history.setId(id);
+            }
+        }, new Realm.Transaction.OnSuccess() {
+            @Override
+            public void onSuccess() {
+            }
+        }, new Realm.Transaction.OnError() {
+            @Override
+            public void onError(Throwable error) {
+                android.util.Log.d("ljx",error.toString());
+            }
+        });
+    }
+
+    private boolean hasRead(String id){
+        RealmResults<ReadHistory> result = realm.where(ReadHistory.class)
+                .equalTo("id", id).findAll();
+        return result.size()>0;
     }
 }

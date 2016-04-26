@@ -3,8 +3,8 @@ package licrafter.com.v2ex.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import licrafter.com.v2ex.model.old.JSONProfit;
-import licrafter.com.v2ex.model.old.JsonTopic;
+import licrafter.com.v2ex.model.JSONProfit;
+import licrafter.com.v2ex.model.JsonTopic;
 import licrafter.com.v2ex.model.Node;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

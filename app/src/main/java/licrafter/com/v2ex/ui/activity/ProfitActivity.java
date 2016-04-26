@@ -19,7 +19,7 @@ import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseToolbarActivity;
 import licrafter.com.v2ex.model.ProfitTopic;
-import licrafter.com.v2ex.model.old.JSONProfit;
+import licrafter.com.v2ex.model.JSONProfit;
 import licrafter.com.v2ex.mvp.presenters.ProfitPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
 import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
