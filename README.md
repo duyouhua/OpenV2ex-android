@@ -17,20 +17,18 @@ v2ex第三方android客户端
 [roundedimageview](https://github.com/vinc3m1/RoundedImageView)
 [retrofit](https://github.com/square/retrofit)
 [okhttp](https://github.com/square/okhttp)
-[picasso](https://github.com/square/picasso)
 [jsoup](http://jsoup.org/)
-[ormlite](https://github.com/j256/ormlite-android)
 
-![节点列表](http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155522.png)
+![](./Screenshop/1.png)
 
-![个人详情](http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155457.png)
+[](./Screenshop/2.png)
 
-![首页列表](http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155422.png)
+[](./Screenshop/3.png)
 
-![帖子详情](http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155252.png)
+[](./Screenshop/4.png)
 
-<video id="video" controls="" preload="none" width="220" poster="http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155522.png">
-      <source id="mp4" src="http://7vzpfd.com1.z0.glb.clouddn.com/device-2015-11-16-155547.mp4" type="video/mp4">
-      <source id="webm" src="http://media.w3.org/2010/05/sintel/trailer.webm" type="video/webm">
-      <p>Your user agent does not support the HTML5 Video element.</p>
-    </video>
+[](./Screenshop/5.png)
+
+[](./Screenshop/6.png)
+
+[](./Screenshop/7.png)
