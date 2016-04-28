@@ -19,16 +19,16 @@ v2ex第三方android客户端
 [okhttp](https://github.com/square/okhttp)
 [jsoup](http://jsoup.org/)
 
-![](./Screenshop/1.png)
+![](./Screenshot/1.png)
 
-[](./Screenshop/2.png)
+[](./Screenshot/2.png)
 
-[](./Screenshop/3.png)
+[](./Screenshot/3.png)
 
-[](./Screenshop/4.png)
+[](./Screenshot/4.png)
 
-[](./Screenshop/5.png)
+[](./Screenshot/5.png)
 
-[](./Screenshop/6.png)
+[](./Screenshot/6.png)
 
-[](./Screenshop/7.png)
+[](./Screenshot/7.png)
