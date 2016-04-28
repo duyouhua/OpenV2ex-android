@@ -16,11 +16,11 @@ import licrafter.com.v2ex.R;
 public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
 
     @Bind(R.id.toolbar)
-    protected Toolbar toolbar;
+    protected Toolbar mToolbar;
     @Bind(R.id.appBarLayout)
-    protected AppBarLayout appBarLayout;
+    protected AppBarLayout mAppBarLayout;
 
-    protected ActionBarHelper actionBarHelper;
+    protected ActionBarHelper mActionBarHelper;
 
     @Override
     protected void initToolbar(Bundle savedInstanceState) {
@@ -28,16 +28,16 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
     }
 
     protected void initToolbarHelper() {
-        if (this.toolbar == null || this.appBarLayout == null) {
+        if (this.mToolbar == null || this.mAppBarLayout == null) {
             return;
         }
-        this.setSupportActionBar(toolbar);
-        this.actionBarHelper = new ActionBarHelper();
-        this.actionBarHelper.init();
-        this.actionBarHelper.setDrawerTitle(getString(R.string.action_menu));
+        this.setSupportActionBar(mToolbar);
+        this.mActionBarHelper = new ActionBarHelper();
+        this.mActionBarHelper.init();
+        this.mActionBarHelper.setDrawerTitle(getString(R.string.action_menu));
 
 //        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-//            appBarLayout.setElevation(6.0f);
+//            mAppBarLayout.setElevation(6.0f);
 //        }
     }
 
@@ -54,7 +54,7 @@ public abstract class BaseToolbarActivity extends BaseAppCompatActivity {
     public void setAppBarShadow(boolean isShown) {
         final int elevation = isShown
                 ? getResources().getDimensionPixelSize(R.dimen.appbar_elevation) : 0;
-        ViewCompat.setElevation(appBarLayout, elevation);
+        ViewCompat.setElevation(mAppBarLayout, elevation);
     }
 
     public class ActionBarHelper {

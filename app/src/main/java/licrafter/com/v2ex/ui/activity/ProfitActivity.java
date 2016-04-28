@@ -35,7 +35,7 @@ public class ProfitActivity extends BaseToolbarActivity implements MvpView {
     @Bind(R.id.iv_avatar)
     RoundedImageView mAvatar;
     @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
+    CollapsingToolbarLayout mCollapsingToolbar;
     @Bind(R.id.tv_tagline)
     TextView mTagLine;
 
@@ -61,7 +61,7 @@ public class ProfitActivity extends BaseToolbarActivity implements MvpView {
             mUserName = getIntent().getStringExtra("user_name");
         }
 
-        collapsingToolbar.setTitle(mUserName);
+        mCollapsingToolbar.setTitle(mUserName);
         mProfitAdapter = new ProfitAdapter(this, R.layout.item_profit_topic, R.layout.item_profit_info);
         mProfitListView.setLayoutManager(new LinearLayoutManager(this));
         mProfitListView.setHasFixedSize(false);

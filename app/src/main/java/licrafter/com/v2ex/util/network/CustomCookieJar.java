@@ -21,22 +21,22 @@ import static okhttp3.internal.Util.trimSubstring;
  * Created by shell on 2016/3/22.
  */
 public class CustomCookieJar implements CookieJar {
-    private final CookieHandler cookieHandler;
+    private final CookieHandler mCookieHandler;
 
     public CustomCookieJar(CookieHandler cookieHandler) {
-        this.cookieHandler = cookieHandler;
+        this.mCookieHandler = cookieHandler;
     }
 
     @Override
     public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-        if (cookieHandler != null) {
+        if (mCookieHandler != null) {
             List<String> cookieStrings = new ArrayList<>();
             for (Cookie cookie : cookies) {
                 cookieStrings.add(cookie.toString());
             }
             Map<String, List<String>> multimap = Collections.singletonMap("Set-Cookie", cookieStrings);
             try {
-                cookieHandler.put(url.uri(), multimap);
+                mCookieHandler.put(url.uri(), multimap);
             } catch (IOException e) {
                 Internal.logger.log(WARNING, "Saving cookies failed for " + url.resolve("/..."), e);
             }
@@ -49,7 +49,7 @@ public class CustomCookieJar implements CookieJar {
         Map<String, List<String>> headers = Collections.emptyMap();
         Map<String, List<String>> cookieHeaders;
         try {
-            cookieHeaders = cookieHandler.get(url.uri(), headers);
+            cookieHeaders = mCookieHandler.get(url.uri(), headers);
         } catch (IOException e) {
             Internal.logger.log(WARNING, "Loading cookies failed for " + url.resolve("/..."), e);
             return Collections.emptyList();

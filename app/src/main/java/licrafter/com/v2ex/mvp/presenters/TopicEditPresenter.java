@@ -25,7 +25,7 @@ import rx.schedulers.Schedulers;
 public class TopicEditPresenter extends BasePresenter<TopicEditActivity> {
 
     public void postTopic(final String title, final String content, final String nodeId) {
-        compositeSubscription.add(AuthService.getInstance().auth()
+        mCompositeSubscription.add(AuthService.getInstance().auth()
                 .getOnceString()
                 .map(new Func1<String, String>() {
                     @Override
@@ -71,7 +71,7 @@ public class TopicEditPresenter extends BasePresenter<TopicEditActivity> {
     }
 
     public void getSearchList() {
-        compositeSubscription.add(V2exApiService.getInstance().v2exApi().getNodesList()
+        mCompositeSubscription.add(V2exApiService.getmInstance().v2exApi().getNodesList()
                 .map(new Func1<ArrayList<Node>, ArrayList<SearchItem>>() {
                     @Override
                     public ArrayList<SearchItem> call(ArrayList<Node> nodes) {

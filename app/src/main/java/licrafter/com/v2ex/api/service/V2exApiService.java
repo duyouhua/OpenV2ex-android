@@ -23,29 +23,29 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * date: 2016/3/18
  **/
 public class V2exApiService {
-    private static V2exApiService instance;
+    private static V2exApiService mInstance;
 
     private V2EXAPI mV2exApi;
-    private Gson gson;
-    private OkHttpClient client;
+    private Gson mGson;
+    private OkHttpClient mClient;
 
-    public static V2exApiService getInstance() {
-        if (instance == null) {
-            instance = new V2exApiService();
+    public static V2exApiService getmInstance() {
+        if (mInstance == null) {
+            mInstance = new V2exApiService();
         }
-        return instance;
+        return mInstance;
     }
 
     public V2exApiService() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        client = new OkHttpClient.Builder()
+        mClient = new OkHttpClient.Builder()
                 .readTimeout(12, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .addInterceptor(jsonInterceptor)
                 .build();
 
-        gson = new GsonBuilder()
+        mGson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .serializeNulls()
                 .create();
@@ -56,8 +56,8 @@ public class V2exApiService {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(V2EXAPI.BASE_API)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create(mGson))
+                    .client(mClient)
                     .build();
             mV2exApi = retrofit.create(V2EXAPI.class);
         }

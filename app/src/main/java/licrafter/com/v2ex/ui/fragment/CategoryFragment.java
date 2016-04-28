@@ -22,11 +22,11 @@ import licrafter.com.v2ex.util.Constant;
 public class CategoryFragment extends BaseFragment {
 
     @Bind(R.id.categoryTabLayout)
-    TabLayout categoryTabLayout;
+    TabLayout mCategoryTabLayout;
     @Bind(R.id.categoryViewPager)
-    ViewPager categoryViewPager;
+    ViewPager mCategoryViewPager;
 
-    private List<Tab> tabs;
+    private List<Tab> mTabs;
 
     @Override
     public int getLayoutId() {
@@ -50,13 +50,13 @@ public class CategoryFragment extends BaseFragment {
 
     @Override
     public void initViews(View view) {
-        tabs = Constant.getTables();
-        categoryTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
-        categoryTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-        categoryTabLayout.setTabTextColors(getResources().getColor(R.color.grey800), getResources().getColor(R.color.white));
-        ViewCompat.setElevation(categoryTabLayout, getResources().getDimension(R.dimen.appbar_elevation));
-        categoryViewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager(), tabs));
-        categoryTabLayout.setupWithViewPager(categoryViewPager);
+        mTabs = Constant.getmTables();
+        mCategoryTabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        mCategoryTabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        mCategoryTabLayout.setTabTextColors(getResources().getColor(R.color.grey800), getResources().getColor(R.color.white));
+        ViewCompat.setElevation(mCategoryTabLayout, getResources().getDimension(R.dimen.appbar_elevation));
+        mCategoryViewPager.setAdapter(new MainPagerAdapter(getChildFragmentManager(), mTabs));
+        mCategoryTabLayout.setupWithViewPager(mCategoryViewPager);
     }
 
     @Override

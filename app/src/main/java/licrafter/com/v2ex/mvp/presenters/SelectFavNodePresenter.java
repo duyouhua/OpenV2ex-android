@@ -17,7 +17,7 @@ import rx.schedulers.Schedulers;
 public class SelectFavNodePresenter extends BasePresenter<SelectFavNodeAvtivity> {
 
     public void getNodes() {
-        compositeSubscription.add(V2exApiService.getInstance().v2exApi().getNodesList()
+        mCompositeSubscription.add(V2exApiService.getmInstance().v2exApi().getNodesList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<ArrayList<Node>>() {

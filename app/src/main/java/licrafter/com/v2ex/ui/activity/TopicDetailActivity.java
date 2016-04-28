@@ -36,7 +36,7 @@ import rx.functions.Action1;
  **/
 public class TopicDetailActivity extends BaseToolbarActivity {
 
-    private Topic topic;
+    private Topic mTopic;
     @Bind(R.id.topic_detail_footer)
     RelativeLayout mDetailFooterLayout;
     @Bind(R.id.footer_comment)
@@ -46,9 +46,9 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     @Bind(R.id.commentActionbtn)
     FloatingActionButton commentActionBtn;
     @Bind(R.id.transition_pager)
-    ViewPager viewPager;
+    ViewPager mViewPager;
     @Bind(R.id.transition_full_background)
-    View transition_background;
+    View mTransitionBackground;
 
     private ImagePagerAdapter pagerAdapter;
 
@@ -64,14 +64,14 @@ public class TopicDetailActivity extends BaseToolbarActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        topic = (Topic) getIntent().getSerializableExtra("topic");
+        mTopic = (Topic) getIntent().getSerializableExtra("topic");
         FragmentUtil.replace(getSupportFragmentManager()
-                , R.id.container, TopicDetailFragment.newInstance(topic), false, "TopicDetailFragment");
-        mFooterCommentView.setText(String.valueOf(topic.getReplies()));
+                , R.id.container, TopicDetailFragment.newInstance(mTopic), false, "TopicDetailFragment");
+        mFooterCommentView.setText(String.valueOf(mTopic.getReplies()));
 
-        pagerAdapter = new ImagePagerAdapter(viewPager, settingsSetupListener);
-        viewPager.setAdapter(pagerAdapter);
-        viewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_normal));
+        pagerAdapter = new ImagePagerAdapter(mViewPager, settingsSetupListener);
+        mViewPager.setAdapter(pagerAdapter);
+        mViewPager.setPageMargin(getResources().getDimensionPixelSize(R.dimen.margin_normal));
     }
 
     @Override
@@ -110,8 +110,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
             switch (v.getId()) {
                 case R.id.footer_comment:
                     FragmentUtil.replace(getSupportFragmentManager()
-                            , R.id.container, TopicCommentListFragment.getInstance(topic.getTitle()
-                                    , topic.getTopicId()), true, "TopicCommentListFragment");
+                            , R.id.container, TopicCommentListFragment.getInstance(mTopic.getTitle()
+                                    , mTopic.getTopicId()), true, "TopicCommentListFragment");
                     break;
                 case R.id.footer_shoucang:
                     RxBus.getDefault().post(new FavoriteEvent());
@@ -153,16 +153,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     };
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId()==android.R.id.home){
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     public void onBackPressed() {
-        if (viewPager.getVisibility() == View.VISIBLE) {
+        if (mViewPager.getVisibility() == View.VISIBLE) {
             setImagePageVisible(View.GONE);
         } else {
             setResult(RESULT_OK);
@@ -171,8 +163,8 @@ public class TopicDetailActivity extends BaseToolbarActivity {
     }
 
     public void setImagePageVisible(int visible) {
-        viewPager.setVisibility(visible);
-        transition_background.setVisibility(visible);
+        mViewPager.setVisibility(visible);
+        mTransitionBackground.setVisibility(visible);
     }
 
     @Override

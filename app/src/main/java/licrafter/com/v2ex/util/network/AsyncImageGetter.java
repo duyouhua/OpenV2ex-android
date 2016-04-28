@@ -21,16 +21,16 @@ import licrafter.com.v2ex.util.ScreenUtil;
  */
 public class AsyncImageGetter implements Html.ImageGetter {
 
-    private Context context;
-    private TextView container;
-    private Drawable defaultDrawable;
+    private Context mContext;
+    private TextView mContainer;
+    private Drawable mDefaultDrawable;
     private int mMaxWidth;
 
     public AsyncImageGetter(Context context, TextView view) {
-        this.context = context;
-        this.container = view;
+        this.mContext = context;
+        this.mContainer = view;
         mMaxWidth = ScreenUtil.getDisplayWidth(context) - ScreenUtil.dp(context, 100);
-        defaultDrawable = context.getResources().getDrawable(R.mipmap.ic_launcher);
+        mDefaultDrawable = context.getResources().getDrawable(R.mipmap.ic_launcher);
     }
 
     /**
@@ -43,7 +43,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
     public Drawable getDrawable(String source) {
         final URLDrawable urlDrawable = new URLDrawable();
 
-        Glide.with(context)
+        Glide.with(mContext)
                 .load(source)
                 .asBitmap()
                 .into(new SimpleTarget<Bitmap>() {
@@ -59,11 +59,11 @@ public class AsyncImageGetter implements Html.ImageGetter {
                                 width = resource.getWidth();
                                 height = resource.getHeight();
                             }
-                            Drawable drawable = new BitmapDrawable(context.getResources(), resource);
+                            Drawable drawable = new BitmapDrawable(mContext.getResources(), resource);
                             drawable.setBounds(0, 0, width, height);
                             urlDrawable.setBounds(0, 0, width, height);
                             urlDrawable.mDrawable = drawable;
-                            container.setText(container.getText());
+                            mContainer.setText(mContainer.getText());
                         }
                     }
                 });
@@ -79,7 +79,7 @@ public class AsyncImageGetter implements Html.ImageGetter {
             if (mDrawable != null) {
                 mDrawable.draw(canvas);
             } else {
-                defaultDrawable.draw(canvas);
+                mDefaultDrawable.draw(canvas);
             }
         }
     }

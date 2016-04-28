@@ -13,26 +13,26 @@ import licrafter.com.v2ex.ui.fragment.TopicListFragment;
  */
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Tab> tabs;
+    private List<Tab> mTabs;
 
     public MainPagerAdapter(FragmentManager fm, List<Tab> tabs) {
         super(fm);
-        this.tabs = tabs;
+        this.mTabs = tabs;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return TopicListFragment.getInstance(tabs.get(position).getTabValue());
+        return TopicListFragment.getInstance(mTabs.get(position).getTabValue());
     }
 
     @Override
     public int getCount() {
-        return tabs.size();
+        return mTabs.size();
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return tabs.get(position).getTabName();
+        return mTabs.get(position).getTabName();
     }
 
 }

@@ -19,8 +19,8 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
 
     private static final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
-    private int directionChange;
-    private boolean isBottom;
+    private int mDirectionChange;
+    private boolean mIsBottom;
 
     public FooterBehavior(Context context, AttributeSet attr) {
         super(context, attr);
@@ -36,15 +36,15 @@ public class FooterBehavior extends CoordinatorLayout.Behavior<View> {
     public void onNestedPreScroll(CoordinatorLayout coordinatorLayout, View child, View target, int dx, int dy, int[] consumed) {
         super.onNestedPreScroll(coordinatorLayout, child, target, dx, dy, consumed);
         if (target instanceof NestedScrollView) {
-            if (dy > 0 && directionChange < 0 || dy < 0 && directionChange > 0) {
+            if (dy > 0 && mDirectionChange < 0 || dy < 0 && mDirectionChange > 0) {
                 child.animate().cancel();
-                directionChange = 0;
+                mDirectionChange = 0;
             }
-            directionChange += dy;
+            mDirectionChange += dy;
 
-            if (directionChange > child.getHeight() && child.getVisibility() == View.VISIBLE && !isBottom) {
+            if (mDirectionChange > child.getHeight() && child.getVisibility() == View.VISIBLE && !mIsBottom) {
                 hide(child);
-            } else if (directionChange < 0 && child.getVisibility() == View.GONE) {
+            } else if (mDirectionChange < 0 && child.getVisibility() == View.GONE) {
                 show(child);
             }
         }

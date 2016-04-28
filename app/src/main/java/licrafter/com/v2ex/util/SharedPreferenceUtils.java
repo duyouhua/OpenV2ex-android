@@ -15,16 +15,16 @@ public class SharedPreferenceUtils {
 
 
     public static final String APP_CACHE_NAME = "app_cache_name";
-    private static SharedPreferences sharedPreferences = null;
+    private static SharedPreferences mSharedPreferences = null;
 
     public static void init(Context context) {
-        if (sharedPreferences == null && context != null) {
-            sharedPreferences = context.getSharedPreferences(APP_CACHE_NAME, Context.MODE_PRIVATE);
+        if (mSharedPreferences == null && context != null) {
+            mSharedPreferences = context.getSharedPreferences(APP_CACHE_NAME, Context.MODE_PRIVATE);
         }
     }
 
     private static SharedPreferences getSP() {
-        return sharedPreferences;
+        return mSharedPreferences;
     }
 
     private static SharedPreferences.Editor getEditor() {

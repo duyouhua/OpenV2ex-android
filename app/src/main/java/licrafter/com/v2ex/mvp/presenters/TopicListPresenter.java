@@ -2,7 +2,6 @@ package licrafter.com.v2ex.mvp.presenters;/**
  * Created by Administrator on 2016/3/18.
  */
 
-import io.realm.Realm;
 import licrafter.com.v2ex.api.service.V2exService;
 import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.ui.fragment.TopicListFragment;
@@ -20,24 +19,22 @@ import rx.schedulers.Schedulers;
  **/
 public class TopicListPresenter extends BasePresenter<TopicListFragment> {
 
-    private Realm realm;
 
     @Override
     public void attachView(TopicListFragment view) {
         super.attachView(view);
-       // realm = Realm.getDefaultInstance();
     }
 
     private Observable<String> getObservable(String tabTitle, int pageIndex) {
         if (tabTitle.equals("recent")) {
-            return V2exService.getInstance().v2EX().getRecentTopics(tabTitle, pageIndex);
+            return V2exService.getmInstance().v2EX().getRecentTopics(tabTitle, pageIndex);
         } else {
-            return V2exService.getInstance().v2EX().getTabTopics(tabTitle);
+            return V2exService.getmInstance().v2EX().getTabTopics(tabTitle);
         }
     }
 
     public void getTopicList(final String tabTitle, int pageIndex, final boolean isRefresh) {
-        compositeSubscription.add(getObservable(tabTitle, pageIndex)
+        mCompositeSubscription.add(getObservable(tabTitle, pageIndex)
                 .map(new Func1<String, TabContent>() {
                     @Override
                     public TabContent call(String response) {

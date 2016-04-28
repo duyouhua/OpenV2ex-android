@@ -30,57 +30,57 @@ import retrofit2.converter.gson.GsonConverterFactory;
  **/
 public class AuthService {
 
-    private static AuthService instance;
-    private Gson gson;
-    private OkHttpClient client;
-    private AUTH auth;
-    private PersistentCookieStore persistentCookieStore;
+    private static AuthService mInstance;
+    private Gson mGson;
+    private OkHttpClient mClient;
+    private AUTH mAuth;
+    private PersistentCookieStore mPersistentCookieStore;
 
     public static AuthService getInstance() {
-        if (instance == null) {
-            instance = new AuthService();
+        if (mInstance == null) {
+            mInstance = new AuthService();
         }
 
-        return instance;
+        return mInstance;
     }
 
     public PersistentCookieStore getCookieStore(){
-        return persistentCookieStore;
+        return mPersistentCookieStore;
     }
 
     public AuthService() {
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        persistentCookieStore = new PersistentCookieStore(BaseApplication.getContext());
-        client = new OkHttpClient.Builder()
-                .cookieJar(new CustomCookieJar(new CookieManager(persistentCookieStore, CookiePolicy.ACCEPT_ALL)))
+        mPersistentCookieStore = new PersistentCookieStore(BaseApplication.getContext());
+        mClient = new OkHttpClient.Builder()
+                .cookieJar(new CustomCookieJar(new CookieManager(mPersistentCookieStore, CookiePolicy.ACCEPT_ALL)))
                 .readTimeout(12, TimeUnit.SECONDS)
                 .addInterceptor(htmlInterceptor)
                 .addInterceptor(loggingInterceptor)
                 .build();
 
-        gson = new GsonBuilder()
+        mGson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                 .serializeNulls()
                 .create();
     }
 
     public boolean clearCookies() {
-        return persistentCookieStore.removeAll();
+        return mPersistentCookieStore.removeAll();
     }
 
     public AUTH auth() {
-        if (auth == null) {
+        if (mAuth == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(AUTH.BASE_URL)
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .addConverterFactory(new StringConverter())
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create(mGson))
+                    .client(mClient)
                     .build();
-            auth = retrofit.create(AUTH.class);
+            mAuth = retrofit.create(AUTH.class);
         }
-        return auth;
+        return mAuth;
     }
 
     //这个interceptor添加顺序要在loggingInterceptor之前，否则无效

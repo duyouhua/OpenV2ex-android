@@ -16,17 +16,17 @@ import licrafter.com.v2ex.ui.widget.LoadingDialog;
  */
 public abstract class BaseFragment extends Fragment {
 
-    private boolean isVisible;
-    private boolean isPrepare;
-    private BaseToolbarActivity activity;
+    private boolean mIsVisible;
+    private boolean mIsPrepare;
+    private BaseToolbarActivity mActivity;
 
-    private LoadingDialog loadingDialog;
+    private LoadingDialog mLoadingDialog;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context != null) {
-            activity = (BaseToolbarActivity) context;
+            mActivity = (BaseToolbarActivity) context;
         }
     }
 
@@ -41,11 +41,11 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadingDialog = new LoadingDialog(getActivity());
+        mLoadingDialog = new LoadingDialog(getActivity());
         attachView();
         initViews(view);
         setListeners();
-        isPrepare = true;
+        mIsPrepare = true;
         loadData();
     }
 
@@ -53,33 +53,33 @@ public abstract class BaseFragment extends Fragment {
 //    public void setUserVisibleHint(boolean isVisibleToUser) {
 //        super.setUserVisibleHint(isVisibleToUser);
 //        if (getUserVisibleHint()){
-//            isVisible = true;
+//            mIsVisible = true;
 //            lazyLoad();
 //        }else {
-//            isVisible = false;
+//            mIsVisible = false;
 //        }
 //    }
 
 //    public void lazyLoad(){
-//        if (!isVisible||!isPrepare){
+//        if (!mIsVisible||!mIsPrepare){
 //            return;
 //        }
 //        loadData();
 //    }
 
     public BaseToolbarActivity getBaseActivity() {
-        return activity;
+        return mActivity;
     }
 
     public void showLoadingDialog() {
-        if (loadingDialog != null && !loadingDialog.isShowing()) {
-            loadingDialog.show();
+        if (mLoadingDialog != null && !mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
         }
     }
 
     public void hideLoadingDialog() {
-        if (loadingDialog != null && loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
+        if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 

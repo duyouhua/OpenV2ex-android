@@ -18,7 +18,7 @@ import licrafter.com.v2ex.mvp.views.MvpView;
  **/
 public class SelectFavNodeAvtivity extends BaseToolbarActivity implements MvpView {
 
-    private SelectFavNodePresenter presenter;
+    private SelectFavNodePresenter mPresenter;
 
     @Override
     protected int getLayoutId() {
@@ -27,8 +27,8 @@ public class SelectFavNodeAvtivity extends BaseToolbarActivity implements MvpVie
 
     @Override
     protected void attachVeiw() {
-        presenter = new SelectFavNodePresenter();
-        presenter.attachView(this);
+        mPresenter = new SelectFavNodePresenter();
+        mPresenter.attachView(this);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SelectFavNodeAvtivity extends BaseToolbarActivity implements MvpVie
 
     @Override
     protected void detachView() {
-        presenter.detachView();
+        mPresenter.detachView();
     }
 
     @Override

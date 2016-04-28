@@ -23,7 +23,7 @@ import rx.schedulers.Schedulers;
 public class ProfitPresenter extends BasePresenter<ProfitActivity> {
 
     public void getProfitHeader(String user) {
-        compositeSubscription.add(V2exApiService.getInstance().v2exApi()
+        mCompositeSubscription.add(V2exApiService.getmInstance().v2exApi()
                 .getProfitByUserName(user)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -50,7 +50,7 @@ public class ProfitPresenter extends BasePresenter<ProfitActivity> {
     }
 
     public void getTopicsByUserId(String userId) {
-        compositeSubscription.add(V2exService.getInstance().v2EX()
+        mCompositeSubscription.add(V2exService.getmInstance().v2EX()
                 .getTopicsByUserId(userId)
                 .map(new Func1<String, ArrayList<ProfitTopic>>() {
                     @Override

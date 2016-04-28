@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,15 +24,10 @@ import java.io.File;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import licrafter.com.v2ex.BaseApplication;
 import licrafter.com.v2ex.R;
-import licrafter.com.v2ex.event.UserEvent;
-import licrafter.com.v2ex.model.LoginResult;
 import licrafter.com.v2ex.model.response.RegFormInfo;
 import licrafter.com.v2ex.mvp.presenters.LoginPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
-import licrafter.com.v2ex.util.RxBus;
-import licrafter.com.v2ex.util.SharedPreferenceUtils;
 
 /**
  * author: lijinxiang
@@ -42,23 +36,23 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
 public class RegisterDialog extends Dialog implements View.OnClickListener, MvpView {
 
     @Bind(R.id.input_name)
-    TextInputEditText inputName;
+    TextInputEditText mInputName;
     @Bind(R.id.input_pwd)
-    TextInputEditText inputPwd;
+    TextInputEditText mInputPwd;
     @Bind(R.id.input_email)
-    TextInputEditText inputEmail;
+    TextInputEditText mInputEmail;
     @Bind(R.id.input_code)
-    TextInputEditText inputCode;
+    TextInputEditText mInputCode;
     @Bind(R.id.regProgressbar)
-    ProgressBar regProgressbar;
+    ProgressBar mRegProgressbar;
     @Bind(R.id.codeProgressbar)
-    ProgressBar codeProgerssbar;
+    ProgressBar mCodeProgerssbar;
     @Bind(R.id.codeImage)
-    RoundedImageView codeImage;
+    RoundedImageView mCodeImage;
     @Bind(R.id.regBtn)
-    TextView registerBtn;
+    TextView mRegisterBtn;
     @Bind(R.id.regFrameLayout)
-    FrameLayout regFrameLayout;
+    FrameLayout mRegFrameLayout;
     @Bind(R.id.v_code_background)
     View mCodeBackground;
 
@@ -75,7 +69,7 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         View rootView = LayoutInflater.from(context).inflate(R.layout.dialog_register, null);
         setContentView(rootView);
         ButterKnife.bind(this);
-        codeImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        mCodeImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
@@ -83,20 +77,20 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         getWindow().setAttributes(lp);
 
         presenter = new LoginPresenter();
-        inputName.addTextChangedListener(new InputTextWatcher(inputName));
-        inputPwd.addTextChangedListener(new InputTextWatcher(inputPwd));
-        inputEmail.addTextChangedListener(new InputTextWatcher(inputEmail));
-        inputCode.addTextChangedListener(new InputTextWatcher(inputCode));
-        registerBtn.setOnClickListener(this);
+        mInputName.addTextChangedListener(new InputTextWatcher(mInputName));
+        mInputPwd.addTextChangedListener(new InputTextWatcher(mInputPwd));
+        mInputEmail.addTextChangedListener(new InputTextWatcher(mInputEmail));
+        mInputCode.addTextChangedListener(new InputTextWatcher(mInputCode));
+        mRegisterBtn.setOnClickListener(this);
     }
 
     private void refreshRegButtonStatus() {
         if (!isNameEmpty && !isPswEmpty && !isEmailEmpty && !isCodeEmpty) {
-            registerBtn.setTextColor(getContext().getResources().getColor(R.color.teal500));
-            registerBtn.setClickable(true);
+            mRegisterBtn.setTextColor(getContext().getResources().getColor(R.color.teal500));
+            mRegisterBtn.setClickable(true);
         } else {
-            registerBtn.setTextColor(getContext().getResources().getColor(R.color.teal100));
-            registerBtn.setClickable(false);
+            mRegisterBtn.setTextColor(getContext().getResources().getColor(R.color.teal100));
+            mRegisterBtn.setClickable(false);
         }
     }
 
@@ -105,10 +99,10 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         switch (v.getId()) {
             case R.id.regBtn:
                 showRegProgressbar(true);
-                formInfo.setNameValue(inputName.getText().toString());
-                formInfo.setPswValue(inputPwd.getText().toString());
-                formInfo.setEmailValue(inputEmail.getText().toString());
-                formInfo.setCodeValue(inputCode.getText().toString());
+                formInfo.setNameValue(mInputName.getText().toString());
+                formInfo.setPswValue(mInputPwd.getText().toString());
+                formInfo.setEmailValue(mInputEmail.getText().toString());
+                formInfo.setCodeValue(mInputCode.getText().toString());
                 presenter.register(formInfo);
                 showRegProgressbar(true);
                 break;
@@ -149,7 +143,7 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
         hideCodeProgressbar();
         Glide.with(getContext()).load(file).diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .into(codeImage);
+                .into(mCodeImage);
     }
 
     public void parseRegError(String error) {
@@ -166,13 +160,13 @@ public class RegisterDialog extends Dialog implements View.OnClickListener, MvpV
     }
 
     private void showRegProgressbar(boolean show) {
-        regProgressbar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-        registerBtn.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        mRegProgressbar.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        mRegisterBtn.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
     }
 
     private void hideCodeProgressbar() {
         mCodeBackground.setVisibility(View.INVISIBLE);
-        codeProgerssbar.setVisibility(View.INVISIBLE);
+        mCodeProgerssbar.setVisibility(View.INVISIBLE);
     }
 
     private class InputTextWatcher implements TextWatcher {

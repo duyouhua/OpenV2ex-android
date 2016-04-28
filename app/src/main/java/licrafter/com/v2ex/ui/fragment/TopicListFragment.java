@@ -47,7 +47,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     private int mPageIndex = 1;
     private int mTotalPage;
     private TabContent mTabContent;
-    private Realm realm;
+    private Realm mRealm;
 
     public static TopicListFragment getInstance(String tabTitle) {
         Bundle bundle = new Bundle();
@@ -62,7 +62,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     @Override
     public void onStart() {
         super.onStart();
-        realm = realm.getDefaultInstance();
+        mRealm = mRealm.getDefaultInstance();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     @Override
     public void onStop() {
         super.onStop();
-        realm.close();
+        mRealm.close();
     }
 
     @Override
@@ -220,7 +220,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     private void addReadHistory(final String id){
-        realm.executeTransactionAsync(new Realm.Transaction() {
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
             @Override
             public void execute(Realm bgRealm) {
                 ReadHistory history = bgRealm.createObject(ReadHistory.class);
@@ -239,7 +239,7 @@ public class TopicListFragment extends BaseFragment implements TopicListView {
     }
 
     private boolean hasRead(String id){
-        RealmResults<ReadHistory> result = realm.where(ReadHistory.class)
+        RealmResults<ReadHistory> result = mRealm.where(ReadHistory.class)
                 .equalTo("id", id).findAll();
         return result.size()>0;
     }

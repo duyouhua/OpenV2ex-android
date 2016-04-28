@@ -2,7 +2,6 @@ package licrafter.com.v2ex.ui.fragment;/**
  * Created by Administrator on 2016/3/26.
  */
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -47,22 +46,22 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     @Bind(R.id.tv_title)
     TextView mTitleView;
     @Bind(R.id.tv_content)
-    LJWebView mcontentWebView;
+    LJWebView mContentWebView;
     @Bind(R.id.detail_ScrollView)
     NestedScrollView mDetailScrollView;
     @Bind(R.id.rl_profit)
     RelativeLayout mProfitRelative;
 
-    private Topic topic;
+    private Topic mTopic;
     private TopicDetailPresenter mPresenter;
-    private TopicDetail topicDetail;
+    private TopicDetail mTopicDetail;
     private Subscription mFavoriteSubscription;
-    private LoginDialog dialog;
+    private LoginDialog mDialog;
 
     public static TopicDetailFragment newInstance(Topic topic) {
         TopicDetailFragment fragment = new TopicDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("topic", topic);
+        bundle.putSerializable("mTopic", topic);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -71,7 +70,7 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            topic = (Topic) getArguments().getSerializable("topic");
+            mTopic = (Topic) getArguments().getSerializable("mTopic");
         }
     }
 
@@ -90,11 +89,11 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     protected void initViews(View view) {
         ((TopicDetailActivity) getActivity()).setAppBarShadow(false);
         ((TopicDetailActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.topic_detail));
-        dialog = new LoginDialog(getActivity());
-        if (topic != null) {
-            mTitleView.setText(topic.getTitle());
-            Glide.with(this).load(topic.getAvatar()).into(mAvatarView);
-            mUserNameView.setText(topic.getUserId());
+        mDialog = new LoginDialog(getActivity());
+        if (mTopic != null) {
+            mTitleView.setText(mTopic.getTitle());
+            Glide.with(this).load(mTopic.getAvatar()).into(mAvatarView);
+            mUserNameView.setText(mTopic.getUserId());
         }
     }
 
@@ -104,16 +103,16 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
                 .subscribe(new Action1<FavoriteEvent>() {
                     @Override
                     public void call(FavoriteEvent favoriteEvent) {
-                        if (BaseApplication.isLogin() && !topicDetail.getCsrfToken().equals("false")) {
+                        if (BaseApplication.isLogin() && !mTopicDetail.getCsrfToken().equals("false")) {
                             showLoadingDialog();
-                            if (topicDetail.isFravorite()) {
-                                mPresenter.unFavoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
+                            if (mTopicDetail.isFravorite()) {
+                                mPresenter.unFavoriteTopic(mTopic.getTopicId(), mTopicDetail.getCsrfToken());
                             } else {
-                                mPresenter.favoriteTopic(topic.getTopicId(), topicDetail.getCsrfToken());
+                                mPresenter.favoriteTopic(mTopic.getTopicId(), mTopicDetail.getCsrfToken());
                             }
                         } else {
                             Toast.makeText(getActivity(), getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                            dialog.show();
+                            mDialog.show();
                         }
                     }
                 });
@@ -121,16 +120,16 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ProfitActivity.class);
-                intent.putExtra("user_name", topic.getUserId());
+                intent.putExtra("user_name", mTopic.getUserId());
                 startActivity(intent);
             }
         });
 
-        dialog.setOnLoginListener(new LoginDialog.OnLoginListener() {
+        mDialog.setOnLoginListener(new LoginDialog.OnLoginListener() {
             @Override
             public void onLoginSuccess() {
                 showLoadingDialog();
-                mPresenter.getTopicDetail(topic.getTopicId());
+                mPresenter.getTopicDetail(mTopic.getTopicId());
             }
 
             @Override
@@ -142,11 +141,11 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     @Override
     protected void loadData() {
-        if (topicDetail == null) {
+        if (mTopicDetail == null) {
             showLoadingDialog();
-            mPresenter.getTopicDetail(topic.getTopicId());
+            mPresenter.getTopicDetail(mTopic.getTopicId());
         } else {
-            parseTopicDetail(topicDetail);
+            parseTopicDetail(mTopicDetail);
         }
     }
 
@@ -157,17 +156,17 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
 
     public void parseTopicDetail(TopicDetail topicDetail) {
         hideLoadingDialog();
-        this.topicDetail = topicDetail;
+        this.mTopicDetail = topicDetail;
         ((TopicDetailActivity) getActivity()).onImageLoadSuccess(topicDetail.getImgUrls());
         mCreatTimeView.setText("发布于 " + topicDetail.getCreateTime() + " " + topicDetail.getClickCount());
         ((TopicDetailActivity) getActivity()).setShoucangStatus(topicDetail.isFravorite());
-        mcontentWebView.loadHtml(topicDetail.getContent());
+        mContentWebView.loadHtml(topicDetail.getContent());
     }
 
     @Override
     public void onFailure(String e) {
         hideLoadingDialog();
-        mcontentWebView.loadData(e, "text/html; charset=UTF-8", null);
+        mContentWebView.loadData(e, "text/html; charset=UTF-8", null);
     }
 
     @Override
@@ -181,8 +180,8 @@ public class TopicDetailFragment extends BaseFragment implements MvpView {
     public void parseFavorite(String token, boolean isFavorite) {
         hideLoadingDialog();
         Toast.makeText(getActivity(), "操作成功", Toast.LENGTH_SHORT).show();
-        topicDetail.setCsrfToken(token);
-        topicDetail.setFravorite(isFavorite);
+        mTopicDetail.setCsrfToken(token);
+        mTopicDetail.setFravorite(isFavorite);
         ((TopicDetailActivity) getActivity()).setShoucangStatus(isFavorite);
     }
 }

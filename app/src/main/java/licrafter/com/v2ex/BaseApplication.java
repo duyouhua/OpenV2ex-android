@@ -19,21 +19,21 @@ import rx.Observable;
  **/
 public class BaseApplication extends Application {
 
-    private static Context context;
+    private static Context mContext;
     private Observable<ArrayList<Node>> nodeObservable;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        context = getApplicationContext();
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(context)
+        mContext = getApplicationContext();
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(mContext)
                 .name("v2ex.realm").build();
         Realm.setDefaultConfiguration(realmConfiguration);
 
     }
 
     public static Context getContext() {
-        return context;
+        return mContext;
     }
 
     public static boolean isLogin() {

@@ -29,7 +29,6 @@ public class StringConverter extends Converter.Factory {
 
     @Override
     public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-        android.util.Log.d("ljx","type = "+type.toString()+(String.class.equals(type)));
         if (String.class.equals(type)) {
             return new Converter<ResponseBody, String>() {
                 @Override

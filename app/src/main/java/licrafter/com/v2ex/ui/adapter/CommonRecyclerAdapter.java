@@ -31,7 +31,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
     private int mItemLayoutId;
     private int mHeadLayoutId;
     private boolean mHasNextPage = false;
-    private String error;
+    private String mError;
 
     protected CommonRecyclerAdapter(Context context, int itemLayoutId) {
         this(context, itemLayoutId, 0);
@@ -43,7 +43,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
         this.mItemLayoutId = itemLayoutId;
         this.mHeadLayoutId = headerLayoutId;
         mInflater = LayoutInflater.from(context);
-        error = mContext.getString(R.string.no_data);
+        mError = mContext.getString(R.string.no_data);
     }
 
     @Override
@@ -98,7 +98,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
             bindHeader((HeaderViewHolder) holder, position);
         }
         if (holder instanceof EmptyViewHolder) {
-            ((EmptyViewHolder) holder).getTextView(R.id.tv_error).setText(error);
+            ((EmptyViewHolder) holder).getTextView(R.id.tv_error).setText(mError);
         }
     }
 
@@ -112,7 +112,7 @@ public abstract class CommonRecyclerAdapter<T> extends RecyclerView.Adapter {
     }
 
     public void setErrorInfo(String error) {
-        this.error = error;
+        this.mError = error;
         notifyDataSetChanged();
     }
 

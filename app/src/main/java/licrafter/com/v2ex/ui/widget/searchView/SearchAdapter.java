@@ -25,7 +25,7 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
     private Context mContext;
     private ArrayList<SearchItem> mDatas;
     private ArrayList<SearchItem> mResult;
-    private OnItemClickListener listener;
+    private OnItemClickListener mListener;
 
     public SearchAdapter(Context context) {
         this.mContext = context;
@@ -39,7 +39,7 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
             @Override
             public void onClick(View v) {
                 SearchItem item = mResult.get(holder.getAdapterPosition());
-                listener.onClick(item.getName(), item.getTitle());
+                mListener.onClick(item.getName(), item.getTitle());
             }
         });
         return holder;
@@ -107,7 +107,7 @@ public class SearchAdapter extends RecyclerView.Adapter implements Filterable {
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+        this.mListener = listener;
     }
 
     public void setData(ArrayList<SearchItem> items) {

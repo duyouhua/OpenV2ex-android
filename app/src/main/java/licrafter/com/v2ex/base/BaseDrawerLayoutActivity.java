@@ -35,40 +35,40 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     public final String TAG = this.getClass().getName();
 
     @Bind(R.id.drawerLayout)
-    DrawerLayout drawerLayout;
+    DrawerLayout mDrawerLayout;
     @Bind(R.id.navigationView)
-    NavigationView navigationView;
-    private ActionBarDrawerToggle actionBarDrawerToggle;
+    NavigationView mNavigationView;
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
 
-    private View headerView;
-    private TextView userInfoTextView;
-    private ImageView userAvatarImageView;
-    protected MenuItem old = null;
-    private Subscription userSubscription;
-    private Subscription logoutSubscription;
+    private View mHeaderView;
+    private TextView mUserInfoTextView;
+    private ImageView mUserAvatarImageView;
+    protected MenuItem mOld = null;
+    private Subscription mUserSubscription;
+    private Subscription mLogoutSubscription;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        dialog = new LoginDialog(this);
-        this.navigationView.setNavigationItemSelectedListener(itemSelectedListener);
-        this.drawerLayout.setDrawerListener(new EasyDrawerListener());
-        Menu menu = navigationView.getMenu();
-        old = menu.findItem(R.id.topicDrawerMenuItem);
-        this.actionBarDrawerToggle = new ActionBarDrawerToggle(
+        mDialog = new LoginDialog(this);
+        this.mNavigationView.setNavigationItemSelectedListener(itemSelectedListener);
+        this.mDrawerLayout.setDrawerListener(new EasyDrawerListener());
+        Menu menu = mNavigationView.getMenu();
+        mOld = menu.findItem(R.id.topicDrawerMenuItem);
+        this.mActionBarDrawerToggle = new ActionBarDrawerToggle(
                 this,
-                this.drawerLayout,
+                this.mDrawerLayout,
                 R.string.action_menu,
                 R.string.app_name
         );
-        headerView = navigationView.getHeaderView(0);
-        userInfoTextView = (TextView) headerView.findViewById(R.id.userNameTextView);
-        userAvatarImageView = (ImageView) headerView.findViewById(R.id.userAvatarImageView);
-        userInfoTextView.setOnClickListener(new View.OnClickListener() {
+        mHeaderView = mNavigationView.getHeaderView(0);
+        mUserInfoTextView = (TextView) mHeaderView.findViewById(R.id.userNameTextView);
+        mUserAvatarImageView = (ImageView) mHeaderView.findViewById(R.id.userAvatarImageView);
+        mUserInfoTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!BaseApplication.isLogin()) {
-                    dialog.show();
+                    mDialog.show();
                 } else {
                     Intent intent = new Intent(BaseDrawerLayoutActivity.this, WebViewActivity.class);
                     intent.putExtra("url", ("https://www.v2ex.com/member/" + SharedPreferenceUtils.getString("user_name", "")));
@@ -83,7 +83,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     }
 
     private void onEvent() {
-        userSubscription = RxBus.getDefault().toObserverable(UserEvent.class).subscribe(new Action1<UserEvent>() {
+        mUserSubscription = RxBus.getDefault().toObserverable(UserEvent.class).subscribe(new Action1<UserEvent>() {
             @Override
             public void call(UserEvent userEvent) {
                 setUserInfo(userEvent);
@@ -94,7 +94,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
 
             }
         });
-        logoutSubscription = RxBus.getDefault().toObserverable(LogoutEvent.class).subscribe(new Action1<LogoutEvent>() {
+        mLogoutSubscription = RxBus.getDefault().toObserverable(LogoutEvent.class).subscribe(new Action1<LogoutEvent>() {
             @Override
             public void call(LogoutEvent logoutEvent) {
                 setUserInfo(null);
@@ -105,12 +105,12 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     protected void setUserInfo(UserEvent userEvent) {
         if (userEvent == null) {
             Glide.with(BaseDrawerLayoutActivity.this).load(SharedPreferenceUtils.getString("user_avatar", ""))
-                    .into(userAvatarImageView);
-            userInfoTextView.setText(SharedPreferenceUtils.getString("user_name", getString(R.string.please_login)));
+                    .into(mUserAvatarImageView);
+            mUserInfoTextView.setText(SharedPreferenceUtils.getString("user_name", getString(R.string.please_login)));
         } else {
             Glide.with(BaseDrawerLayoutActivity.this).load(userEvent.getAvatar())
-                    .into(userAvatarImageView);
-            userInfoTextView.setText(userEvent.getName());
+                    .into(mUserAvatarImageView);
+            mUserInfoTextView.setText(userEvent.getName());
         }
     }
 
@@ -134,12 +134,12 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
      * @return true to display the item as the selected item
      */
     protected boolean menuItemChecked(MenuItem item) {
-//        android.util.Log.d(TAG,"点击了item"+old.getItemId());
+//        android.util.Log.d(TAG,"点击了item"+mOld.getItemId());
 
         /**
          * 如果选择了之前被选中的item
          */
-        if (old != null && old.getItemId() == item.getItemId()) {
+        if (mOld != null && mOld.getItemId() == item.getItemId()) {
             return false;
         }
 
@@ -150,13 +150,13 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
          * 所以不用设置选中状态
          */
         if (item.getGroupId() != R.id.secondaryGroup && item.getItemId() != R.id.drawerSubTitle) {
-            if (old != null) {
-                old.setChecked(false);
+            if (mOld != null) {
+                mOld.setChecked(false);
             }
-            old = item;
+            mOld = item;
             item.setChecked(true);
         }
-        this.drawerLayout.closeDrawer(this.navigationView);
+        this.mDrawerLayout.closeDrawer(this.mNavigationView);
         this.onMenuItemOnClick(item);
         return true;
     }
@@ -169,8 +169,8 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && this.drawerLayout.isDrawerOpen(this.navigationView)) {
-            this.drawerLayout.closeDrawer(this.navigationView);
+        if (keyCode == KeyEvent.KEYCODE_BACK && this.mDrawerLayout.isDrawerOpen(this.mNavigationView)) {
+            this.mDrawerLayout.closeDrawer(this.mNavigationView);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -185,7 +185,7 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            this.drawerLayout.openDrawer(GravityCompat.START);
+            this.mDrawerLayout.openDrawer(GravityCompat.START);
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -199,26 +199,26 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
     private class EasyDrawerListener implements DrawerLayout.DrawerListener {
         @Override
         public void onDrawerOpened(View drawerView) {
-            BaseDrawerLayoutActivity.this.actionBarDrawerToggle.onDrawerOpened(drawerView);
-            if (BaseDrawerLayoutActivity.this.actionBarHelper != null) {
-                BaseDrawerLayoutActivity.this.actionBarHelper.onDrawerOpened();
+            BaseDrawerLayoutActivity.this.mActionBarDrawerToggle.onDrawerOpened(drawerView);
+            if (BaseDrawerLayoutActivity.this.mActionBarHelper != null) {
+                BaseDrawerLayoutActivity.this.mActionBarHelper.onDrawerOpened();
             }
         }
 
         @Override
         public void onDrawerClosed(View drawerView) {
-            BaseDrawerLayoutActivity.this.actionBarDrawerToggle.onDrawerClosed(drawerView);
-            BaseDrawerLayoutActivity.this.actionBarHelper.onDrawerClosed();
+            BaseDrawerLayoutActivity.this.mActionBarDrawerToggle.onDrawerClosed(drawerView);
+            BaseDrawerLayoutActivity.this.mActionBarHelper.onDrawerClosed();
         }
 
         @Override
         public void onDrawerSlide(View drawerView, float slideOffset) {
-            BaseDrawerLayoutActivity.this.actionBarDrawerToggle.onDrawerSlide(drawerView, slideOffset);
+            BaseDrawerLayoutActivity.this.mActionBarDrawerToggle.onDrawerSlide(drawerView, slideOffset);
         }
 
         @Override
         public void onDrawerStateChanged(int newState) {
-            BaseDrawerLayoutActivity.this.actionBarDrawerToggle.onDrawerStateChanged(newState);
+            BaseDrawerLayoutActivity.this.mActionBarDrawerToggle.onDrawerStateChanged(newState);
         }
     }
 
@@ -227,17 +227,17 @@ public abstract class BaseDrawerLayoutActivity extends BaseToolbarActivity {
         super.onPostCreate(savedInstanceState);
 
         // Sync the toggle state after onRestoreInstanceState has occurred.
-        actionBarDrawerToggle.syncState();
+        mActionBarDrawerToggle.syncState();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (!userSubscription.isUnsubscribed()) {
-            userSubscription.unsubscribe();
+        if (!mUserSubscription.isUnsubscribed()) {
+            mUserSubscription.unsubscribe();
         }
-        if (!logoutSubscription.isUnsubscribed()) {
-            logoutSubscription.unsubscribe();
+        if (!mLogoutSubscription.isUnsubscribed()) {
+            mLogoutSubscription.unsubscribe();
         }
     }
 }

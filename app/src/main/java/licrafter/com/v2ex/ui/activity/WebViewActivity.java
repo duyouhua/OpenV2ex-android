@@ -19,11 +19,11 @@ import licrafter.com.v2ex.util.CustomUtil;
 public class WebViewActivity extends BaseToolbarActivity {
 
     @Bind(R.id.webContent)
-    LJWebView webContent;
+    LJWebView mWebContent;
     @Bind(R.id.swipe_layout)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
-    private String url;
+    private String mUrl;
 
     @Override
     protected int getLayoutId() {
@@ -37,12 +37,12 @@ public class WebViewActivity extends BaseToolbarActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        CustomUtil.initStyle(swipeRefreshLayout);
-        if (getIntent().getStringExtra("url") != null) {
-            swipeRefreshLayout.setRefreshing(true);
-            url = getIntent().getStringExtra("url");
-            webContent.setWebChromeClient(chromeClient);
-            webContent.loadUrl(url);
+        CustomUtil.initStyle(mSwipeRefreshLayout);
+        if (getIntent().getStringExtra("mUrl") != null) {
+            mSwipeRefreshLayout.setRefreshing(true);
+            mUrl = getIntent().getStringExtra("mUrl");
+            mWebContent.setWebChromeClient(chromeClient);
+            mWebContent.loadUrl(mUrl);
         }
     }
 
@@ -51,7 +51,7 @@ public class WebViewActivity extends BaseToolbarActivity {
         public void onProgressChanged(WebView view, int newProgress) {
             super.onProgressChanged(view, newProgress);
             if (view.getProgress() == 100) {
-                swipeRefreshLayout.setRefreshing(false);
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }
 
@@ -59,14 +59,14 @@ public class WebViewActivity extends BaseToolbarActivity {
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
             android.util.Log.d("ljx",view.getTitle());
-            actionBarHelper.setTitle(view.getTitle());
+            mActionBarHelper.setTitle(view.getTitle());
         }
     };
 
     @Override
     public void onBackPressed() {
-        if (webContent.canGoBack()) {
-            webContent.goBack();
+        if (mWebContent.canGoBack()) {
+            mWebContent.goBack();
         } else {
             finish();
         }
@@ -79,17 +79,17 @@ public class WebViewActivity extends BaseToolbarActivity {
 
     @Override
     protected void initListener() {
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                webContent.loadUrl(url);
+                mWebContent.loadUrl(mUrl);
             }
         });
-        toolbar.setOnClickListener(new View.OnClickListener() {
+        mToolbar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (webContent.canGoBack()) {
-                    webContent.goBack();
+                if (mWebContent.canGoBack()) {
+                    mWebContent.goBack();
                 } else {
                     finish();
                 }

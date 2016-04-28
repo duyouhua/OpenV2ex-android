@@ -25,23 +25,21 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import java.util.ArrayList;
-
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.util.CustomUtil;
 
 public class LJSearchView extends FrameLayout implements View.OnClickListener, TextWatcher, Filter.FilterListener {
 
-    private int hintTextColor;
-    private String hintText;
+    private int mHintTextColor;
+    private String mHintText;
 
-    private EditText queryEditText;
-    private RelativeLayout searchViewRelativeLayout;
-    private ImageView backButton;
-    private ImageView cancelButton;
-    private RecyclerView historyRecyclerView;
+    private EditText mQueryEditText;
+    private RelativeLayout mSearchViewRelativeLayout;
+    private ImageView mBackButton;
+    private ImageView mCancelButton;
+    private RecyclerView mHistoryRecyclerView;
 
-    private SearchAdapter historyAdapter;
+    private SearchAdapter mHistoryAdapter;
 
     public LJSearchView(Context context) {
         this(context, null);
@@ -59,44 +57,44 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
 
     private void init(Context context, AttributeSet attrs) {
         LayoutInflater.from(context).inflate(R.layout.layout_search_view, this, true);
-        queryEditText = (EditText) findViewById(R.id.queryEditText);
+        mQueryEditText = (EditText) findViewById(R.id.queryEditText);
         setBackgroundResource(R.color.transparent_background);
-        searchViewRelativeLayout = (RelativeLayout) findViewById(R.id.searchViewRelativeLayout);
-        backButton = (ImageView) findViewById(R.id.searchBackButton);
-        cancelButton = (ImageView) findViewById(R.id.searchCancelButton);
-        historyRecyclerView = (RecyclerView) findViewById(R.id.searchResultRecyclerView);
-        historyRecyclerView.setHasFixedSize(true);
-        historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
+        mSearchViewRelativeLayout = (RelativeLayout) findViewById(R.id.searchViewRelativeLayout);
+        mBackButton = (ImageView) findViewById(R.id.searchBackButton);
+        mCancelButton = (ImageView) findViewById(R.id.searchCancelButton);
+        mHistoryRecyclerView = (RecyclerView) findViewById(R.id.searchResultRecyclerView);
+        mHistoryRecyclerView.setHasFixedSize(true);
+        mHistoryRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LJSearchView, 0, 0);
         if (typedArray != null) {
-            hintText = typedArray.getString(R.styleable.LJSearchView_hint_text);
-            hintTextColor = typedArray.getColor(R.styleable.LJSearchView_hint_color, 0);
+            mHintText = typedArray.getString(R.styleable.LJSearchView_hint_text);
+            mHintTextColor = typedArray.getColor(R.styleable.LJSearchView_hint_color, 0);
             typedArray.recycle();
         }
-        if (hintText != null) {
-            queryEditText.setHint(hintText);
+        if (mHintText != null) {
+            mQueryEditText.setHint(mHintText);
         }
-        if (hintTextColor != 0) {
-            queryEditText.setHintTextColor(hintTextColor);
+        if (mHintTextColor != 0) {
+            mQueryEditText.setHintTextColor(mHintTextColor);
         }
 
-        queryEditText.addTextChangedListener(this);
-        cancelButton.setOnClickListener(this);
-        backButton.setOnClickListener(this);
+        mQueryEditText.addTextChangedListener(this);
+        mCancelButton.setOnClickListener(this);
+        mBackButton.setOnClickListener(this);
     }
 
     public void show() {
 
         setVisibility(VISIBLE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Animator animator = ViewAnimationUtils.createCircularReveal(searchViewRelativeLayout, searchViewRelativeLayout.getWidth() / 2
-                    , searchViewRelativeLayout.getHeight() / 2, 0, searchViewRelativeLayout.getWidth());
+            Animator animator = ViewAnimationUtils.createCircularReveal(mSearchViewRelativeLayout, mSearchViewRelativeLayout.getWidth() / 2
+                    , mSearchViewRelativeLayout.getHeight() / 2, 0, mSearchViewRelativeLayout.getWidth());
             animator.setDuration(300);
             animator.addListener(showListener);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.start();
         } else {
-            ObjectAnimator animator = ObjectAnimator.ofFloat(searchViewRelativeLayout, "scaleX", 0f, 1.0f);
+            ObjectAnimator animator = ObjectAnimator.ofFloat(mSearchViewRelativeLayout, "scaleX", 0f, 1.0f);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addListener(showListener);
             animator.setDuration(300).start();
@@ -105,8 +103,8 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
 
     public void hide() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Animator animator = ViewAnimationUtils.createCircularReveal(searchViewRelativeLayout, searchViewRelativeLayout.getWidth() / 2
-                    , searchViewRelativeLayout.getHeight() / 2, searchViewRelativeLayout.getWidth(), 0);
+            Animator animator = ViewAnimationUtils.createCircularReveal(mSearchViewRelativeLayout, mSearchViewRelativeLayout.getWidth() / 2
+                    , mSearchViewRelativeLayout.getHeight() / 2, mSearchViewRelativeLayout.getWidth(), 0);
             animator.setDuration(300);
             animator.setInterpolator(new AccelerateDecelerateInterpolator());
             animator.addListener(hideListener);
@@ -119,13 +117,13 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
         @Override
         public void onAnimationStart(Animator animation) {
             super.onAnimationStart(animation);
-            historyRecyclerView.setVisibility(GONE);
+            mHistoryRecyclerView.setVisibility(GONE);
         }
 
         @Override
         public void onAnimationEnd(Animator animation) {
             setVisibility(GONE);
-            queryEditText.setText("");
+            mQueryEditText.setText("");
         }
     };
 
@@ -133,9 +131,9 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
 
         @Override
         public void onAnimationEnd(Animator animation) {
-            queryEditText.requestFocus();
-            CustomUtil.showInputMethod(queryEditText);
-            historyRecyclerView.setVisibility(VISIBLE);
+            mQueryEditText.requestFocus();
+            CustomUtil.showInputMethod(mQueryEditText);
+            mHistoryRecyclerView.setVisibility(VISIBLE);
         }
     };
 
@@ -145,7 +143,7 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
         if (id == R.id.searchBackButton) {
             hide();
         } else if (id == R.id.searchCancelButton) {
-            queryEditText.setText("");
+            mQueryEditText.setText("");
         }
     }
 
@@ -165,21 +163,21 @@ public class LJSearchView extends FrameLayout implements View.OnClickListener, T
     }
 
     public void setAdapter(SearchAdapter adapter) {
-        this.historyAdapter = adapter;
-        historyRecyclerView.setAdapter(historyAdapter);
+        this.mHistoryAdapter = adapter;
+        mHistoryRecyclerView.setAdapter(mHistoryAdapter);
     }
 
-    public void setHintText(CharSequence hint) {
-        queryEditText.setHint(hint);
+    public void setmHintText(CharSequence hint) {
+        mQueryEditText.setHint(hint);
     }
 
-    public void setHintTextColor(int color) {
-        queryEditText.setHintTextColor(color);
+    public void setmHintTextColor(int color) {
+        mQueryEditText.setHintTextColor(color);
     }
 
     private void startFilter(CharSequence s) {
-        if (historyAdapter != null) {
-            (historyAdapter).getFilter().filter(s, this);
+        if (mHistoryAdapter != null) {
+            (mHistoryAdapter).getFilter().filter(s, this);
         }
     }
 

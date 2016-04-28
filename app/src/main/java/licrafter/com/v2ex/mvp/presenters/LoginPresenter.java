@@ -30,7 +30,7 @@ public class LoginPresenter extends BasePresenter<MvpView> {
 
 
     public void login(final String username, final String password) {
-        compositeSubscription.add(AuthService.getInstance().auth().getOnceString()
+        mCompositeSubscription.add(AuthService.getInstance().auth().getOnceString()
                 .map(new Func1<String, LoginFormInfo>() {
                     @Override
                     public LoginFormInfo call(String s) {
@@ -86,7 +86,7 @@ public class LoginPresenter extends BasePresenter<MvpView> {
     }
 
     public void getRegisterCode() {
-        compositeSubscription.add(AuthService.getInstance().auth()
+        mCompositeSubscription.add(AuthService.getInstance().auth()
                 .getRegisterCode()
                 .map(new Func1<String, RegFormInfo>() {
                     @Override
@@ -119,7 +119,7 @@ public class LoginPresenter extends BasePresenter<MvpView> {
     }
 
     public void getCodeImage(String once) {
-        compositeSubscription.add(AuthService.getInstance().auth().getCodeImage(once)
+        mCompositeSubscription.add(AuthService.getInstance().auth().getCodeImage(once)
                 .map(new Func1<ResponseBody, File>() {
                     @Override
                     public File call(ResponseBody responseBody) {
@@ -157,7 +157,7 @@ public class LoginPresenter extends BasePresenter<MvpView> {
         fieldMap.put(formInfo.getEmailKey(), formInfo.getEmailValue());
         fieldMap.put(formInfo.getCodeKey(), formInfo.getCodeValue());
         fieldMap.put("once", formInfo.getOnce());
-        compositeSubscription.add(AuthService.getInstance().auth().register(fieldMap)
+        mCompositeSubscription.add(AuthService.getInstance().auth().register(fieldMap)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {

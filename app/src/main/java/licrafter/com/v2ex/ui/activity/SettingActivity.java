@@ -22,7 +22,7 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
 public class SettingActivity extends BaseToolbarActivity {
 
     @Bind(R.id.logoutBtn)
-    Button logoutBtn;
+    Button mLogoutBtn;
 
     @Override
     protected int getLayoutId() {
@@ -46,7 +46,7 @@ public class SettingActivity extends BaseToolbarActivity {
 
     @Override
     protected void initListener() {
-        logoutBtn.setOnClickListener(onClickListener);
+        mLogoutBtn.setOnClickListener(onClickListener);
     }
 
     @Override

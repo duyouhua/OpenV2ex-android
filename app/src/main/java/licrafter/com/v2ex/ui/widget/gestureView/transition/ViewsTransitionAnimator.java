@@ -222,7 +222,7 @@ public class ViewsTransitionAnimator<ID> extends ViewsCoordinator<ID> {
     }
 
     /**
-     * Replaces old animator with new one preserving state.
+     * Replaces mOld animator with new one preserving state.
      */
     private void swapAnimator(ViewPositionAnimator old, ViewPositionAnimator next) {
         final float state = old.getPositionState();

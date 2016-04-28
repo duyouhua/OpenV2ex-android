@@ -9,20 +9,15 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageButton;
 
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
-
-import java.util.ArrayList;
 
 import butterknife.Bind;
 import licrafter.com.v2ex.R;
 import licrafter.com.v2ex.base.BaseFragment;
 import licrafter.com.v2ex.event.CommentEvent;
 import licrafter.com.v2ex.listener.OnScrollBottomListener;
-import licrafter.com.v2ex.model.TabContent;
 import licrafter.com.v2ex.model.TopicComment;
 import licrafter.com.v2ex.mvp.presenters.TopicDetailPresenter;
 import licrafter.com.v2ex.mvp.views.MvpView;
@@ -31,7 +26,6 @@ import licrafter.com.v2ex.ui.adapter.CommonRecyclerAdapter;
 import licrafter.com.v2ex.ui.widget.RichTextView;
 import licrafter.com.v2ex.util.CustomUtil;
 import licrafter.com.v2ex.util.RxBus;
-import rx.Subscriber;
 import rx.Subscription;
 import rx.functions.Action1;
 
@@ -52,8 +46,8 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
     private TopicDetailPresenter mPresenter;
     private Subscription commentScription;
 
-    private int pageIndex = 1;
-    private int totalPage;
+    private int mPageIndex = 1;
+    private int mTotalPage;
 
     public static TopicCommentListFragment getInstance(String topicTitle, String topicId) {
         TopicCommentListFragment fragment = new TopicCommentListFragment();
@@ -101,16 +95,16 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                pageIndex = 1;
-                mPresenter.getCommentsList(mTopicId, pageIndex, true);
+                mPageIndex = 1;
+                mPresenter.getCommentsList(mTopicId, mPageIndex, true);
             }
         });
         mCommentRecyclerView.addOnScrollListener(new OnScrollBottomListener() {
             @Override
             public void onBottom() {
                 super.onBottom();
-                if (pageIndex <= totalPage) {
-                    mPresenter.getCommentsList(mTopicId, pageIndex, false);
+                if (mPageIndex <= mTotalPage) {
+                    mPresenter.getCommentsList(mTopicId, mPageIndex, false);
                 }
             }
         });
@@ -157,9 +151,9 @@ public class TopicCommentListFragment extends BaseFragment implements MvpView {
         if (mRefreshLayout.isRefreshing()) {
             mRefreshLayout.setRefreshing(false);
         }
-        pageIndex = topicComment.getPage() + 1;
-        totalPage = topicComment.getTotalPage();
-        if (pageIndex > totalPage) {
+        mPageIndex = topicComment.getPage() + 1;
+        mTotalPage = topicComment.getTotalPage();
+        if (mPageIndex > mTotalPage) {
             mAdapter.hasNextPage(false);
         } else {
             mAdapter.hasNextPage(true);

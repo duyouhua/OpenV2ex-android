@@ -33,8 +33,8 @@ public class PersistentCookieStore implements CookieStore {
     private static final String COOKIE_PREFS = "CookiePrefsFile";
     private static final String COOKIE_NAME_PREFIX = "cookie_";
 
-    private final HashMap<String, ConcurrentHashMap<String, HttpCookie>> cookies;
-    private final SharedPreferences cookiePrefs;
+    private final HashMap<String, ConcurrentHashMap<String, HttpCookie>> mCookies;
+    private final SharedPreferences mCookiePrefs;
 
     /**
      * Construct a persistent cookie store.
@@ -42,22 +42,22 @@ public class PersistentCookieStore implements CookieStore {
      * @param context Context to attach cookie store to
      */
     public PersistentCookieStore(Context context) {
-        cookiePrefs = context.getSharedPreferences(COOKIE_PREFS, Context.MODE_PRIVATE);
-        cookies = new HashMap<>();
+        mCookiePrefs = context.getSharedPreferences(COOKIE_PREFS, Context.MODE_PRIVATE);
+        mCookies = new HashMap<>();
 
-        // Load any previously stored cookies into the store
-        Map<String, ?> prefsMap = cookiePrefs.getAll();
+        // Load any previously stored mCookies into the store
+        Map<String, ?> prefsMap = mCookiePrefs.getAll();
         for (Map.Entry<String, ?> entry : prefsMap.entrySet()) {
             if (entry.getValue() != null && !((String) entry.getValue()).startsWith(COOKIE_NAME_PREFIX)) {
                 String[] cookieNames = TextUtils.split((String) entry.getValue(), ",");
                 for (String name : cookieNames) {
-                    String encodedCookie = cookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
+                    String encodedCookie = mCookiePrefs.getString(COOKIE_NAME_PREFIX + name, null);
                     if (encodedCookie != null) {
                         HttpCookie decodedCookie = decodeCookie(encodedCookie);
                         if (decodedCookie != null) {
-                            if (!cookies.containsKey(entry.getKey()))
-                                cookies.put(entry.getKey(), new ConcurrentHashMap<String, HttpCookie>());
-                            cookies.get(entry.getKey()).put(name, decodedCookie);
+                            if (!mCookies.containsKey(entry.getKey()))
+                                mCookies.put(entry.getKey(), new ConcurrentHashMap<String, HttpCookie>());
+                            mCookies.get(entry.getKey()).put(name, decodedCookie);
                         }
                     }
                 }
@@ -70,18 +70,18 @@ public class PersistentCookieStore implements CookieStore {
     public void add(URI uri, HttpCookie cookie) {
         // Save cookie into local store, or remove if expired
         if (!cookie.hasExpired()) {
-            if (!cookies.containsKey(cookie.getDomain()))
-                cookies.put(cookie.getDomain(), new ConcurrentHashMap<String, HttpCookie>());
-            cookies.get(cookie.getDomain()).put(cookie.getName(), cookie);
+            if (!mCookies.containsKey(cookie.getDomain()))
+                mCookies.put(cookie.getDomain(), new ConcurrentHashMap<String, HttpCookie>());
+            mCookies.get(cookie.getDomain()).put(cookie.getName(), cookie);
         } else {
-            if (cookies.containsKey(cookie.getDomain()))
-                cookies.get(cookie.getDomain()).remove(cookie.getDomain());
+            if (mCookies.containsKey(cookie.getDomain()))
+                mCookies.get(cookie.getDomain()).remove(cookie.getDomain());
         }
 
         TokenCache.saveToken(cookie.getValue());
         // Save cookie into persistent store
-        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-        prefsWriter.putString(cookie.getDomain(), TextUtils.join(",", cookies.get(cookie.getDomain()).keySet()));
+        SharedPreferences.Editor prefsWriter = mCookiePrefs.edit();
+        prefsWriter.putString(cookie.getDomain(), TextUtils.join(",", mCookies.get(cookie.getDomain()).keySet()));
         prefsWriter.putString(COOKIE_NAME_PREFIX + cookie.getName(), encodeCookie(new SerializableHttpCookie(cookie)));
         prefsWriter.apply();
 
@@ -95,9 +95,9 @@ public class PersistentCookieStore implements CookieStore {
     @Override
     public List<HttpCookie> get(URI uri) {
         ArrayList<HttpCookie> ret = new ArrayList<>();
-        for (String key : cookies.keySet()) {
+        for (String key : mCookies.keySet()) {
             if (uri.getHost().contains(key)) {
-                ret.addAll(cookies.get(key).values());
+                ret.addAll(mCookies.get(key).values());
             }
         }
         return ret;
@@ -105,10 +105,10 @@ public class PersistentCookieStore implements CookieStore {
 
     @Override
     public boolean removeAll() {
-        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        SharedPreferences.Editor prefsWriter = mCookiePrefs.edit();
         prefsWriter.clear();
         prefsWriter.apply();
-        cookies.clear();
+        mCookies.clear();
         return true;
     }
 
@@ -117,14 +117,14 @@ public class PersistentCookieStore implements CookieStore {
     public boolean remove(URI uri, HttpCookie cookie) {
         String name = getCookieToken(uri, cookie);
 
-        if (cookies.containsKey(uri.getHost()) && cookies.get(uri.getHost()).containsKey(name)) {
-            cookies.get(uri.getHost()).remove(name);
+        if (mCookies.containsKey(uri.getHost()) && mCookies.get(uri.getHost()).containsKey(name)) {
+            mCookies.get(uri.getHost()).remove(name);
 
-            SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
-            if (cookiePrefs.contains(COOKIE_NAME_PREFIX + name)) {
+            SharedPreferences.Editor prefsWriter = mCookiePrefs.edit();
+            if (mCookiePrefs.contains(COOKIE_NAME_PREFIX + name)) {
                 prefsWriter.remove(COOKIE_NAME_PREFIX + name);
             }
-            prefsWriter.putString(uri.getHost(), TextUtils.join(",", cookies.get(uri.getHost()).keySet()));
+            prefsWriter.putString(uri.getHost(), TextUtils.join(",", mCookies.get(uri.getHost()).keySet()));
             prefsWriter.apply();
 
             return true;
@@ -136,9 +136,9 @@ public class PersistentCookieStore implements CookieStore {
     @Override
     public List<HttpCookie> getCookies() {
         ArrayList<HttpCookie> ret = new ArrayList<>();
-        for (String key : cookies.keySet()) {
-            ret.addAll(cookies.get(key).values());
-            android.util.Log.d(TAG, key + " : " + cookies.keySet());
+        for (String key : mCookies.keySet()) {
+            ret.addAll(mCookies.get(key).values());
+            android.util.Log.d(TAG, key + " : " + mCookies.keySet());
         }
         return ret;
     }
@@ -146,7 +146,7 @@ public class PersistentCookieStore implements CookieStore {
     @Override
     public List<URI> getURIs() {
         ArrayList<URI> ret = new ArrayList<>();
-        for (String key : cookies.keySet())
+        for (String key : mCookies.keySet())
             try {
                 ret.add(new URI(key));
             } catch (URISyntaxException e) {
@@ -189,7 +189,7 @@ public class PersistentCookieStore implements CookieStore {
         HttpCookie cookie = null;
         try {
             ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
-            cookie = ((SerializableHttpCookie) objectInputStream.readObject()).getCookie();
+            cookie = ((SerializableHttpCookie) objectInputStream.readObject()).getmCookie();
         } catch (IOException e) {
             Log.d(LOG_TAG, "IOException in decodeCookie", e);
         } catch (ClassNotFoundException e) {

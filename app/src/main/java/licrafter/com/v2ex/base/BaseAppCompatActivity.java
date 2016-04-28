@@ -14,8 +14,8 @@ import licrafter.com.v2ex.util.SharedPreferenceUtils;
  */
 public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
-    private LoadingDialog loadingDialog;
-    protected LoginDialog dialog;
+    private LoadingDialog mLoadingDialog;
+    protected LoginDialog mDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -25,7 +25,7 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         SharedPreferenceUtils.init(getApplicationContext());
-        loadingDialog = new LoadingDialog(this);
+        mLoadingDialog = new LoadingDialog(this);
         this.initToolbar(savedInstanceState);
         this.attachVeiw();
         this.initView(savedInstanceState);
@@ -40,14 +40,14 @@ public abstract class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     protected void showDialog() {
-        if (!loadingDialog.isShowing()) {
-            loadingDialog.show();
+        if (!mLoadingDialog.isShowing()) {
+            mLoadingDialog.show();
         }
     }
 
     protected void hideDialog() {
-        if (loadingDialog.isShowing()) {
-            loadingDialog.dismiss();
+        if (mLoadingDialog.isShowing()) {
+            mLoadingDialog.dismiss();
         }
     }
 

@@ -1,6 +1,5 @@
 package licrafter.com.v2ex;
 
-import android.app.Application;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -25,7 +24,7 @@ import licrafter.com.v2ex.util.FragmentUtil;
 public class MainActivity extends BaseDrawerLayoutActivity {
 
 
-    private Handler handler;
+    private Handler mHandler;
 
     @Override
     protected int getLayoutId() {
@@ -39,7 +38,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
     @Override
     protected void initView(Bundle savedInstanceState) {
-        handler = new Handler();
+        mHandler = new Handler();
         switchFragment(CategoryFragment.newInstance());
     }
 
@@ -62,11 +61,11 @@ public class MainActivity extends BaseDrawerLayoutActivity {
         switch (now.getItemId()) {
             case R.id.topicDrawerMenuItem:
                 switchFragment(CategoryFragment.newInstance());
-                actionBarHelper.setTitle(getString(R.string.app_name));
+                mActionBarHelper.setTitle(getString(R.string.app_name));
                 break;
             case R.id.nodeDrawerMenuItem:
                 switchFragment(NodeListFragment.newInstance());
-                actionBarHelper.setTitle(getString(R.string.node_list));
+                mActionBarHelper.setTitle(getString(R.string.node_list));
                 break;
             case R.id.settingDrawerMenuItem:
                 startActivity(new Intent(this, SettingActivity.class));
@@ -106,7 +105,7 @@ public class MainActivity extends BaseDrawerLayoutActivity {
                 startActivity(new Intent(this, TopicEditActivity.class));
             } else {
                 Toast.makeText(this, getString(R.string.please_login), Toast.LENGTH_SHORT).show();
-                dialog.show();
+                mDialog.show();
             }
             return true;
         }
@@ -121,14 +120,14 @@ public class MainActivity extends BaseDrawerLayoutActivity {
 
     public void switchFragment(final Fragment fragment) {
         //延时200ms跳转fragment，减缓drawerlayout卡顿现象
-        handler.postDelayed(new Runnable() {
+        mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 boolean show = fragment instanceof CategoryFragment;
                 setAppBarShadow(!show);
                 FragmentUtil.replaceWithAnim(getSupportFragmentManager(), R.id.containerFrameLayout
                         , fragment, false, "");
-                handler.removeCallbacks(this);
+                mHandler.removeCallbacks(this);
             }
         }, 200);
 

@@ -22,10 +22,10 @@ import rx.schedulers.Schedulers;
  **/
 public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
-    private boolean isLoading;
+    private boolean mIsLoading;
 
     public void getTopicDetail(String topicId) {
-        compositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, 1)
+        mCompositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, 1)
                 .map(new Func1<String, TopicDetail>() {
                     @Override
                     public TopicDetail call(String response) {
@@ -58,11 +58,11 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
     }
 
     public void getCommentsList(String topicId, int pageIndex, final boolean isRefresh) {
-        if (isLoading) {
+        if (mIsLoading) {
             return;
         }
-        isLoading = true;
-        compositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, pageIndex)
+        mIsLoading = true;
+        mCompositeSubscription.add(AuthService.getInstance().auth().getTopicDetailsById(topicId, pageIndex)
                 .map(new Func1<String, TopicComment>() {
                     @Override
                     public TopicComment call(String response) {
@@ -79,7 +79,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
                     @Override
                     public void onError(Throwable e) {
-                        isLoading = false;
+                        mIsLoading = false;
                         if (getView() != null) {
                             getView().onFailure(ApiErrorUtil.handleError(e));
                         }
@@ -87,7 +87,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
                     @Override
                     public void onNext(TopicComment topicComment) {
-                        isLoading = false;
+                        mIsLoading = false;
                         if (getView() != null) {
                             if (isRefresh) {
                                 ((TopicCommentListFragment) getView()).parseComments(topicComment);
@@ -101,7 +101,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
     public void favoriteTopic(String topicId, String csrfToken) {
         String referer = "http://www.v2ex.com/t/" + topicId;
-        compositeSubscription.add(AuthService.getInstance().auth().favoriteTopic(referer, topicId, csrfToken)
+        mCompositeSubscription.add(AuthService.getInstance().auth().favoriteTopic(referer, topicId, csrfToken)
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String response) {
@@ -134,7 +134,7 @@ public class TopicDetailPresenter extends BasePresenter<MvpView> {
 
     public void unFavoriteTopic(String topicId, String scrfToken) {
         String referer = "http://www.v2ex.com/t/" + topicId;
-        compositeSubscription.add(AuthService.getInstance().auth().unFavoriteTopic(referer, topicId, scrfToken)
+        mCompositeSubscription.add(AuthService.getInstance().auth().unFavoriteTopic(referer, topicId, scrfToken)
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String response) {
